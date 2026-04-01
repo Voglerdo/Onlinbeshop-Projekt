@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * CRIMSON COALS SECURITY RULES ANALYSIS & DESIGN
+     * 
+     * Core Philosophy:
+     * This ruleset implements a strict user-ownership model for all private data (profiles, carts, orders)
+     * and a public-read/admin-write model for the product catalog. The architecture prioritizes
+     * "Authorization Independence," ensuring that access decisions for deeply nested items 
+     * (like CartItems) can be made without expensive parent document lookups.
+     * 
+     * Data Structure:
+     * - /products/{productId}: Public product catalog.
+     * - /users/{userId}: Private user profiles.
+     * - /users/{userId}/shoppingCarts/{cartId}: User-specific carts.
+     * - /users/{userId}/shoppingCarts/{cartId}/cartItems/{itemId}: Items within a cart.
+     * - /users/{userId}/orders/{orderId}: Historical order records.
+     * - /roles_admin/{uid}: Internal collection for identifying administrative users.
+     * 
+     * Key Security Decisions:
+     * 1. Path-Based Ownership: All user data is nested under `/users/{userId}`. Rules enforce 
+     *    that `request.auth.uid == userId` for all access.
+     * 2. Denormalization for Performance: Security rules for nested items (CartItems, OrderItems) 
+     *    expect critical relational IDs (like `userId` or `cartId`) to be present in the document 
+     *    data itself to avoid `get()` calls.
+     * 3. Prototyping Flexibility: While authorization (who can access) is strictly enforced, 
+     *    data schema (what is inside) is left flexible to allow for rapid frontend iteration.
+     * 4. Admin Privileges: Global product management is restricted to users present in the 
+     *    `roles_admin` collection.
+     */
+
+    // --- HELPER FUNCTIONS ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Rules for the public product catalog.
+     * @path /products/{productId}
+     * @allow (get, list) for any user. (create, update, delete) for authenticated admins.
+     * @deny (write) for standard customers.
+     * @principle Public Read with Admin-Only Writes.
+     */
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for user profile documents.
+     * @path /users/{userId}
+     * @allow (get, list, write) for the owner where path userId matches auth UID.
+     * @deny (get, list, write) if the userId does not match the requester's UID.
+     * @principle Ownership-based access with relational integrity check on ID.
+     */
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Rules for user shopping carts.
+     * @path /users/{userId}/shoppingCarts/{cartId}
+     * @allow (get, list, write) for the cart owner.
+     * @deny (write) if trying to create a cart for a different user.
+     * @principle Nested ownership enforcement.
+     */
+    match /users/{userId}/shoppingCarts/{cartId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for items stored within a shopping cart.
+       * @path /users/{userId}/shoppingCarts/{cartId}/cartItems/{cartItemId}
+       * @allow (create) if the owner sets the correct cart relationship.
+       * @deny (update) if the item ownership is modified.
+       * @principle Relational integrity and path-based authorization.
+       */
+      match /cartItems/{cartItemId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.cartId == cartId;
+        allow update: if isExistingOwner(userId) && request.resource.data.cartId == resource.data.cartId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Rules for user order history.
+     * @path /users/{userId}/orders/{orderId}
+     * @allow (get, list) for the user who placed the order.
+     * @deny (delete) orders should typically be immutable (logic allows delete for prototype, but restricted to owner).
+     * @principle Path-based ownership for historical transaction data.
+     */
+    match /users/{userId}/orders/{orderId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for individual items within a historical order.
+       * @path /users/{userId}/orders/{orderId}/orderItems/{orderItemId}
+       * @allow (get, list) for the order owner.
+       * @deny (create) if the orderId in data does not match the path.
+       * @principle Deeply nested path-based authorization.
+       */
+      match /orderItems/{orderItemId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.orderId == orderId;
+        allow update: if isExistingOwner(userId) && request.resource.data.orderId == resource.data.orderId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description System collection to identify administrative users.
+     * @path /roles_admin/{adminUid}
+     * @allow (get) for signed-in users to verify permissions.
+     * @deny (write) for all clients; roles should be managed via Admin SDK/Console.
+     * @principle Role-Based Access Control (RBAC) source of truth.
+     */
+    match /roles_admin/{adminUid} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create, update, delete: if false;
+    }
+  }
+}
