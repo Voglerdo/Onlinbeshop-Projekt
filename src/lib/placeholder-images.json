@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-shisha",
+      "description": "Luxurious Shisha setup",
+      "imageUrl": "https://picsum.photos/seed/shisha1/1920/1080",
+      "imageHint": "luxury shisha"
+    },
+    {
+      "id": "product-1",
+      "description": "Crimson Premium Hookah",
+      "imageUrl": "https://picsum.photos/seed/hookah1/600/800",
+      "imageHint": "premium hookah"
+    },
+    {
+      "id": "product-2",
+      "description": "Golden Ember Coal",
+      "imageUrl": "https://picsum.photos/seed/coal1/600/800",
+      "imageHint": "shisha charcoal"
+    },
+    {
+      "id": "product-3",
+      "description": "Ruby Mist Tobacco",
+      "imageUrl": "https://picsum.photos/seed/tobacco1/600/800",
+      "imageHint": "shisha flavor"
+    },
+    {
+      "id": "product-4",
+      "description": "Obsidian Glass Base",
+      "imageUrl": "https://picsum.photos/seed/glass1/600/800",
+      "imageHint": "hookah glass"
+    },
+    {
+      "id": "product-5",
+      "description": "Silk Road Hose",
+      "imageUrl": "https://picsum.photos/seed/hose1/600/800",
+      "imageHint": "hookah hose"
+    },
+    {
+      "id": "product-6",
+      "description": "Royal Gold Bowl",
+      "imageUrl": "https://picsum.photos/seed/bowl1/600/800",
+      "imageHint": "shisha bowl"
+    }
+  ]
 }
