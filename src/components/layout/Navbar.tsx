@@ -1,14 +1,36 @@
 "use client"
 
 import Link from 'next/link';
-import { Search, ShoppingBag, User, Sparkles } from 'lucide-react';
+import { Search, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartSheet } from '@/components/cart/CartSheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Sync internal search state with URL parameter if it exists
+  useEffect(() => {
+    const query = searchParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+      setIsSearchOpen(true);
+    }
+  }, [searchParams]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/?q=${encodeURIComponent(searchQuery.trim())}#catalog`);
+    } else {
+      router.push('/#catalog');
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -30,13 +52,18 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className={`relative flex items-center transition-all duration-300 ${isSearchOpen ? 'w-48 md:w-64' : 'w-10'}`}>
+          <form onSubmit={handleSearch} className={`relative flex items-center transition-all duration-300 ${isSearchOpen ? 'w-48 md:w-64' : 'w-10'}`}>
             <Input 
               placeholder="Search products..." 
-              className={`h-9 bg-muted/50 border-none transition-opacity duration-300 ${isSearchOpen ? 'opacity-100 pl-8' : 'opacity-0'}`}
-              onBlur={() => setIsSearchOpen(false)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={`h-9 bg-muted/50 border-none transition-opacity duration-300 ${isSearchOpen ? 'opacity-100 pl-8' : 'opacity-0 pointer-events-none'}`}
+              onBlur={() => {
+                if (!searchQuery) setIsSearchOpen(false);
+              }}
             />
             <Button 
+              type="button"
               variant="ghost" 
               size="icon" 
               className="absolute left-0 text-secondary"
@@ -44,7 +71,13 @@ export function Navbar() {
             >
               <Search className="h-5 w-5" />
             </Button>
-          </div>
+            {isSearchOpen && searchQuery && (
+              <button 
+                type="submit" 
+                className="hidden"
+              />
+            )}
+          </form>
           
           <CartSheet />
           

@@ -7,11 +7,12 @@ import { ProductCard } from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Star, Loader2, Sparkles, Filter } from 'lucide-react';
+import { Star, Loader2, Sparkles, Filter, X } from 'lucide-react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { Product } from '@/app/types';
 import { cn } from '@/lib/utils';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const CATEGORIES = [
   { id: 'all', label: 'All Collection' },
@@ -23,7 +24,11 @@ const CATEGORIES = [
 
 export default function Home() {
   const db = useFirestore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  const searchQuery = searchParams.get('q') || '';
   
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-shisha');
 
@@ -34,9 +39,19 @@ export default function Home() {
 
   const { data: allProducts, isLoading } = useCollection<Product>(productsQuery);
 
-  const filteredProducts = allProducts?.filter(product => 
-    selectedCategory === 'all' || product.category === selectedCategory
-  ) || [];
+  const filteredProducts = allProducts?.filter(product => {
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesSearch = !searchQuery || 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesCategory && matchesSearch;
+  }) || [];
+
+  const clearSearch = () => {
+    router.push('/#catalog');
+  };
 
   return (
     <div className="flex flex-col gap-16 pb-20">
@@ -93,6 +108,16 @@ export default function Home() {
               Curated Selection
             </div>
             <h2 className="text-4xl md:text-5xl font-headline font-bold">Our Masterpieces</h2>
+            {searchQuery && (
+              <div className="flex items-center gap-2 mt-2">
+                <Badge variant="secondary" className="px-3 py-1 bg-primary/10 text-primary border-primary/20 flex items-center gap-2">
+                  Results for "{searchQuery}"
+                  <button onClick={clearSearch} className="hover:text-foreground">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              </div>
+            )}
             <p className="text-muted-foreground font-medium">Handpicked selections for your perfect session.</p>
           </div>
           
@@ -131,9 +156,14 @@ export default function Home() {
                 <Filter className="h-8 w-8 text-muted-foreground" />
               </div>
               <h3 className="text-xl font-bold font-headline">No Matches Found</h3>
-              <p className="text-muted-foreground">We couldn't find any masterpieces in the "{CATEGORIES.find(c => c.id === selectedCategory)?.label}" category currently. Try exploring our other selections.</p>
-              <Button variant="link" onClick={() => setSelectedCategory('all')} className="text-secondary font-bold">
-                View All Products
+              <p className="text-muted-foreground">
+                {searchQuery 
+                  ? `We couldn't find any masterpieces matching "${searchQuery}".`
+                  : `We couldn't find any masterpieces in the "${CATEGORIES.find(c => c.id === selectedCategory)?.label}" category currently.`
+                }
+              </p>
+              <Button variant="link" onClick={() => { setSelectedCategory('all'); clearSearch(); }} className="text-secondary font-bold">
+                Clear Filters & View All
               </Button>
             </div>
           </div>
