@@ -1,8 +1,8 @@
-
 "use client"
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -69,9 +69,11 @@ export default function Home() {
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-16 duration-1000">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-10 rounded-full crimson-glow">
-              Explore Collection
-            </Button>
+            <Link href="/#catalog">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-10 rounded-full crimson-glow">
+                Explore Collection
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10 h-14 px-10 rounded-full">
               Our Story
             </Button>
@@ -84,7 +86,7 @@ export default function Home() {
       </section>
 
       {/* Catalog Section */}
-      <section className="container mx-auto px-4 lg:px-8 space-y-12">
+      <section id="catalog" className="container mx-auto px-4 lg:px-8 space-y-12 scroll-mt-20">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-border pb-8">
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-[0.3em] text-xs">

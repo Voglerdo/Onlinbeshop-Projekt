@@ -21,7 +21,7 @@ export function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="hover:text-primary transition-colors">Catalog</Link>
+            <Link href="/#catalog" className="hover:text-primary transition-colors">Catalog</Link>
             <Link href="/admin" className="flex items-center gap-1.5 text-secondary hover:text-secondary/80 transition-colors">
               <Sparkles className="h-4 w-4" />
               Admin
