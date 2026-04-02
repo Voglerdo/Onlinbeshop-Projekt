@@ -1,15 +1,16 @@
+
 "use client"
 
 import Image from 'next/image';
 import { notFound, useParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Star, ShieldCheck, Truck, RefreshCw, Loader2 } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RefreshCw, Loader2, ChevronRight } from 'lucide-react';
 import { ProductCard } from '@/components/products/ProductCard';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc, collection, query, limit, where } from 'firebase/firestore';
 import { Product } from '@/app/types';
+import Link from 'next/link';
 
 export default function ProductPage() {
   const params = useParams();
@@ -21,7 +22,7 @@ export default function ProductPage() {
     return doc(db, 'products', id);
   }, [db, id]);
 
-  const { data: product, isLoading, error } = useDoc<Product>(docRef);
+  const { data: product, isLoading } = useDoc<Product>(docRef);
 
   const relatedQuery = useMemoFirebase(() => {
     if (!db || !product) return null;
@@ -37,9 +38,12 @@ export default function ProductPage() {
 
   if (isLoading) {
     return (
-      <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-medium">Summoning product details...</p>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6">
+        <div className="relative">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse" />
+        </div>
+        <p className="text-muted-foreground font-medium animate-pulse">Summoning product details...</p>
       </div>
     );
   }
@@ -49,28 +53,41 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 space-y-24">
+    <div className="container mx-auto px-4 py-12 lg:px-8 space-y-16">
+      {/* Breadcrumbs / Back navigation */}
+      <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-8">
+        <Link href="/" className="hover:text-primary transition-colors">Catalog</Link>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-foreground font-bold truncate max-w-[200px]">{product.name}</span>
+      </nav>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         {/* Image Section */}
-        <div className="space-y-4">
-          <div className="aspect-square relative overflow-hidden rounded-3xl glass-card gold-glow border-none">
+        <div className="space-y-6">
+          <div className="aspect-[4/5] relative overflow-hidden rounded-[2rem] glass-card gold-glow border-none group">
             <Image
               src={product.imageUrl}
               alt={product.name}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
               priority
               data-ai-hint={product.imageHint}
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
           </div>
+          
+          {/* Thumbnails (simulated angles) */}
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square relative rounded-lg overflow-hidden glass-card border-none hover:gold-glow transition-all cursor-pointer">
+              <div 
+                key={i} 
+                className="aspect-square relative rounded-2xl overflow-hidden glass-card border-none hover:ring-2 hover:ring-secondary transition-all cursor-pointer opacity-70 hover:opacity-100"
+              >
                 <Image
                   src={product.imageUrl}
-                  alt={product.name}
+                  alt={`${product.name} angle ${i}`}
                   fill
-                  className="object-cover opacity-60 hover:opacity-100 transition-opacity"
+                  className="object-cover"
                   data-ai-hint={product.imageHint}
                 />
               </div>
@@ -79,54 +96,80 @@ export default function ProductPage() {
         </div>
 
         {/* Content Section */}
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <Badge variant="secondary" className="px-4 py-1 text-xs uppercase tracking-widest font-bold">
-              Premium {product.category}
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-headline font-bold leading-tight">{product.name}</h1>
-            <div className="flex items-center gap-4">
+        <div className="space-y-10">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary" className="px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-bold border-none gold-glow">
+                Premium Selection
+              </Badge>
+              <Badge variant="outline" className="px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-medium border-border">
+                {product.category}
+              </Badge>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-headline font-black tracking-tight leading-[1.1]">{product.name}</h1>
+            
+            <div className="flex items-center gap-6">
               <div className="flex text-secondary">
                 {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-5 w-5 fill-secondary" />)}
               </div>
-              <span className="text-sm text-muted-foreground">Premium Collection</span>
+              <div className="h-4 w-px bg-border" />
+              <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Certified Luxury</span>
             </div>
-            <div className="text-4xl font-bold text-secondary">${product.price.toFixed(2)}</div>
+
+            <div className="flex items-baseline gap-4">
+              <div className="text-5xl font-black text-secondary">${product.price.toFixed(2)}</div>
+              <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Incl. VAT</div>
+            </div>
           </div>
 
-          <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">
-            {product.description}
-          </p>
+          <div className="space-y-4">
+            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">The Narrative</h3>
+            <p className="text-xl text-muted-foreground leading-relaxed font-light whitespace-pre-wrap">
+              {product.description}
+            </p>
+          </div>
 
           {product.features && product.features.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="font-bold uppercase tracking-widest text-sm text-primary">Key Features</h3>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-6 pt-6 border-t border-border">
+              <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Key Attributes</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                 {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm">
-                    <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                    {feature}
-                  </li>
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="h-1.5 w-1.5 rotate-45 bg-secondary shadow-[0_0_8px_rgba(209,163,71,0.8)]" />
+                    <span className="text-sm font-medium text-foreground/80">{feature}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
-          <div className="pt-6 border-t border-border space-y-6">
-            <AddToCartButton product={product} />
+          <div className="pt-10 space-y-8">
+            <div className="flex flex-col gap-4">
+              <AddToCartButton product={product} />
+              <p className="text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">
+                Limited Availability • Ships Worldwide
+              </p>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-              <div className="flex flex-col items-center text-center gap-2">
-                <ShieldCheck className="h-6 w-6 text-secondary" />
-                <span className="text-xs font-medium uppercase tracking-tighter">Authentic Product</span>
+            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border">
+              <div className="flex flex-col items-center text-center gap-3 group">
+                <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
+                  <ShieldCheck className="h-6 w-6 text-secondary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Authentic</span>
               </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <Truck className="h-6 w-6 text-secondary" />
-                <span className="text-xs font-medium uppercase tracking-tighter">Express Shipping</span>
+              <div className="flex flex-col items-center text-center gap-3 group">
+                <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
+                  <Truck className="h-6 w-6 text-secondary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Priority</span>
               </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <RefreshCw className="h-6 w-6 text-secondary" />
-                <span className="text-xs font-medium uppercase tracking-tighter">Easy Returns</span>
+              <div className="flex flex-col items-center text-center gap-3 group">
+                <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
+                  <RefreshCw className="h-6 w-6 text-secondary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Premium Care</span>
               </div>
             </div>
           </div>
@@ -135,17 +178,20 @@ export default function ProductPage() {
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <div className="space-y-12">
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl font-headline font-bold">You May Also Like</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Complete your setup with these complementary products recommended by our experts.</p>
+        <section className="space-y-12 pt-24 border-t border-border">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+            <div className="space-y-3">
+              <h2 className="text-4xl font-headline font-bold">The Complete Set</h2>
+              <div className="h-1 w-20 bg-primary" />
+              <p className="text-muted-foreground font-medium">Complementary selections curated for this piece.</p>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {relatedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
