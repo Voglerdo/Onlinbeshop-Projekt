@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -15,4 +16,15 @@ export interface Product {
 
 export interface CartItem extends Product {
   quantity: number;
+}
+
+export interface JobOffer {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: 'Full-time' | 'Part-time' | 'Contract';
+  description: string;
+  requirements: string[];
+  createdAt: string;
 }
