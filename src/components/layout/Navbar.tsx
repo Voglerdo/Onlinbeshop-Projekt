@@ -48,9 +48,11 @@ export function Navbar() {
           
           <CartSheet />
           
-          <Button variant="ghost" size="icon" className="text-secondary hidden sm:flex">
-            <User className="h-5 w-5" />
-          </Button>
+          <Link href="/profile">
+            <Button variant="ghost" size="icon" className="text-secondary hidden sm:flex">
+              <User className="h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
