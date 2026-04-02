@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, ArrowLeft, Loader2, CreditCard, Truck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
