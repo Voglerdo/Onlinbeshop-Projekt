@@ -3,10 +3,14 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: 'hookah' | 'coal' | 'flavor' | 'accessory';
+  category: 'hookah' | 'coal' | 'flavor' | 'accessory' | string;
   imageUrl: string;
   imageHint: string;
+  brand: string;
+  stockQuantity: number;
   features: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CartItem extends Product {

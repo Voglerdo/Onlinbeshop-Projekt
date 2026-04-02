@@ -1,12 +1,24 @@
+"use client"
+
 import Image from 'next/image';
-import { MOCK_PRODUCTS } from '@/app/lib/products';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, Loader2 } from 'lucide-react';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { Product } from '@/app/types';
 
 export default function Home() {
+  const db = useFirestore();
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-shisha');
+
+  const productsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  }, [db]);
+
+  const { data: products, isLoading } = useCollection<Product>(productsQuery);
 
   return (
     <div className="flex flex-col gap-16 pb-20">
@@ -68,11 +80,21 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : products && products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 border border-dashed border-border rounded-3xl">
+            <p className="text-muted-foreground">No masterpieces found in our current catalog.</p>
+          </div>
+        )}
 
         <div className="mt-20 p-12 glass-card rounded-3xl flex flex-col md:flex-row items-center justify-between gap-12 gold-glow border-none">
           <div className="max-w-xl space-y-4">

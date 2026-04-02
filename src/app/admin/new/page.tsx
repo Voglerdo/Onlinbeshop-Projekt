@@ -17,16 +17,22 @@ import {
 import { Sparkles, ArrowLeft, Plus, X, Loader2, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { useFirestore } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const db = useFirestore();
   const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     price: '',
     description: '',
+    brand: 'Crimson Coals',
+    stockQuantity: '10',
     features: ['']
   });
 
@@ -79,10 +85,33 @@ export default function NewProductPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!db) return;
+
+    const productsRef = collection(db, 'products');
+    const timestamp = new Date().toISOString();
+    
+    const newProduct = {
+      name: formData.name,
+      category: formData.category,
+      price: parseFloat(formData.price),
+      description: formData.description,
+      brand: formData.brand,
+      stockQuantity: parseInt(formData.stockQuantity),
+      features: formData.features.filter(f => f.trim() !== ''),
+      imageUrl: `https://picsum.photos/seed/${Math.random()}/600/800`,
+      imageHint: `${formData.category} shisha`,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    };
+
+    addDocumentNonBlocking(productsRef, newProduct);
+
     toast({
       title: "Success",
-      description: "Item saved to inventory (Simulation)",
+      description: "Item saved to inventory and shop catalog.",
     });
+    
     router.push('/admin');
   };
 
@@ -134,11 +163,36 @@ export default function NewProductPage() {
                 <Input 
                   id="price" 
                   type="number" 
+                  step="0.01"
                   placeholder="249.99" 
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   className="bg-card border-border"
                   required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="brand">Brand</Label>
+                <Input 
+                  id="brand" 
+                  placeholder="Crimson Coals" 
+                  value={formData.brand}
+                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                  className="bg-card border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="stock">Initial Stock</Label>
+                <Input 
+                  id="stock" 
+                  type="number" 
+                  placeholder="10" 
+                  value={formData.stockQuantity}
+                  onChange={(e) => setFormData({ ...formData, stockQuantity: e.target.value })}
+                  className="bg-card border-border"
                 />
               </div>
             </div>

@@ -1,21 +1,52 @@
-import { getProduct, MOCK_PRODUCTS } from '@/app/lib/products';
+"use client"
+
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, ShieldCheck, Truck, RefreshCw, ShoppingBag } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RefreshCw, Loader2 } from 'lucide-react';
 import { ProductCard } from '@/components/products/ProductCard';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
+import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc, collection, query, limit, where } from 'firebase/firestore';
+import { Product } from '@/app/types';
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const { id } = await params;
-  const product = getProduct(id);
+export default function ProductPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const db = useFirestore();
+
+  const docRef = useMemoFirebase(() => {
+    if (!db || !id) return null;
+    return doc(db, 'products', id);
+  }, [db, id]);
+
+  const { data: product, isLoading, error } = useDoc<Product>(docRef);
+
+  const relatedQuery = useMemoFirebase(() => {
+    if (!db || !product) return null;
+    return query(
+      collection(db, 'products'), 
+      where('category', '==', product.category),
+      limit(5)
+    );
+  }, [db, product]);
+
+  const { data: relatedProductsRaw } = useCollection<Product>(relatedQuery);
+  const relatedProducts = relatedProductsRaw?.filter(p => p.id !== id).slice(0, 4) || [];
+
+  if (isLoading) {
+    return (
+      <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <p className="text-muted-foreground font-medium">Summoning product details...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();
   }
-
-  const relatedProducts = MOCK_PRODUCTS.filter(p => p.id !== id).slice(0, 4);
 
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-24">
@@ -58,26 +89,28 @@ export default async function ProductPage({ params }: { params: { id: string } }
               <div className="flex text-secondary">
                 {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-5 w-5 fill-secondary" />)}
               </div>
-              <span className="text-sm text-muted-foreground">48 Reviews</span>
+              <span className="text-sm text-muted-foreground">Premium Collection</span>
             </div>
             <div className="text-4xl font-bold text-secondary">${product.price.toFixed(2)}</div>
           </div>
 
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">
             {product.description}
           </p>
 
-          <div className="space-y-4">
-            <h3 className="font-bold uppercase tracking-widest text-sm text-primary">Key Features</h3>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {product.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2 text-sm">
-                  <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {product.features && product.features.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="font-bold uppercase tracking-widest text-sm text-primary">Key Features</h3>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {product.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm">
+                    <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="pt-6 border-t border-border space-y-6">
             <AddToCartButton product={product} />
@@ -101,17 +134,19 @@ export default async function ProductPage({ params }: { params: { id: string } }
       </div>
 
       {/* Related Products */}
-      <div className="space-y-12">
-        <div className="text-center space-y-4">
-          <h2 className="text-4xl font-headline font-bold">You May Also Like</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">Complete your setup with these complementary products recommended by our experts.</p>
+      {relatedProducts.length > 0 && (
+        <div className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl font-headline font-bold">You May Also Like</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Complete your setup with these complementary products recommended by our experts.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {relatedProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
