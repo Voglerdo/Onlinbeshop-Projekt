@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from 'next/image';
@@ -36,7 +35,8 @@ export default function ProductPage() {
   const { data: relatedProductsRaw } = useCollection<Product>(relatedQuery);
   const relatedProducts = relatedProductsRaw?.filter(p => p.id !== id).slice(0, 4) || [];
 
-  if (isLoading) {
+  // Show loading state while data is being fetched or while params are initializing
+  if (isLoading || !id) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6">
         <div className="relative">
@@ -48,13 +48,13 @@ export default function ProductPage() {
     );
   }
 
+  // Only trigger 404 if loading is finished and no product was found
   if (!product) {
     notFound();
   }
 
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-16">
-      {/* Breadcrumbs / Back navigation */}
       <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-8">
         <Link href="/" className="hover:text-primary transition-colors">Catalog</Link>
         <ChevronRight className="h-3 w-3" />
@@ -62,7 +62,6 @@ export default function ProductPage() {
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        {/* Image Section */}
         <div className="space-y-6">
           <div className="aspect-[4/5] relative overflow-hidden rounded-[2rem] glass-card gold-glow border-none group">
             <Image
@@ -71,12 +70,11 @@ export default function ProductPage() {
               fill
               className="object-cover transition-transform duration-1000 group-hover:scale-105"
               priority
-              data-ai-hint={product.imageHint}
+              data-ai-hint={product.imageHint || "shisha hookah"}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
           </div>
           
-          {/* Thumbnails (simulated angles) */}
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div 
@@ -88,14 +86,13 @@ export default function ProductPage() {
                   alt={`${product.name} angle ${i}`}
                   fill
                   className="object-cover"
-                  data-ai-hint={product.imageHint}
+                  data-ai-hint={product.imageHint || "shisha hookah"}
                 />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Content Section */}
         <div className="space-y-10">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -176,7 +173,6 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <section className="space-y-12 pt-24 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6">
