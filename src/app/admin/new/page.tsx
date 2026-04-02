@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useRef } from 'react';
@@ -15,7 +14,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
@@ -36,7 +35,7 @@ export default function NewProductPage() {
     category: '',
     price: '',
     description: '',
-    brand: 'Crimson Coals',
+    brand: 'Blubber Baron',
     stockQuantity: '10',
     features: [''],
     imageUrl: ''
@@ -45,7 +44,7 @@ export default function NewProductPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) { // 1MB limit check for Firestore string size efficiency
+      if (file.size > 1024 * 1024) {
         toast({
           title: "File too large",
           description: "Please select an image smaller than 1MB for optimal performance.",
@@ -161,11 +160,10 @@ export default function NewProductPage() {
 
       <div className="space-y-2">
         <h1 className="text-4xl font-headline font-bold">Add New Masterpiece</h1>
-        <p className="text-muted-foreground">Register a new premium product into the Crimson Coals catalog.</p>
+        <p className="text-muted-foreground">Register a new premium product into the Blubber Baron catalog.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Left Column: Media & Core */}
         <div className="lg:col-span-1 space-y-8">
           <div className="space-y-4">
             <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Product Media</h3>
@@ -215,7 +213,7 @@ export default function NewProductPage() {
                 <Label htmlFor="brand">Brand</Label>
                 <Input 
                   id="brand" 
-                  placeholder="Crimson Coals" 
+                  placeholder="Blubber Baron" 
                   value={formData.brand}
                   onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                   className="bg-card border-border"
@@ -236,7 +234,6 @@ export default function NewProductPage() {
           </div>
         </div>
 
-        {/* Center/Right Column: Details & Narrative */}
         <div className="lg:col-span-2 space-y-8">
           <div className="space-y-6">
             <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Core Details</h3>
@@ -244,7 +241,7 @@ export default function NewProductPage() {
               <Label htmlFor="name">Product Name</Label>
               <Input 
                 id="name" 
-                placeholder="e.g., Crimson Royal Gold Shisha" 
+                placeholder="e.g., Baron Royal Gold Shisha" 
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="bg-card border-border text-lg h-12"

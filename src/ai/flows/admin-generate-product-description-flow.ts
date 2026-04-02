@@ -37,7 +37,7 @@ const productDescriptionPrompt = ai.definePrompt({
   name: 'productDescriptionPrompt',
   input: {schema: AdminGenerateProductDescriptionInputSchema},
   output: {schema: AdminGenerateProductDescriptionOutputSchema},
-  prompt: `You are an expert copywriter for an online shisha shop called Crimson Coals.
+  prompt: `You are an expert copywriter for an online shisha shop called Blubber Baron.
 Your task is to generate a comprehensive, engaging, and enticing product description for a shisha product.
 Highlight the key features and make it appealing to customers, using sophisticated and luxurious language.
 

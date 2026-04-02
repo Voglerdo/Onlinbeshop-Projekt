@@ -111,7 +111,7 @@ export function CartSheet() {
                 Complete Order
               </Button>
               <p className="text-center text-[10px] text-muted-foreground uppercase tracking-widest">
-                Secure checkout powered by Crimson Coals
+                Secure checkout powered by Blubber Baron
               </p>
             </div>
           </SheetFooter>

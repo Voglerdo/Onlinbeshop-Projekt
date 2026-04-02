@@ -34,7 +34,6 @@ export default function Home() {
 
   const { data: allProducts, isLoading } = useCollection<Product>(productsQuery);
 
-  // Client-side filtering to avoid complex composite index requirements during development
   const filteredProducts = allProducts?.filter(product => 
     selectedCategory === 'all' || product.category === selectedCategory
   ) || [];
@@ -64,7 +63,7 @@ export default function Home() {
               IGNITE YOUR <span className="text-primary">PASSION</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
-              Welcome to the elite world of Crimson Coals. Discover curated premium hookahs and flavors designed for true connoisseurs.
+              Welcome to the elite world of Blubber Baron. Discover curated premium hookahs and flavors designed for true connoisseurs.
             </p>
           </div>
           
@@ -148,10 +147,10 @@ export default function Home() {
           
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
             <div className="max-w-xl space-y-6 text-center lg:text-left">
-              <Badge className="bg-secondary/20 text-secondary border-none px-4 py-1">CRIMSON ELITE</Badge>
+              <Badge className="bg-secondary/20 text-secondary border-none px-4 py-1">BARON ELITE</Badge>
               <h3 className="text-4xl md:text-5xl font-headline font-black leading-tight">Elevate Your Lifestyle</h3>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Subscribe to the Crimson Elite circle for early access to limited edition drops, secret flavor blends, and exclusive invitations to global shisha lounge events.
+                Subscribe to the Baron Elite circle for early access to limited edition drops, secret flavor blends, and exclusive invitations to global shisha lounge events.
               </p>
             </div>
             

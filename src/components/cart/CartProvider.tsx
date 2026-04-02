@@ -19,7 +19,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('crimson_coals_cart');
+    const savedCart = localStorage.getItem('blubber_baron_cart');
     if (savedCart) {
       try {
         setItems(JSON.parse(savedCart));
@@ -30,7 +30,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('crimson_coals_cart', JSON.stringify(items));
+    localStorage.setItem('blubber_baron_cart', JSON.stringify(items));
   }, [items]);
 
   const addItem = (product: Product) => {

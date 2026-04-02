@@ -16,7 +16,7 @@ export function Navbar() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl font-black tracking-tighter text-primary group-hover:text-primary/80 transition-colors font-headline uppercase">
-              Crimson Coals
+              Blubber Baron
             </span>
           </Link>
 

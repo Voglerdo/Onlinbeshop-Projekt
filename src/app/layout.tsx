@@ -7,8 +7,8 @@ import { CartProvider } from '@/components/cart/CartProvider';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'Crimson Coals | Premium Shisha Experience',
-  description: 'Discover luxury hookahs, premium coals, and sophisticated flavors at Crimson Coals.',
+  title: 'Blubber Baron | Premium Shisha Experience',
+  description: 'Discover luxury hookahs, premium coals, and sophisticated flavors at Blubber Baron.',
 };
 
 export default function RootLayout({
