@@ -4,17 +4,17 @@
 import { Button } from '@/components/ui/button';
 import { 
   Plus, 
-  Search, 
   MoreHorizontal, 
   Trash2, 
-  Edit3, 
   Sparkles,
   LayoutGrid,
-  List,
   Loader2,
   ExternalLink,
   Briefcase,
-  MapPin
+  MapPin,
+  TrendingUp,
+  Package,
+  ArrowUpRight
 } from 'lucide-react';
 import { 
   Table, 
@@ -24,7 +24,6 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -41,6 +40,29 @@ import { Product, JobOffer } from '@/app/types';
 import { deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell,
+  LineChart,
+  Line
+} from 'recharts';
+
+const ANALYTICS_DATA = [
+  { name: 'Mon', acquisitions: 12, revenue: 2400 },
+  { name: 'Tue', acquisitions: 18, revenue: 3600 },
+  { name: 'Wed', acquisitions: 15, revenue: 3000 },
+  { name: 'Thu', acquisitions: 25, revenue: 5000 },
+  { name: 'Fri', acquisitions: 32, revenue: 6400 },
+  { name: 'Sat', acquisitions: 45, revenue: 9000 },
+  { name: 'Sun', acquisitions: 40, revenue: 8000 },
+];
 
 export default function AdminPage() {
   const db = useFirestore();
@@ -62,112 +84,70 @@ export default function AdminPage() {
 
   const handleDeleteProduct = (productId: string) => {
     if (!db) return;
-    const docRef = doc(db, 'products', productId);
-    deleteDocumentNonBlocking(docRef);
-    toast({
-      title: "Item Deleted",
-      description: "The product has been removed from the catalog.",
-      variant: "destructive"
-    });
-  };
-
-  const handleDeleteJob = (jobId: string) => {
-    if (!db) return;
-    const docRef = doc(db, 'jobs', jobId);
-    deleteDocumentNonBlocking(docRef);
-    toast({
-      title: "Position Removed",
-      description: "The career opportunity has been withdrawn.",
-      variant: "destructive"
-    });
+    deleteDocumentNonBlocking(doc(db, 'products', productId));
+    toast({ title: "Item Deleted", variant: "destructive" });
   };
 
   const seedSampleJobs = () => {
     if (!db) return;
     setIsSeeding(true);
-    
     const jobsRef = collection(db, 'jobs');
-    const timestamp = new Date().toISOString();
-
-    const sampleJobs = [
-      {
-        title: "Master Shisha Tester",
-        department: "Sensory Research",
-        location: "Global / Remote",
-        type: "Full-time",
-        description: "Join the Baron's inner circle to evaluate premium tobacco blends, airflow dynamics, and heat distribution.",
-        requirements: ["5+ years experience", "Exceptional palate", "Deep coal knowledge"],
-        createdAt: timestamp
-      }
-    ];
-
-    sampleJobs.forEach(job => {
-      addDocumentNonBlocking(jobsRef, job);
+    addDocumentNonBlocking(jobsRef, {
+      title: "Master Shisha Tester",
+      department: "Sensory Research",
+      location: "Dubai / Global",
+      type: "Full-time",
+      description: "Evaluate ultra-premium blends and airflow dynamics in the Baron's private lab.",
+      requirements: ["5+ years experience", "Exceptional palate"],
+      createdAt: new Date().toISOString()
     });
-
-    setTimeout(() => {
-      setIsSeeding(false);
-      toast({
-        title: "Sample Seeded",
-        description: "Standard positions have been added to your registry.",
-      });
-    }, 1000);
+    setTimeout(() => setIsSeeding(false), 500);
   };
 
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl font-headline font-bold flex items-center gap-3">
-            Admin Console
-            <Badge variant="secondary" className="text-[10px] h-5">CENTRAL</Badge>
-          </h1>
-          <p className="text-muted-foreground">Orchestrate your empire's inventory and human capital.</p>
+          <h1 className="text-4xl font-headline font-bold">Admin Console</h1>
+          <p className="text-muted-foreground">Orchestrate the Blubber Baron empire.</p>
         </div>
-        <div className="flex gap-4">
-          <Button 
-            variant="outline" 
-            onClick={seedSampleJobs} 
-            disabled={isSeeding}
-            className="border-secondary text-secondary hover:bg-secondary/10 h-12 px-6 font-bold"
-          >
-            {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="mr-2 h-5 w-5" />}
-            Seed Samples
-          </Button>
-        </div>
+        <Button variant="outline" onClick={seedSampleJobs} disabled={isSeeding} className="border-secondary text-secondary">
+          {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="mr-2 h-5 w-5" />}
+          Seed Elite Roles
+        </Button>
       </div>
 
       <Tabs defaultValue="inventory" className="space-y-8">
-        <TabsList className="bg-muted/50 border border-border p-1 h-14 rounded-xl">
-          <TabsTrigger value="inventory" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
-            <LayoutGrid className="h-4 w-4 mr-2" /> Luxury Inventory
+        <TabsList className="bg-muted/50 p-1 h-14 rounded-xl border border-border">
+          <TabsTrigger value="inventory" className="h-full px-8 font-bold data-[state=active]:gold-glow">
+            <LayoutGrid className="h-4 w-4 mr-2" /> Inventory
           </TabsTrigger>
-          <TabsTrigger value="careers" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
-            <Briefcase className="h-4 w-4 mr-2" /> Elite Careers
+          <TabsTrigger value="careers" className="h-full px-8 font-bold data-[state=active]:gold-glow">
+            <Briefcase className="h-4 w-4 mr-2" /> Careers
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="h-full px-8 font-bold data-[state=active]:gold-glow">
+            <TrendingUp className="h-4 w-4 mr-2" /> Empire Analytics
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="inventory" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-headline font-bold">Catalog Management</h2>
+            <h2 className="text-2xl font-headline font-bold">Luxury Catalog</h2>
             <Link href="/admin/new">
-              <Button className="bg-primary hover:bg-primary/90 font-bold">
-                <Plus className="mr-2 h-4 w-4" /> Add New Item
+              <Button className="bg-primary font-bold">
+                <Plus className="mr-2 h-4 w-4" /> New Item
               </Button>
             </Link>
           </div>
 
-          <div className="glass-card rounded-2xl overflow-hidden border-none">
+          <div className="glass-card rounded-2xl overflow-hidden">
             {isProductsLoading ? (
-              <div className="flex justify-center items-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
+              <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
             ) : (
               <Table>
                 <TableHeader className="bg-card">
-                  <TableRow className="border-border">
-                    <TableHead className="w-[80px]">Image</TableHead>
-                    <TableHead>Product Name</TableHead>
+                  <TableRow>
+                    <TableHead>Product</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Stock</TableHead>
@@ -176,18 +156,14 @@ export default function AdminPage() {
                 </TableHeader>
                 <TableBody>
                   {products?.map((product) => (
-                    <TableRow key={product.id} className="group hover:bg-white/5 border-border">
-                      <TableCell>
-                        <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted">
+                    <TableRow key={product.id}>
+                      <TableCell className="flex items-center gap-3">
+                        <div className="relative h-10 w-10 rounded overflow-hidden">
                           <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
                         </div>
+                        <span className="font-medium">{product.name}</span>
                       </TableCell>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize text-secondary border-secondary/30">
-                          {product.category}
-                        </Badge>
-                      </TableCell>
+                      <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
                       <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
                       <TableCell>{product.stockQuantity} units</TableCell>
                       <TableCell className="text-right">
@@ -197,9 +173,7 @@ export default function AdminPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-card border-border">
                             <DropdownMenuItem asChild>
-                              <Link href={`/products/${product.id}`} className="flex items-center gap-2">
-                                <ExternalLink className="h-4 w-4" /> View Page
-                              </Link>
+                              <Link href={`/products/${product.id}`}><ExternalLink className="h-4 w-4 mr-2" /> View</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteProduct(product.id)}>
                               <Trash2 className="h-4 w-4 mr-2" /> Delete
@@ -215,72 +189,114 @@ export default function AdminPage() {
           </div>
         </TabsContent>
 
+        <TabsContent value="analytics" className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="glass-card border-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Weekly Revenue</CardTitle>
+                <TrendingUp className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold font-headline">$36,400</div>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <ArrowUpRight className="h-3 w-3 text-green-500" /> +12.5% from last week
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card border-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Acquisitions</CardTitle>
+                <Package className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold font-headline">182</div>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <ArrowUpRight className="h-3 w-3 text-green-500" /> +18 new Barons today
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card border-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Catalog Reach</CardTitle>
+                <LayoutGrid className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold font-headline">{products?.length || 0} Items</div>
+                <p className="text-xs text-muted-foreground">Curated premium selection</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glass-card border-none p-6">
+            <CardHeader>
+              <CardTitle className="font-headline">Acquisition Trends</CardTitle>
+              <CardDescription>Weekly flow of luxury transactions</CardDescription>
+            </CardHeader>
+            <CardContent className="h-[400px] pt-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={ANALYTICS_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} 
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} 
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1d1616', border: '1px solid rgba(209,163,71,0.2)', borderRadius: '12px' }}
+                    itemStyle={{ color: '#d1a347' }}
+                  />
+                  <Bar dataKey="acquisitions" radius={[4, 4, 0, 0]}>
+                    {ANALYTICS_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={index > 4 ? '#df2030' : '#d1a347'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="careers" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-headline font-bold">Open Engagements</h2>
+            <h2 className="text-2xl font-headline font-bold">Open Positions</h2>
             <Link href="/admin/jobs/new">
-              <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">
-                <Plus className="mr-2 h-4 w-4" /> Add New Position
+              <Button className="bg-secondary text-background font-bold">
+                <Plus className="mr-2 h-4 w-4" /> New Position
               </Button>
             </Link>
           </div>
-
-          <div className="glass-card rounded-2xl overflow-hidden border-none">
+          <div className="glass-card rounded-2xl overflow-hidden">
             {isJobsLoading ? (
-              <div className="flex justify-center items-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
+              <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
             ) : (
               <Table>
                 <TableHeader className="bg-card">
-                  <TableRow className="border-border">
-                    <TableHead>Role Title</TableHead>
+                  <TableRow>
+                    <TableHead>Role</TableHead>
                     <TableHead>Department</TableHead>
                     <TableHead>Location</TableHead>
-                    <TableHead>Type</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {jobs?.map((job) => (
-                    <TableRow key={job.id} className="group hover:bg-white/5 border-border">
+                    <TableRow key={job.id}>
                       <TableCell className="font-bold">{job.title}</TableCell>
                       <TableCell>{job.department}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
-                          {job.location}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{job.type}</Badge>
-                      </TableCell>
+                      <TableCell><MapPin className="h-3 w-3 inline mr-1" />{job.location}</TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-card border-border">
-                            <DropdownMenuItem asChild>
-                              <Link href="/careers" className="flex items-center gap-2">
-                                <ExternalLink className="h-4 w-4" /> View Listings
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteJob(job.id)}>
-                              <Trash2 className="h-4 w-4 mr-2" /> Remove Position
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Button variant="ghost" size="icon" onClick={() => deleteDocumentNonBlocking(doc(db, 'jobs', job.id))}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
-                  {(!jobs || jobs.length === 0) && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
-                        No active engagements. The Baron's council is currently full.
-                      </TableCell>
-                    </TableRow>
-                  )}
                 </TableBody>
               </Table>
             )}
