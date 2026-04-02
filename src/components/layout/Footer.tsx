@@ -21,12 +21,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4 text-secondary">Support</h4>
+            <h4 className="font-semibold mb-4 text-secondary">About</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/" className="hover:text-primary transition-colors">Shipping Policy</Link></li>
-              <li><Link href="/" className="hover:text-primary transition-colors">Returns</Link></li>
-              <li><Link href="/" className="hover:text-primary transition-colors">FAQ</Link></li>
-              <li><Link href="/" className="hover:text-primary transition-colors">Contact Us</Link></li>
+              <li><Link href="/story" className="hover:text-primary transition-colors">Our Story</Link></li>
+              <li><Link href="/profile" className="hover:text-primary transition-colors">The Registry</Link></li>
+              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin Console</Link></li>
             </ul>
           </div>
           <div>

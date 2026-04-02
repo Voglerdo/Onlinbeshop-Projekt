@@ -88,8 +88,8 @@ export default function Home() {
                 Explore Collection
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10 h-14 px-10 rounded-full">
-              Our Story
+            <Button asChild size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10 h-14 px-10 rounded-full">
+              <Link href="/story">Our Story</Link>
             </Button>
           </div>
         </div>
