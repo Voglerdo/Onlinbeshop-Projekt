@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link';
-import { Search, User, Sparkles } from 'lucide-react';
+import { Search, User, Sparkles, BookOpen, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartSheet } from '@/components/cart/CartSheet';
@@ -44,6 +44,14 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link href="/#catalog" className="hover:text-primary transition-colors">Catalog</Link>
+            <Link href="/story" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <BookOpen className="h-4 w-4" />
+              Story
+            </Link>
+            <Link href="/careers" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <Briefcase className="h-4 w-4" />
+              Careers
+            </Link>
             <Link href="/admin" className="flex items-center gap-1.5 text-secondary hover:text-secondary/80 transition-colors">
               <Sparkles className="h-4 w-4" />
               Admin

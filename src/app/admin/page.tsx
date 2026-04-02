@@ -1,4 +1,3 @@
-
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,8 @@ import {
   LayoutGrid,
   List,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  Briefcase
 } from 'lucide-react';
 import { 
   Table, 
@@ -35,12 +35,14 @@ import { Badge } from '@/components/ui/badge';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Product } from '@/app/types';
-import { deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 export default function AdminPage() {
   const db = useFirestore();
   const { toast } = useToast();
+  const [isSeeding, setIsSeeding] = useState(false);
 
   const productsQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -60,6 +62,47 @@ export default function AdminPage() {
     });
   };
 
+  const seedSampleJobs = () => {
+    if (!db) return;
+    setIsSeeding(true);
+    
+    const jobsRef = collection(db, 'jobs');
+    const timestamp = new Date().toISOString();
+
+    const sampleJobs = [
+      {
+        title: "Master Shisha Tester",
+        department: "Sensory Research",
+        location: "Global / Remote",
+        type: "Full-time",
+        description: "Join the Baron's inner circle to evaluate premium tobacco blends, airflow dynamics, and heat distribution across our entire experimental collection.",
+        requirements: ["5+ years of connoisseur-level experience", "Exceptional palate for subtle flavor notes", "Deep understanding of coal thermodynamics"],
+        createdAt: timestamp
+      },
+      {
+        title: "Aesthetic Brand Ambassador",
+        department: "Communications",
+        location: "Paris / Dubai",
+        type: "Contract",
+        description: "Represent the Blubber Baron lifestyle at high-end lounge events and luxury exhibitions worldwide.",
+        requirements: ["Experience in luxury hospitality", "Multilingual capabilities", "Passion for aesthetic excellence"],
+        createdAt: timestamp
+      }
+    ];
+
+    sampleJobs.forEach(job => {
+      addDocumentNonBlocking(jobsRef, job);
+    });
+
+    setTimeout(() => {
+      setIsSeeding(false);
+      toast({
+        title: "Elite Positions Seeded",
+        description: "The 'Shisha Tester' role and others are now live in the Careers section.",
+      });
+    }, 1000);
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -70,12 +113,23 @@ export default function AdminPage() {
           </h1>
           <p className="text-muted-foreground">Manage your luxury inventory and catalog items.</p>
         </div>
-        <Link href="/admin/new">
-          <Button className="bg-primary hover:bg-primary/90 h-12 px-6 font-bold shadow-lg shadow-primary/20">
-            <Plus className="mr-2 h-5 w-5" />
-            Add New Item
+        <div className="flex gap-4">
+          <Button 
+            variant="outline" 
+            onClick={seedSampleJobs} 
+            disabled={isSeeding}
+            className="border-secondary text-secondary hover:bg-secondary/10 h-12 px-6 font-bold"
+          >
+            {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Briefcase className="mr-2 h-5 w-5" />}
+            Seed Elite Positions
           </Button>
-        </Link>
+          <Link href="/admin/new">
+            <Button className="bg-primary hover:bg-primary/90 h-12 px-6 font-bold shadow-lg shadow-primary/20">
+              <Plus className="mr-2 h-5 w-5" />
+              Add New Item
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
