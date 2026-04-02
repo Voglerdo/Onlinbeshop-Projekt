@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,8 @@ import {
   List,
   Loader2,
   ExternalLink,
-  Briefcase
+  Briefcase,
+  MapPin
 } from 'lucide-react';
 import { 
   Table, 
@@ -32,9 +34,10 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
-import { Product } from '@/app/types';
+import { Product, JobOffer } from '@/app/types';
 import { deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
@@ -49,15 +52,32 @@ export default function AdminPage() {
     return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   }, [db]);
 
-  const { data: products, isLoading } = useCollection<Product>(productsQuery);
+  const jobsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'jobs'), orderBy('createdAt', 'desc'));
+  }, [db]);
 
-  const handleDelete = (productId: string) => {
+  const { data: products, isLoading: isProductsLoading } = useCollection<Product>(productsQuery);
+  const { data: jobs, isLoading: isJobsLoading } = useCollection<JobOffer>(jobsQuery);
+
+  const handleDeleteProduct = (productId: string) => {
     if (!db) return;
     const docRef = doc(db, 'products', productId);
     deleteDocumentNonBlocking(docRef);
     toast({
       title: "Item Deleted",
       description: "The product has been removed from the catalog.",
+      variant: "destructive"
+    });
+  };
+
+  const handleDeleteJob = (jobId: string) => {
+    if (!db) return;
+    const docRef = doc(db, 'jobs', jobId);
+    deleteDocumentNonBlocking(docRef);
+    toast({
+      title: "Position Removed",
+      description: "The career opportunity has been withdrawn.",
       variant: "destructive"
     });
   };
@@ -75,17 +95,8 @@ export default function AdminPage() {
         department: "Sensory Research",
         location: "Global / Remote",
         type: "Full-time",
-        description: "Join the Baron's inner circle to evaluate premium tobacco blends, airflow dynamics, and heat distribution across our entire experimental collection.",
-        requirements: ["5+ years of connoisseur-level experience", "Exceptional palate for subtle flavor notes", "Deep understanding of coal thermodynamics"],
-        createdAt: timestamp
-      },
-      {
-        title: "Aesthetic Brand Ambassador",
-        department: "Communications",
-        location: "Paris / Dubai",
-        type: "Contract",
-        description: "Represent the Blubber Baron lifestyle at high-end lounge events and luxury exhibitions worldwide.",
-        requirements: ["Experience in luxury hospitality", "Multilingual capabilities", "Passion for aesthetic excellence"],
+        description: "Join the Baron's inner circle to evaluate premium tobacco blends, airflow dynamics, and heat distribution.",
+        requirements: ["5+ years experience", "Exceptional palate", "Deep coal knowledge"],
         createdAt: timestamp
       }
     ];
@@ -97,8 +108,8 @@ export default function AdminPage() {
     setTimeout(() => {
       setIsSeeding(false);
       toast({
-        title: "Elite Positions Seeded",
-        description: "The 'Shisha Tester' role and others are now live in the Careers section.",
+        title: "Sample Seeded",
+        description: "Standard positions have been added to your registry.",
       });
     }, 1000);
   };
@@ -109,9 +120,9 @@ export default function AdminPage() {
         <div className="space-y-1">
           <h1 className="text-4xl font-headline font-bold flex items-center gap-3">
             Admin Console
-            <Badge variant="secondary" className="text-[10px] h-5">STABLE</Badge>
+            <Badge variant="secondary" className="text-[10px] h-5">CENTRAL</Badge>
           </h1>
-          <p className="text-muted-foreground">Manage your luxury inventory and catalog items.</p>
+          <p className="text-muted-foreground">Orchestrate your empire's inventory and human capital.</p>
         </div>
         <div className="flex gap-4">
           <Button 
@@ -120,140 +131,162 @@ export default function AdminPage() {
             disabled={isSeeding}
             className="border-secondary text-secondary hover:bg-secondary/10 h-12 px-6 font-bold"
           >
-            {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Briefcase className="mr-2 h-5 w-5" />}
-            Seed Elite Positions
+            {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="mr-2 h-5 w-5" />}
+            Seed Samples
           </Button>
-          <Link href="/admin/new">
-            <Button className="bg-primary hover:bg-primary/90 h-12 px-6 font-bold shadow-lg shadow-primary/20">
-              <Plus className="mr-2 h-5 w-5" />
-              Add New Item
-            </Button>
-          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-card p-6 rounded-2xl border-none space-y-2">
-          <div className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Total Inventory</div>
-          <div className="text-4xl font-bold text-secondary">{products?.length || 0} Items</div>
-        </div>
-        <div className="glass-card p-6 rounded-2xl border-none space-y-2">
-          <div className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Stock Health</div>
-          <div className="text-4xl font-bold text-green-500">Active</div>
-        </div>
-        <div className="glass-card p-6 rounded-2xl border-none space-y-2">
-          <div className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Recent Activity</div>
-          <div className="text-4xl font-bold text-primary">{isLoading ? "..." : "Live"}</div>
-        </div>
-      </div>
+      <Tabs defaultValue="inventory" className="space-y-8">
+        <TabsList className="bg-muted/50 border border-border p-1 h-14 rounded-xl">
+          <TabsTrigger value="inventory" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
+            <LayoutGrid className="h-4 w-4 mr-2" /> Luxury Inventory
+          </TabsTrigger>
+          <TabsTrigger value="careers" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
+            <Briefcase className="h-4 w-4 mr-2" /> Elite Careers
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="glass-card rounded-2xl overflow-hidden border-none border-border/50">
-        <div className="p-4 border-b border-border bg-card/50 flex items-center justify-between">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search inventory..." 
-              className="pl-10 h-10 bg-background border-border"
-            />
+        <TabsContent value="inventory" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-headline font-bold">Catalog Management</h2>
+            <Link href="/admin/new">
+              <Button className="bg-primary hover:bg-primary/90 font-bold">
+                <Plus className="mr-2 h-4 w-4" /> Add New Item
+              </Button>
+            </Link>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" className="h-10 w-10">
-              <LayoutGrid className="h-4 w-4" />
-            </Button>
-            <Button variant="secondary" size="icon" className="h-10 w-10">
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="glass-card rounded-2xl overflow-hidden border-none">
+            {isProductsLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-card">
+                  <TableRow className="border-border">
+                    <TableHead className="w-[80px]">Image</TableHead>
+                    <TableHead>Product Name</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Stock</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {products?.map((product) => (
+                    <TableRow key={product.id} className="group hover:bg-white/5 border-border">
+                      <TableCell>
+                        <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted">
+                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="capitalize text-secondary border-secondary/30">
+                          {product.category}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
+                      <TableCell>{product.stockQuantity} units</TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-card border-border">
+                            <DropdownMenuItem asChild>
+                              <Link href={`/products/${product.id}`} className="flex items-center gap-2">
+                                <ExternalLink className="h-4 w-4" /> View Page
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteProduct(product.id)}>
+                              <Trash2 className="h-4 w-4 mr-2" /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
-        ) : (
-          <Table>
-            <TableHeader className="bg-card">
-              <TableRow className="hover:bg-transparent border-border">
-                <TableHead className="w-[80px]">Image</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {products?.map((product) => (
-                <TableRow key={product.id} className="group hover:bg-white/5 transition-colors border-border">
-                  <TableCell>
-                    <Link href={`/products/${product.id}`} className="block relative h-12 w-12 rounded-lg overflow-hidden bg-muted hover:ring-2 hover:ring-primary transition-all">
-                      <Image
-                        src={product.imageUrl}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </Link>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <Link href={`/products/${product.id}`} className="hover:text-primary transition-colors flex items-center gap-2">
-                      {product.name}
-                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-50" />
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="capitalize text-secondary border-secondary/30">
-                      {product.category}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${product.stockQuantity > 0 ? 'bg-green-500' : 'bg-destructive'}`} />
-                      <span className="text-sm font-medium">{product.stockQuantity} units</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-card border-border">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/products/${product.id}`} className="w-full flex items-center gap-2">
-                            <ExternalLink className="h-4 w-4" /> View Public Page
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
-                          <Edit3 className="h-4 w-4" /> Edit Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
-                          <Sparkles className="h-4 w-4 text-secondary" /> Regenerate AI Copy
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          className="gap-2 text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" /> Delete Item
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {(!products || products.length === 0) && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
-                    No products in inventory.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </div>
+        </TabsContent>
+
+        <TabsContent value="careers" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-headline font-bold">Open Engagements</h2>
+            <Link href="/admin/jobs/new">
+              <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">
+                <Plus className="mr-2 h-4 w-4" /> Add New Position
+              </Button>
+            </Link>
+          </div>
+
+          <div className="glass-card rounded-2xl overflow-hidden border-none">
+            {isJobsLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-card">
+                  <TableRow className="border-border">
+                    <TableHead>Role Title</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {jobs?.map((job) => (
+                    <TableRow key={job.id} className="group hover:bg-white/5 border-border">
+                      <TableCell className="font-bold">{job.title}</TableCell>
+                      <TableCell>{job.department}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          {job.location}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{job.type}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-card border-border">
+                            <DropdownMenuItem asChild>
+                              <Link href="/careers" className="flex items-center gap-2">
+                                <ExternalLink className="h-4 w-4" /> View Listings
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteJob(job.id)}>
+                              <Trash2 className="h-4 w-4 mr-2" /> Remove Position
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {(!jobs || jobs.length === 0) && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+                        No active engagements. The Baron's council is currently full.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
