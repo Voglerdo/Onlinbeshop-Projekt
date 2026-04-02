@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,8 @@ import {
   Sparkles,
   LayoutGrid,
   List,
-  Loader2
+  Loader2,
+  ExternalLink
 } from 'lucide-react';
 import { 
   Table, 
@@ -130,16 +132,21 @@ export default function AdminPage() {
               {products?.map((product) => (
                 <TableRow key={product.id} className="group hover:bg-white/5 transition-colors border-border">
                   <TableCell>
-                    <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted">
+                    <Link href={`/products/${product.id}`} className="block relative h-12 w-12 rounded-lg overflow-hidden bg-muted hover:ring-2 hover:ring-primary transition-all">
                       <Image
                         src={product.imageUrl}
                         alt={product.name}
                         fill
                         className="object-cover"
                       />
-                    </div>
+                    </Link>
                   </TableCell>
-                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/products/${product.id}`} className="hover:text-primary transition-colors flex items-center gap-2">
+                      {product.name}
+                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-50" />
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <Badge variant="outline" className="capitalize text-secondary border-secondary/30">
                       {product.category}
@@ -160,6 +167,11 @@ export default function AdminPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-card border-border">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/products/${product.id}`} className="w-full flex items-center gap-2">
+                            <ExternalLink className="h-4 w-4" /> View Public Page
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2">
                           <Edit3 className="h-4 w-4" /> Edit Details
                         </DropdownMenuItem>
