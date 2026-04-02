@@ -1,6 +1,6 @@
 "use client"
 
-import { ShoppingBag, X, Trash2, Plus, Minus } from 'lucide-react';
+import { ShoppingBag, Trash2, Plus, Minus } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 
 export function CartSheet() {
   const { items, totalItems, totalPrice, removeItem, updateQuantity } = useCart();
@@ -46,7 +47,9 @@ export function CartSheet() {
                 <ShoppingBag className="h-8 w-8 text-muted-foreground" />
               </div>
               <p className="text-muted-foreground font-medium">Your cart is currently empty.</p>
-              <Button variant="link" className="text-secondary">Continue Shopping</Button>
+              <Button variant="link" asChild className="text-secondary">
+                <Link href="/#catalog">Continue Shopping</Link>
+              </Button>
             </div>
           ) : (
             <div className="space-y-6">
@@ -107,8 +110,8 @@ export function CartSheet() {
                 <span className="font-bold text-secondary text-2xl">${totalPrice.toFixed(2)}</span>
               </div>
               <Separator />
-              <Button className="w-full bg-primary hover:bg-primary/90 h-12 text-lg font-bold">
-                Complete Order
+              <Button asChild className="w-full bg-primary hover:bg-primary/90 h-12 text-lg font-bold">
+                <Link href="/checkout">Proceed to Checkout</Link>
               </Button>
               <p className="text-center text-[10px] text-muted-foreground uppercase tracking-widest">
                 Secure checkout powered by Blubber Baron
