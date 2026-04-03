@@ -1,18 +1,41 @@
 
 "use client"
 
+import { useState } from 'react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { JobOffer } from '@/app/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles } from 'lucide-react';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogFooter,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 export default function CareersPage() {
   const db = useFirestore();
+  const { toast } = useToast();
+  const [isApplying, setIsApplying] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
+  const [applicationData, setApplicationData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
 
   const jobsQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -20,6 +43,37 @@ export default function CareersPage() {
   }, [db]);
 
   const { data: jobs, isLoading } = useCollection<JobOffer>(jobsQuery);
+
+  const handleApply = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!db || !selectedJob) return;
+
+    setIsApplying(true);
+    
+    const applicationsRef = collection(db, 'jobs', selectedJob.id, 'applications');
+    const timestamp = new Date().toISOString();
+
+    const application = {
+      jobId: selectedJob.id,
+      jobTitle: selectedJob.title,
+      applicantName: applicationData.name,
+      applicantEmail: applicationData.email,
+      message: applicationData.message,
+      status: 'Pending',
+      createdAt: timestamp
+    };
+
+    addDocumentNonBlocking(applicationsRef, application);
+
+    toast({
+      title: "Credentials Received",
+      description: "The Baron's council will review your vision shortly.",
+    });
+
+    setApplicationData({ name: '', email: '', message: '' });
+    setSelectedJob(null);
+    setIsApplying(false);
+  };
 
   return (
     <div className="flex flex-col gap-24 pb-20">
@@ -125,16 +179,76 @@ export default function CareersPage() {
                       </div>
                     </div>
                   </div>
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 rounded-xl px-8 hidden md:flex font-bold">
-                    Apply Now
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  
+                  <Dialog open={selectedJob?.id === job.id} onOpenChange={(open) => !open && setSelectedJob(null)}>
+                    <DialogTrigger asChild>
+                      <Button size="lg" className="bg-primary hover:bg-primary/90 rounded-xl px-8 hidden md:flex font-bold" onClick={() => setSelectedJob(job)}>
+                        Apply Now
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="glass-card border-none sm:max-w-[500px]">
+                      <form onSubmit={handleApply}>
+                        <DialogHeader className="space-y-4">
+                          <DialogTitle className="text-3xl font-headline font-bold">Manifest Your Ambition</DialogTitle>
+                          <DialogDescription className="text-base">
+                            Apply for the <span className="text-secondary font-bold">{job.title}</span> position within the Baron's council.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-6 py-8">
+                          <div className="space-y-2">
+                            <Label htmlFor="name">Your Name</Label>
+                            <Input 
+                              id="name" 
+                              placeholder="Full Name" 
+                              required 
+                              className="bg-card h-12"
+                              value={applicationData.name}
+                              onChange={(e) => setApplicationData({ ...applicationData, name: e.target.value })}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Preferred Contact</Label>
+                            <Input 
+                              id="email" 
+                              type="email" 
+                              placeholder="email@example.com" 
+                              required 
+                              className="bg-card h-12"
+                              value={applicationData.email}
+                              onChange={(e) => setApplicationData({ ...applicationData, email: e.target.value })}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="message">Why the Baron?</Label>
+                            <Textarea 
+                              id="message" 
+                              placeholder="Tell us about your vision..." 
+                              required 
+                              className="bg-card min-h-[120px] resize-none"
+                              value={applicationData.message}
+                              onChange={(e) => setApplicationData({ ...applicationData, message: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button 
+                            type="submit" 
+                            disabled={isApplying} 
+                            className="w-full h-14 bg-primary hover:bg-primary/90 font-bold text-lg crimson-glow"
+                          >
+                            {isApplying ? <Loader2 className="h-5 w-5 animate-spin" /> : <><Send className="mr-2 h-5 w-5" /> Submit Credentials</>}
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </CardHeader>
                 <CardContent className="px-8 pb-8">
                   <p className="text-muted-foreground leading-relaxed max-w-3xl">
                     {job.description}
                   </p>
-                  <Button variant="link" className="text-secondary p-0 mt-4 md:hidden">
+                  <Button variant="link" className="text-secondary p-0 mt-4 md:hidden" onClick={() => setSelectedJob(job)}>
                     View Details & Apply
                   </Button>
                 </CardContent>

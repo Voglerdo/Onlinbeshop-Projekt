@@ -7,36 +7,14 @@
       "type": "object",
       "description": "Represents a user's profile information within the application, linked to their shopping activity.",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["id", "firstName", "lastName", "email", "createdAt", "updatedAt"]
     },
     "Product": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -44,52 +22,18 @@
       "type": "object",
       "description": "Represents a single shisha product available for sale.",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "price": {
-          "type": "number"
-        },
-        "imageUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "category": {
-          "type": "string"
-        },
-        "brand": {
-          "type": "string"
-        },
-        "stockQuantity": {
-          "type": "number"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "category": { "type": "string" },
+        "brand": { "type": "string" },
+        "stockQuantity": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "name",
-        "description",
-        "price",
-        "imageUrl",
-        "category",
-        "brand",
-        "stockQuantity",
-        "createdAt",
-        "updatedAt"
-      ]
+      "required": ["id", "name", "description", "price", "imageUrl", "category", "brand", "stockQuantity", "createdAt", "updatedAt"]
     },
     "JobOffer": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -97,49 +41,33 @@
       "type": "object",
       "description": "Represents a career opportunity within the Blubber Baron organization.",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "department": {
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "Full-time",
-            "Part-time",
-            "Contract"
-          ]
-        },
-        "description": {
-          "type": "string"
-        },
-        "requirements": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "department": { "type": "string" },
+        "location": { "type": "string" },
+        "type": { "type": "string", "enum": ["Full-time", "Part-time", "Contract"] },
+        "description": { "type": "string" },
+        "requirements": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "title",
-        "department",
-        "location",
-        "type",
-        "description",
-        "createdAt"
-      ]
+      "required": ["id", "title", "department", "location", "type", "description", "createdAt"]
+    },
+    "JobApplication": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "JobApplication",
+      "type": "object",
+      "description": "Represents an application for a job offer.",
+      "properties": {
+        "id": { "type": "string" },
+        "jobId": { "type": "string" },
+        "jobTitle": { "type": "string" },
+        "applicantName": { "type": "string" },
+        "applicantEmail": { "type": "string", "format": "email" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Reviewed", "Accepted", "Rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "jobId", "applicantName", "applicantEmail", "createdAt"]
     },
     "Order": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -147,37 +75,17 @@
       "type": "object",
       "description": "Represents a completed transaction.",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "userId": {
-          "type": "string"
-        },
-        "totalAmount": {
-          "type": "number"
-        },
-        "status": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "userId",
-        "totalAmount",
-        "status",
-        "createdAt"
-      ]
+      "required": ["id", "userId", "totalAmount", "status", "createdAt"]
     }
   },
   "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
+    "providers": ["password", "anonymous"]
   },
   "firestore": {
     "structure": [
@@ -185,9 +93,7 @@
         "path": "/users/{userId}",
         "definition": {
           "entityName": "UserProfile",
-          "schema": {
-            "$ref": "#/backend/entities/UserProfile"
-          },
+          "schema": { "$ref": "#/backend/entities/UserProfile" },
           "description": "Stores user profile information."
         }
       },
@@ -195,9 +101,7 @@
         "path": "/products/{productId}",
         "definition": {
           "entityName": "Product",
-          "schema": {
-            "$ref": "#/backend/entities/Product"
-          },
+          "schema": { "$ref": "#/backend/entities/Product" },
           "description": "The public catalog of all available shisha products."
         }
       },
@@ -205,19 +109,23 @@
         "path": "/jobs/{jobId}",
         "definition": {
           "entityName": "JobOffer",
-          "schema": {
-            "$ref": "#/backend/entities/JobOffer"
-          },
-          "description": "Public job listings for the organization."
+          "schema": { "$ref": "#/backend/entities/JobOffer" },
+          "description": "Public job listings."
+        }
+      },
+      {
+        "path": "/jobs/{jobId}/applications/{applicationId}",
+        "definition": {
+          "entityName": "JobApplication",
+          "schema": { "$ref": "#/backend/entities/JobApplication" },
+          "description": "Applications received for a specific job."
         }
       },
       {
         "path": "/users/{userId}/orders/{orderId}",
         "definition": {
           "entityName": "Order",
-          "schema": {
-            "$ref": "#/backend/entities/Order"
-          },
+          "schema": { "$ref": "#/backend/entities/Order" },
           "description": "User order history."
         }
       }

@@ -28,3 +28,14 @@ export interface JobOffer {
   requirements: string[];
   createdAt: string;
 }
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  jobTitle: string;
+  applicantName: string;
+  applicantEmail: string;
+  message: string;
+  status: 'Pending' | 'Reviewed' | 'Accepted' | 'Rejected';
+  createdAt: string;
+}

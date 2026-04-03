@@ -19,6 +19,11 @@ service cloud.firestore {
     match /jobs/{jobId} {
       allow read: if true;
       allow write: if true; // Prototyping
+      
+      match /applications/{applicationId} {
+        allow create: if true; // Public applications allowed for prototyping
+        allow read, write: if true; // Admin access for prototyping
+      }
     }
 
     match /users/{userId} {
