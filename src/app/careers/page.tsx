@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { JobOffer } from '@/app/types';
@@ -20,17 +20,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send } from 'lucide-react';
+import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send, Paperclip, FileText, X } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 export default function CareersPage() {
   const db = useFirestore();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [isApplying, setIsApplying] = useState(false);
   const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
+  const [resumeBase64, setResumeBase64] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [applicationData, setApplicationData] = useState({
     name: '',
     email: '',
@@ -43,6 +46,29 @@ export default function CareersPage() {
   }, [db]);
 
   const { data: jobs, isLoading } = useCollection<JobOffer>(jobsQuery);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit for base64 prototype
+        toast({ title: "File Too Large", description: "Please provide a document smaller than 2MB.", variant: "destructive" });
+        return;
+      }
+      
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setResumeBase64(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearFile = () => {
+    setResumeBase64(null);
+    setFileName(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const handleApply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +85,7 @@ export default function CareersPage() {
       applicantName: applicationData.name,
       applicantEmail: applicationData.email,
       message: applicationData.message,
+      resumeData: resumeBase64,
       status: 'Pending',
       createdAt: timestamp
     };
@@ -71,6 +98,8 @@ export default function CareersPage() {
     });
 
     setApplicationData({ name: '', email: '', message: '' });
+    setResumeBase64(null);
+    setFileName(null);
     setSelectedJob(null);
     setIsApplying(false);
   };
@@ -187,7 +216,7 @@ export default function CareersPage() {
                         <ChevronRight className="ml-2 h-4 w-4" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="glass-card border-none sm:max-w-[500px]">
+                    <DialogContent className="glass-card border-none sm:max-w-[500px] overflow-y-auto max-h-[90vh]">
                       <form onSubmit={handleApply}>
                         <DialogHeader className="space-y-4">
                           <DialogTitle className="text-3xl font-headline font-bold">Manifest Your Ambition</DialogTitle>
@@ -195,7 +224,7 @@ export default function CareersPage() {
                             Apply for the <span className="text-secondary font-bold">{job.title}</span> position within the Baron's council.
                           </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-6 py-8">
+                        <div className="space-y-6 py-6">
                           <div className="space-y-2">
                             <Label htmlFor="name">Your Name</Label>
                             <Input 
@@ -219,13 +248,49 @@ export default function CareersPage() {
                               onChange={(e) => setApplicationData({ ...applicationData, email: e.target.value })}
                             />
                           </div>
+                          
+                          <div className="space-y-2">
+                            <Label>Resume / CV</Label>
+                            <div 
+                              className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-colors cursor-pointer ${resumeBase64 ? 'border-secondary bg-secondary/5' : 'border-border hover:border-primary/50'}`}
+                              onClick={() => !resumeBase64 && fileInputRef.current?.click()}
+                            >
+                              {resumeBase64 ? (
+                                <div className="flex items-center justify-between w-full">
+                                  <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-secondary/20 rounded-lg">
+                                      <FileText className="h-5 w-5 text-secondary" />
+                                    </div>
+                                    <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
+                                  </div>
+                                  <Button type="button" variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); clearFile(); }}>
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ) : (
+                                <>
+                                  <Paperclip className="h-6 w-6 text-muted-foreground mb-2" />
+                                  <span className="text-sm text-muted-foreground font-medium">Attach Visionary CV</span>
+                                  <span className="text-[10px] text-muted-foreground uppercase mt-1">PDF or DOC (Max 2MB)</span>
+                                </>
+                              )}
+                              <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                className="hidden" 
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleFileChange}
+                              />
+                            </div>
+                          </div>
+
                           <div className="space-y-2">
                             <Label htmlFor="message">Why the Baron?</Label>
                             <Textarea 
                               id="message" 
                               placeholder="Tell us about your vision..." 
                               required 
-                              className="bg-card min-h-[120px] resize-none"
+                              className="bg-card min-h-[100px] resize-none"
                               value={applicationData.message}
                               onChange={(e) => setApplicationData({ ...applicationData, message: e.target.value })}
                             />

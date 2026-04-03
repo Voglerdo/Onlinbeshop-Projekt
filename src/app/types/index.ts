@@ -36,6 +36,7 @@ export interface JobApplication {
   applicantName: string;
   applicantEmail: string;
   message: string;
+  resumeData?: string;
   status: 'Pending' | 'Reviewed' | 'Accepted' | 'Rejected';
   createdAt: string;
 }
