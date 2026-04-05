@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -20,12 +21,15 @@ import {
   ShieldCheck,
   Mail,
   Calendar,
-  CreditCard
+  CreditCard,
+  Briefcase,
+  Key
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 import { getAuth, signOut } from 'firebase/auth';
+import Link from 'next/link';
 
 export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
@@ -34,6 +38,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   
   const [isSaving, setIsSaving] = useState(false);
+  const [isPromoting, setIsPromoting] = useState(false);
 
   // Fetch User Profile
   const profileRef = useMemoFirebase(() => {
@@ -41,7 +46,16 @@ export default function ProfilePage() {
     return doc(db, 'users', user.uid);
   }, [db, user]);
 
-  const { data: profile, isLoading: isProfileLoading } = useDoc(profileRef);
+  const { data: profile } = useDoc(profileRef);
+
+  // Admin Check
+  const adminRoleRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'roles_admin', user.uid);
+  }, [db, user]);
+
+  const { data: adminRole } = useDoc(adminRoleRef);
+  const isAdmin = !!adminRole;
 
   // Fetch Orders
   const ordersQuery = useMemoFirebase(() => {
@@ -86,6 +100,22 @@ export default function ProfilePage() {
     });
   };
 
+  // Prototype convenience: allow creating an admin role for oneself
+  const handleBecomeAdmin = () => {
+    if (!db || !user) return;
+    setIsPromoting(true);
+    const roleRef = doc(db, 'roles_admin', user.uid);
+    setDocumentNonBlocking(roleRef, { uid: user.uid, role: 'admin' }, { merge: true });
+    
+    setTimeout(() => {
+      setIsPromoting(false);
+      toast({
+        title: "Admin Access Granted",
+        description: "You now have access to the Imperial Console.",
+      });
+    }, 800);
+  };
+
   if (isUserLoading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
@@ -96,28 +126,44 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-20 max-w-md text-center space-y-8">
-        <div className="space-y-4">
-          <div className="mx-auto w-20 h-20 rounded-full bg-muted flex items-center justify-center">
-            <User className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h1 className="text-3xl font-headline font-bold">Baron Access</h1>
-          <p className="text-muted-foreground">Sign in to manage your premium collection and track your masterpieces.</p>
+      <div className="container mx-auto px-4 py-20 max-w-4xl space-y-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-5xl font-headline font-black uppercase tracking-tighter">Imperial Registry</h1>
+          <p className="text-muted-foreground text-lg">Identify yourself to access the Blubber Baron ecosystem.</p>
         </div>
-        
-        <div className="grid gap-4">
-          <Button 
-            variant="outline" 
-            className="h-12 border-secondary text-secondary hover:bg-secondary/10"
-            onClick={() => initiateAnonymousSignIn(auth)}
-          >
-            Enter Anonymously
-          </Button>
-          <div className="relative">
-            <Separator />
-            <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-background px-2 text-xs text-muted-foreground uppercase">Coming Soon</span>
-          </div>
-          <Button disabled className="h-12 bg-primary/50 cursor-not-allowed">Email Authentication</Button>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="glass-card border-none hover:gold-glow transition-all p-8 flex flex-col items-center text-center space-y-6">
+            <div className="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center">
+              <User className="h-10 w-10 text-secondary" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold font-headline">Customer Entrance</h2>
+              <p className="text-sm text-muted-foreground">Manage your luxury collection, track acquisitions, and browse the catalog.</p>
+            </div>
+            <Button 
+              className="w-full h-12 bg-secondary text-background font-bold"
+              onClick={() => initiateAnonymousSignIn(auth)}
+            >
+              Enter as Customer
+            </Button>
+          </Card>
+
+          <Card className="glass-card border-none hover:crimson-glow transition-all p-8 flex flex-col items-center text-center space-y-6">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+              <ShieldCheck className="h-10 w-10 text-primary" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold font-headline">Imperial Staff</h2>
+              <p className="text-sm text-muted-foreground">For Baron administrators to manage inventory, roles, and job offerings.</p>
+            </div>
+            <Button 
+              className="w-full h-12 bg-primary font-bold"
+              onClick={() => initiateAnonymousSignIn(auth)}
+            >
+              Admin Sign In
+            </Button>
+          </Card>
         </div>
       </div>
     );
@@ -128,19 +174,34 @@ export default function ProfilePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.3em] text-xs">
-            <ShieldCheck className="h-3 w-3" />
-            Authenticated Baron
+            {isAdmin ? <ShieldCheck className="h-3 w-3 text-primary" /> : <User className="h-3 w-3" />}
+            {isAdmin ? 'Imperial Administrator' : 'Authenticated Baron'}
           </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">
             Welcome, {profile?.firstName || 'The Baron'}
           </h1>
-          <p className="text-muted-foreground">Managing your elite shisha lifestyle since {profile?.createdAt ? new Date(profile.createdAt).getFullYear() : 'today'}.</p>
+          <p className="text-muted-foreground">
+            {isAdmin 
+              ? 'You have full oversight of the Blubber Baron empire.' 
+              : `Managing your elite shisha lifestyle since ${profile?.createdAt ? new Date(profile.createdAt).getFullYear() : 'today'}.`
+            }
+          </p>
         </div>
         
-        <Button variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
-          <LogOut className="h-4 w-4 mr-2" />
-          End Session
-        </Button>
+        <div className="flex gap-4">
+          {isAdmin && (
+            <Link href="/admin">
+              <Button className="bg-primary crimson-glow font-bold">
+                <Key className="h-4 w-4 mr-2" />
+                Admin Console
+              </Button>
+            </Link>
+          )}
+          <Button variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4 mr-2" />
+            End Session
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-8">
@@ -149,7 +210,7 @@ export default function ProfilePage() {
             <Package className="h-4 w-4 mr-2" /> Overview
           </TabsTrigger>
           <TabsTrigger value="settings" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
-            <Settings className="h-4 w-4 mr-2" /> Settings
+            <Settings className="h-4 w-4 mr-2" /> Credentials
           </TabsTrigger>
         </TabsList>
 
@@ -157,8 +218,8 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="glass-card border-none col-span-1 md:col-span-2">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Recent Orders</CardTitle>
-                <CardDescription>A chronicle of your luxury acquisitions.</CardDescription>
+                <CardTitle className="font-headline text-2xl">Recent Acquisitions</CardTitle>
+                <CardDescription>A chronicle of your luxury transactions.</CardDescription>
               </CardHeader>
               <CardContent>
                 {isOrdersLoading ? (
@@ -166,7 +227,9 @@ export default function ProfilePage() {
                 ) : !orders || orders.length === 0 ? (
                   <div className="text-center py-12 space-y-4">
                     <p className="text-muted-foreground">Your history is a blank canvas.</p>
-                    <Button variant="link" className="text-secondary p-0">Begin your first session</Button>
+                    <Link href="/#catalog">
+                      <Button variant="link" className="text-secondary p-0">Begin your first session</Button>
+                    </Link>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -203,16 +266,26 @@ export default function ProfilePage() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Membership</span>
-                    <Badge className="bg-secondary text-background font-bold border-none">ELITE</Badge>
+                    <Badge className={isAdmin ? "bg-primary text-white font-bold border-none" : "bg-secondary text-background font-bold border-none"}>
+                      {isAdmin ? 'IMPERIAL STAFF' : 'ELITE BARON'}
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Joined</span>
                     <span className="text-sm font-medium">{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}</span>
                   </div>
                   <Separator className="bg-border/50" />
-                  <p className="text-xs text-muted-foreground leading-relaxed italic">
-                    "The Blubber Baron remembers every preference, ensuring your sessions are nothing short of legendary."
-                  </p>
+                  {!isAdmin && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full text-xs border-primary/20 hover:bg-primary/10 text-primary"
+                      onClick={handleBecomeAdmin}
+                      disabled={isPromoting}
+                    >
+                      {isPromoting ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <ShieldCheck className="h-3 w-3 mr-2" />}
+                      Request Admin Access
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 

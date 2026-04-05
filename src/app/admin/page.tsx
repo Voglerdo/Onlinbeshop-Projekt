@@ -14,7 +14,8 @@ import {
   MapPin,
   TrendingUp,
   Package,
-  ArrowUpRight
+  ArrowUpRight,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   Table, 
@@ -34,12 +35,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, useUser, useDoc } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Product, JobOffer } from '@/app/types';
 import { deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
   BarChart, 
@@ -49,9 +51,7 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Cell,
-  LineChart,
-  Line
+  Cell
 } from 'recharts';
 
 const ANALYTICS_DATA = [
@@ -66,8 +66,30 @@ const ANALYTICS_DATA = [
 
 export default function AdminPage() {
   const db = useFirestore();
+  const { user, isUserLoading } = useUser();
   const { toast } = useToast();
+  const router = useRouter();
   const [isSeeding, setIsSeeding] = useState(false);
+
+  // Admin Check
+  const adminRoleRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'roles_admin', user.uid);
+  }, [db, user]);
+
+  const { data: adminRole, isLoading: isAdminChecking } = useDoc(adminRoleRef);
+  const isAdmin = !!adminRole;
+
+  useEffect(() => {
+    if (!isUserLoading && !isAdminChecking && !isAdmin) {
+      toast({
+        title: "Access Restricted",
+        description: "Redirecting to your authorized profile.",
+        variant: "destructive"
+      });
+      router.push('/profile');
+    }
+  }, [isAdmin, isUserLoading, isAdminChecking, router, toast]);
 
   const productsQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -104,11 +126,37 @@ export default function AdminPage() {
     setTimeout(() => setIsSeeding(false), 500);
   };
 
+  if (isUserLoading || isAdminChecking) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <p className="text-muted-foreground animate-pulse">Verifying Imperial Credentials...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-8 space-y-6">
+        <div className="p-6 rounded-full bg-destructive/10">
+          <ShieldAlert className="h-16 w-16 text-destructive" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-headline font-bold">Unauthorized Access</h1>
+          <p className="text-muted-foreground max-w-md">This console is reserved for the Baron's inner circle. Please return to your registry.</p>
+        </div>
+        <Button asChild className="bg-primary">
+          <Link href="/profile">Back to Registry</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl font-headline font-bold">Admin Console</h1>
+          <h1 className="text-4xl font-headline font-bold">Imperial Console</h1>
           <p className="text-muted-foreground">Orchestrate the Blubber Baron empire.</p>
         </div>
         <Button variant="outline" onClick={seedSampleJobs} disabled={isSeeding} className="border-secondary text-secondary">

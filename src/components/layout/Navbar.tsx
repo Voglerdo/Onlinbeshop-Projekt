@@ -1,20 +1,33 @@
+
 "use client"
 
 import Link from 'next/link';
-import { Search, User, Sparkles, BookOpen, Briefcase } from 'lucide-react';
+import { Search, User, Sparkles, BookOpen, Briefcase, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartSheet } from '@/components/cart/CartSheet';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUser();
+  const db = useFirestore();
 
-  // Sync internal search state with URL parameter if it exists
+  // Check if user is admin
+  const adminRoleRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'roles_admin', user.uid);
+  }, [db, user]);
+
+  const { data: adminRole } = useDoc(adminRoleRef);
+  const isAdmin = !!adminRole;
+
   useEffect(() => {
     const query = searchParams.get('q');
     if (query) {
@@ -52,10 +65,12 @@ export function Navbar() {
               <Briefcase className="h-4 w-4" />
               Careers
             </Link>
-            <Link href="/admin" className="flex items-center gap-1.5 text-secondary hover:text-secondary/80 transition-colors">
-              <Sparkles className="h-4 w-4" />
-              Admin
-            </Link>
+            {isAdmin && (
+              <Link href="/admin" className="flex items-center gap-1.5 text-secondary hover:text-secondary/80 transition-colors animate-in fade-in slide-in-from-left-2">
+                <ShieldCheck className="h-4 w-4" />
+                Admin Console
+              </Link>
+            )}
           </div>
         </div>
 
@@ -79,18 +94,12 @@ export function Navbar() {
             >
               <Search className="h-5 w-5" />
             </Button>
-            {isSearchOpen && searchQuery && (
-              <button 
-                type="submit" 
-                className="hidden"
-              />
-            )}
           </form>
           
           <CartSheet />
           
           <Link href="/profile">
-            <Button variant="ghost" size="icon" className="text-secondary hidden sm:flex">
+            <Button variant="ghost" size="icon" className="text-secondary">
               <User className="h-5 w-5" />
             </Button>
           </Link>
