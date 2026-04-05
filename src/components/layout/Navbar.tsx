@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from 'next/link';
@@ -10,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,41 +46,39 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center gap-8">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/60 backdrop-blur-2xl">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
+        <div className="flex items-center gap-12">
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-black tracking-tighter text-primary group-hover:text-primary/80 transition-colors font-headline uppercase">
+            <span className="text-2xl font-black tracking-tighter text-secondary group-hover:text-primary transition-all duration-500 font-headline uppercase">
               Blubber Baron
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/#catalog" className="hover:text-primary transition-colors">Catalog</Link>
-            <Link href="/story" className="flex items-center gap-1.5 hover:text-primary transition-colors">
-              <BookOpen className="h-4 w-4" />
+          <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em]">
+            <Link href="/#catalog" className="hover:text-secondary transition-colors opacity-70 hover:opacity-100">Collection</Link>
+            <Link href="/story" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
               Story
             </Link>
-            <Link href="/careers" className="flex items-center gap-1.5 hover:text-primary transition-colors">
-              <Briefcase className="h-4 w-4" />
+            <Link href="/careers" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
               Careers
             </Link>
             {isAdmin && (
-              <Link href="/admin" className="flex items-center gap-1.5 text-secondary hover:text-secondary/80 transition-colors animate-in fade-in slide-in-from-left-2">
-                <ShieldCheck className="h-4 w-4" />
-                Admin Console
+              <Link href="/admin" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all animate-in fade-in slide-in-from-left-2">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Console
               </Link>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <form onSubmit={handleSearch} className={`relative flex items-center transition-all duration-300 ${isSearchOpen ? 'w-48 md:w-64' : 'w-10'}`}>
+        <div className="flex items-center gap-3">
+          <form onSubmit={handleSearch} className={`relative flex items-center transition-all duration-500 ${isSearchOpen ? 'w-56 md:w-80' : 'w-10'}`}>
             <Input 
-              placeholder="Search products..." 
+              placeholder="Search Archives..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`h-9 bg-muted/50 border-none transition-opacity duration-300 ${isSearchOpen ? 'opacity-100 pl-8' : 'opacity-0 pointer-events-none'}`}
+              className={`h-10 bg-white/5 border-none rounded-full transition-opacity duration-500 text-xs tracking-wider ${isSearchOpen ? 'opacity-100 pl-10' : 'opacity-0 pointer-events-none'}`}
               onBlur={() => {
                 if (!searchQuery) setIsSearchOpen(false);
               }}
@@ -89,17 +87,22 @@ export function Navbar() {
               type="button"
               variant="ghost" 
               size="icon" 
-              className="absolute left-0 text-secondary"
+              className={cn(
+                "absolute left-0 transition-colors duration-500",
+                isSearchOpen ? "text-secondary" : "text-white/50 hover:text-white"
+              )}
               onClick={() => setIsSearchOpen(true)}
             >
               <Search className="h-5 w-5" />
             </Button>
           </form>
           
+          <div className="h-6 w-[1px] bg-white/10 mx-2 hidden sm:block" />
+          
           <CartSheet />
           
           <Link href="/profile">
-            <Button variant="ghost" size="icon" className="text-secondary">
+            <Button variant="ghost" size="icon" className="text-white/50 hover:text-white transition-colors">
               <User className="h-5 w-5" />
             </Button>
           </Link>
