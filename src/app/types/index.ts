@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   category: 'hookah' | 'coal' | 'flavor' | 'accessory' | string;
   imageUrl: string;
+  imageUrls: string[];
   imageHint: string;
   brand: string;
   stockQuantity: number;

@@ -16,13 +16,14 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Wand2 } from 'lucide-react';
+import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Wand2, Trash2, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { cn } from '@/lib/utils';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function NewProductPage() {
   
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
   const [isGeneratingImg, setIsGeneratingImg] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -41,7 +42,7 @@ export default function NewProductPage() {
     brand: 'Blubber Baron',
     stockQuantity: '10',
     features: [''],
-    imageUrl: ''
+    imageUrl: '' // We will set the first image as the primary one
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,11 +51,14 @@ export default function NewProductPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        setImagePreview(base64String);
-        setFormData(prev => ({ ...prev, imageUrl: base64String }));
+        setImages(prev => [...prev, base64String]);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleAIDescription = async () => {
@@ -87,8 +91,7 @@ export default function NewProductPage() {
         productName: formData.name,
         description: formData.category + " " + formData.description.substring(0, 100)
       });
-      setImagePreview(result.imageUrl);
-      setFormData(prev => ({ ...prev, imageUrl: result.imageUrl }));
+      setImages(prev => [...prev, result.imageUrl]);
       toast({ title: "KI-Bild manifestiert", description: "Das visuelle Abbild des Barons wurde erstellt." });
     } catch (e) {
       toast({ title: "KI-Bild fehlgeschlagen", variant: "destructive" });
@@ -103,14 +106,31 @@ export default function NewProductPage() {
     setFormData({ ...formData, features: newFeatures });
   };
 
+  const addFeature = () => {
+    setFormData({ ...formData, features: [...formData.features, ''] });
+  };
+
+  const removeFeature = (index: number) => {
+    const newFeatures = formData.features.filter((_, i) => i !== index);
+    setFormData({ ...formData, features: newFeatures.length ? newFeatures : [''] });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!db) return;
+    
+    if (images.length === 0) {
+      toast({ title: "Mindestens ein Bild erforderlich", variant: "destructive" });
+      return;
+    }
+
     const productsRef = collection(db, 'products');
     const timestamp = new Date().toISOString();
     
     addDocumentNonBlocking(productsRef, {
       ...formData,
+      imageUrl: images[0], // Primary image
+      imageUrls: images,    // Full gallery
       price: parseFloat(formData.price),
       stockQuantity: parseInt(formData.stockQuantity),
       features: formData.features.filter(f => f.trim() !== ''),
@@ -123,14 +143,14 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 max-w-5xl space-y-8">
+    <div className="container mx-auto px-4 py-12 lg:px-8 max-w-6xl space-y-8">
       <Link href="/admin" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors gap-2">
         <ArrowLeft className="h-4 w-4" /> Zurück zur Konsole
       </Link>
 
       <div className="space-y-2">
         <h1 className="text-4xl font-headline font-bold">Neues Meisterwerk hinzufügen</h1>
-        <p className="text-muted-foreground">Registrieren Sie ein neues Premium-Produkt im Blubber Baron Katalog.</p>
+        <p className="text-muted-foreground">Registrieren Sie ein neues Premium-Produkt mit vollständiger Galerie.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -138,27 +158,43 @@ export default function NewProductPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-2">
               <h3 className="text-xl font-bold font-headline">Produkt-Medien</h3>
-              <Button type="button" variant="outline" size="sm" className="h-8 gold-glow text-xs" onClick={handleAIImage} disabled={isGeneratingImg}>
-                {isGeneratingImg ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-2" />}
-                KI-Manifest
-              </Button>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" size="sm" className="h-8 gold-glow text-xs" onClick={handleAIImage} disabled={isGeneratingImg}>
+                  {isGeneratingImg ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-2" />}
+                  KI-Generieren
+                </Button>
+                <Button type="button" variant="secondary" size="sm" className="h-8 text-xs" onClick={() => fileInputRef.current?.click()}>
+                  <Plus className="h-3 w-3 mr-2" /> Hinzufügen
+                </Button>
+              </div>
             </div>
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card border-dashed border-2 border-border/50 group cursor-pointer flex flex-col items-center justify-center gap-4" onClick={() => fileInputRef.current?.click()}>
-              {imagePreview ? (
-                <Image src={imagePreview} alt="Vorschau" fill className="object-cover" />
-              ) : (
-                <div className="text-center px-6 text-muted-foreground">
-                  <Upload className="h-8 w-8 mx-auto mb-2" />
-                  <p className="font-bold text-sm">Hochladen oder KI-generieren</p>
+            
+            <div className="grid grid-cols-2 gap-4">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden glass-card group">
+                  <Image src={img} alt={`Bild ${idx + 1}`} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <Button type="button" variant="destructive" size="icon" className="h-8 w-8" onClick={() => removeImage(idx)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    {idx === 0 && <Badge className="absolute top-2 left-2 bg-secondary text-background">Cover</Badge>}
+                  </div>
                 </div>
-              )}
-              <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
+              ))}
+              <div 
+                className="aspect-square rounded-xl border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="h-6 w-6 text-muted-foreground" />
+                <span className="text-[10px] uppercase font-bold text-muted-foreground">Bild hinzufügen</span>
+              </div>
             </div>
+            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Bestand</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Markendetails</h3>
+            <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="brand">Marke</Label>
                 <Input id="brand" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} className="bg-card" />
@@ -208,7 +244,26 @@ export default function NewProductPage() {
                   KI-Beschreibung
                 </Button>
               </div>
-              <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[200px] bg-card leading-relaxed" required />
+              <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[150px] bg-card leading-relaxed" required />
+            </div>
+
+            <div className="space-y-4 pt-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Besonderheiten</Label>
+                <Button type="button" variant="ghost" size="sm" onClick={addFeature} className="text-secondary h-8">
+                  <Plus className="h-4 w-4 mr-1" /> Merkmal hinzufügen
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {formData.features.map((feat, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <Input value={feat} onChange={(e) => handleFeatureChange(idx, e.target.value)} className="bg-card h-10" placeholder={`Besonderheit #${idx + 1}`} />
+                    <Button type="button" variant="ghost" size="icon" onClick={() => removeFeature(idx)} className="h-10 w-10 text-muted-foreground hover:text-destructive shrink-0">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

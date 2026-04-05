@@ -1,10 +1,11 @@
 
 "use client"
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { notFound, useParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { Star, ShieldCheck, Truck, RefreshCw, Loader2, ChevronRight } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RefreshCw, Loader2, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ProductCard } from '@/components/products/ProductCard';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { ReviewSystem } from '@/components/products/ReviewSystem';
@@ -12,11 +13,13 @@ import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase
 import { doc, collection, query, limit, where } from 'firebase/firestore';
 import { Product } from '@/app/types';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function ProductPage() {
   const params = useParams();
   const id = params.id as string;
   const db = useFirestore();
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   const docRef = useMemoFirebase(() => {
     if (!db || !id) return null;
@@ -53,6 +56,10 @@ export default function ProductPage() {
     notFound();
   }
 
+  const gallery = product.imageUrls && product.imageUrls.length > 0 
+    ? product.imageUrls 
+    : [product.imageUrl];
+
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 space-y-24">
       <div className="space-y-8">
@@ -66,16 +73,49 @@ export default function ProductPage() {
           <div className="space-y-6">
             <div className="aspect-[4/5] relative overflow-hidden rounded-[2rem] glass-card gold-glow border-none group">
               <Image
-                src={product.imageUrl}
+                src={gallery[activeImageIdx]}
                 alt={product.name}
                 fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="object-cover transition-all duration-700"
                 priority
                 data-ai-hint={product.imageHint || "shisha hookah"}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+              
+              {gallery.length > 1 && (
+                <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button 
+                    onClick={() => setActiveImageIdx(prev => (prev - 1 + gallery.length) % gallery.length)}
+                    className="p-3 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button 
+                    onClick={() => setActiveImageIdx(prev => (prev + 1) % gallery.length)}
+                    className="p-3 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </div>
+              )}
             </div>
-            {/* Thumbnails removed as they were repeating the main image redundantly */}
+            
+            {gallery.length > 1 && (
+              <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
+                {gallery.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setActiveImageIdx(idx)}
+                    className={cn(
+                      "relative h-24 w-20 rounded-xl overflow-hidden glass-card flex-shrink-0 transition-all border-2",
+                      activeImageIdx === idx ? "border-secondary gold-glow scale-105" : "border-transparent opacity-50 grayscale hover:grayscale-0 hover:opacity-100"
+                    )}
+                  >
+                    <Image src={img} alt={`Vorschau ${idx + 1}`} fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-10">

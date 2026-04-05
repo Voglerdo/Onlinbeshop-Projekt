@@ -26,7 +26,12 @@
         "name": { "type": "string" },
         "description": { "type": "string" },
         "price": { "type": "number" },
-        "imageUrl": { "type": "string", "format": "uri" },
+        "imageUrl": { "type": "string", "format": "uri", "description": "The primary cover image." },
+        "imageUrls": { 
+          "type": "array", 
+          "items": { "type": "string", "format": "uri" },
+          "description": "Additional gallery images."
+        },
         "category": { "type": "string" },
         "brand": { "type": "string" },
         "stockQuantity": { "type": "number" },
