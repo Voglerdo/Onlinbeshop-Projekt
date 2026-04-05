@@ -42,7 +42,6 @@ export default function ProfilePage() {
   const [isPromoting, setIsPromoting] = useState(false);
   const [wantsToBeAdmin, setWantsToBeAdmin] = useState(false);
 
-  // Fetch User Profile
   const profileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
     return doc(db, 'users', user.uid);
@@ -50,7 +49,6 @@ export default function ProfilePage() {
 
   const { data: profile } = useDoc(profileRef);
 
-  // Admin Check
   const adminRoleRef = useMemoFirebase(() => {
     if (!db || !user) return null;
     return doc(db, 'roles_admin', user.uid);
@@ -59,20 +57,18 @@ export default function ProfilePage() {
   const { data: adminRole, isLoading: isAdminChecking } = useDoc(adminRoleRef);
   const isAdmin = !!adminRole;
 
-  // Auto-promote if user clicked "Admin Sign In" and just finished signing in
   useEffect(() => {
     if (user && wantsToBeAdmin && !isAdmin && !isAdminChecking && db) {
       const roleRef = doc(db, 'roles_admin', user.uid);
       setDocumentNonBlocking(roleRef, { uid: user.uid, role: 'admin' }, { merge: true });
       setWantsToBeAdmin(false);
       toast({
-        title: "Admin Credentials Syncing",
-        description: "Granting Imperial oversight permissions...",
+        title: "Admin-Referenzen werden synchronisiert",
+        description: "Berechtigungen für imperiale Aufsicht werden erteilt...",
       });
     }
   }, [user, wantsToBeAdmin, isAdmin, isAdminChecking, db, toast]);
 
-  // Fetch Orders
   const ordersQuery = useMemoFirebase(() => {
     if (!db || !user) return null;
     return query(collection(db, 'users', user.uid, 'orders'), orderBy('createdAt', 'desc'), limit(5));
@@ -100,8 +96,8 @@ export default function ProfilePage() {
     setTimeout(() => {
       setIsSaving(false);
       toast({
-        title: "Profile Updated",
-        description: "Your Baron credentials have been synchronized.",
+        title: "Profil aktualisiert",
+        description: "Ihre Baron-Referenzen wurden synchronisiert.",
       });
     }, 500);
   };
@@ -109,8 +105,8 @@ export default function ProfilePage() {
   const handleSignOut = () => {
     signOut(auth).then(() => {
       toast({
-        title: "Signed Out",
-        description: "Until next time, Baron.",
+        title: "Abgemeldet",
+        description: "Bis zum nächsten Mal, Baron.",
       });
     });
   };
@@ -124,8 +120,8 @@ export default function ProfilePage() {
     setTimeout(() => {
       setIsPromoting(false);
       toast({
-        title: "Admin Access Granted",
-        description: "You now have access to the Imperial Console.",
+        title: "Admin-Zugang gewährt",
+        description: "Sie haben nun Zugriff auf die Imperiale Konsole.",
       });
     }, 800);
   };
@@ -147,8 +143,8 @@ export default function ProfilePage() {
     return (
       <div className="container mx-auto px-4 py-20 max-w-4xl space-y-12">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-headline font-black uppercase tracking-tighter">Imperial Registry</h1>
-          <p className="text-muted-foreground text-lg">Identify yourself to access the Blubber Baron ecosystem.</p>
+          <h1 className="text-5xl font-headline font-black uppercase tracking-tighter">Imperiales Register</h1>
+          <p className="text-muted-foreground text-lg">Identifizieren Sie sich, um Zugang zum Blubber Baron Ökosystem zu erhalten.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -157,14 +153,14 @@ export default function ProfilePage() {
               <User className="h-10 w-10 text-secondary" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold font-headline">Customer Entrance</h2>
-              <p className="text-sm text-muted-foreground">Manage your luxury collection, track acquisitions, and browse the catalog.</p>
+              <h2 className="text-2xl font-bold font-headline">Kundenzugang</h2>
+              <p className="text-sm text-muted-foreground">Verwalten Sie Ihre Kollektion, verfolgen Sie Erwerbe und stöbern Sie im Katalog.</p>
             </div>
             <Button 
               className="w-full h-12 bg-secondary text-background font-bold"
               onClick={() => initiateAnonymousSignIn(auth)}
             >
-              Enter as Customer
+              Als Kunde eintreten
             </Button>
           </Card>
 
@@ -173,14 +169,14 @@ export default function ProfilePage() {
               <ShieldCheck className="h-10 w-10 text-primary" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold font-headline">Imperial Staff</h2>
-              <p className="text-sm text-muted-foreground">For Baron administrators to manage inventory, roles, and job offerings.</p>
+              <h2 className="text-2xl font-bold font-headline">Imperiales Personal</h2>
+              <p className="text-sm text-muted-foreground">Für Administratoren zur Verwaltung von Inventar, Rollen und Stellenangeboten.</p>
             </div>
             <Button 
               className="w-full h-12 bg-primary font-bold"
               onClick={handleAdminSignIn}
             >
-              Admin Sign In
+              Admin-Anmeldung
             </Button>
           </Card>
         </div>
@@ -194,15 +190,15 @@ export default function ProfilePage() {
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.3em] text-xs">
             {isAdmin ? <ShieldCheck className="h-3 w-3 text-primary" /> : <User className="h-3 w-3" />}
-            {isAdmin ? 'Imperial Administrator' : 'Authenticated Baron'}
+            {isAdmin ? 'Imperiale Administration' : 'Authentifizierter Baron'}
           </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">
-            Welcome, {profile?.firstName || 'The Baron'}
+            Willkommen, {profile?.firstName || 'Baron'}
           </h1>
           <p className="text-muted-foreground">
             {isAdmin 
-              ? 'You have full oversight of the Blubber Baron empire.' 
-              : `Managing your elite shisha lifestyle since ${profile?.createdAt ? new Date(profile.createdAt).getFullYear() : 'today'}.`
+              ? 'Sie haben die volle Aufsicht über das Blubber Baron Imperium.' 
+              : `Wir verwalten Ihren Elite-Lifestyle seit ${profile?.createdAt ? new Date(profile.createdAt).getFullYear() : 'heute'}.`
             }
           </p>
         </div>
@@ -212,13 +208,13 @@ export default function ProfilePage() {
             <Link href="/admin">
               <Button className="bg-primary crimson-glow font-bold h-12 px-8">
                 <Key className="h-4 w-4 mr-2" />
-                Admin Console
+                Admin-Konsole
               </Button>
             </Link>
           )}
           <Button variant="ghost" className="text-destructive h-12 hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
             <LogOut className="h-4 w-4 mr-2" />
-            End Session
+            Sitzung beenden
           </Button>
         </div>
       </div>
@@ -226,10 +222,10 @@ export default function ProfilePage() {
       <Tabs defaultValue="overview" className="space-y-8">
         <TabsList className="bg-muted/50 border border-border p-1 h-14 rounded-xl">
           <TabsTrigger value="overview" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
-            <Package className="h-4 w-4 mr-2" /> Overview
+            <Package className="h-4 w-4 mr-2" /> Übersicht
           </TabsTrigger>
           <TabsTrigger value="settings" className="h-full px-8 font-bold rounded-lg data-[state=active]:gold-glow data-[state=active]:bg-card">
-            <Settings className="h-4 w-4 mr-2" /> Credentials
+            <Settings className="h-4 w-4 mr-2" /> Referenzen
           </TabsTrigger>
         </TabsList>
 
@@ -237,17 +233,17 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="glass-card border-none col-span-1 md:col-span-2">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Recent Acquisitions</CardTitle>
-                <CardDescription>A chronicle of your luxury transactions.</CardDescription>
+                <CardTitle className="font-headline text-2xl">Jüngste Akquisitionen</CardTitle>
+                <CardDescription>Eine Chronik Ihrer Luxustransaktionen.</CardDescription>
               </CardHeader>
               <CardContent>
                 {isOrdersLoading ? (
                   <div className="py-12 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
                 ) : !orders || orders.length === 0 ? (
                   <div className="text-center py-12 space-y-4">
-                    <p className="text-muted-foreground">Your history is a blank canvas.</p>
+                    <p className="text-muted-foreground">Ihre Historie ist noch ein leeres Blatt.</p>
                     <Link href="/#catalog">
-                      <Button variant="link" className="text-secondary p-0">Begin your first session</Button>
+                      <Button variant="link" className="text-secondary p-0">Beginnen Sie Ihre erste Session</Button>
                     </Link>
                   </div>
                 ) : (
@@ -259,13 +255,13 @@ export default function ProfilePage() {
                             <CreditCard className="h-5 w-5" />
                           </div>
                           <div>
-                            <div className="font-bold">Order #{order.id.slice(0, 8).toUpperCase()}</div>
+                            <div className="font-bold">Bestellung #{order.id.slice(0, 8).toUpperCase()}</div>
                             <div className="text-sm text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</div>
                           </div>
                         </div>
                         <div className="flex items-center gap-6">
                           <div className="text-right">
-                            <div className="font-bold text-secondary">${order.totalAmount.toFixed(2)}</div>
+                            <div className="font-bold text-secondary">{order.totalAmount.toFixed(2)}€</div>
                             <Badge variant="outline" className="text-[10px] uppercase border-secondary/30 text-secondary">{order.status}</Badge>
                           </div>
                           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -280,17 +276,17 @@ export default function ProfilePage() {
             <div className="space-y-8">
               <Card className="glass-card border-none bg-secondary/5">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold">Baron Status</CardTitle>
+                  <CardTitle className="text-lg font-bold">Baron-Status</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Membership</span>
+                    <span className="text-sm text-muted-foreground">Mitgliedschaft</span>
                     <Badge className={isAdmin ? "bg-primary text-white font-bold border-none" : "bg-secondary text-background font-bold border-none"}>
-                      {isAdmin ? 'IMPERIAL STAFF' : 'ELITE BARON'}
+                      {isAdmin ? 'IMPERIALES PERSONAL' : 'ELITE BARON'}
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Joined</span>
+                    <span className="text-sm text-muted-foreground">Beigetreten</span>
                     <span className="text-sm font-medium">{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}</span>
                   </div>
                   <Separator className="bg-border/50" />
@@ -302,13 +298,13 @@ export default function ProfilePage() {
                       disabled={isPromoting}
                     >
                       {isPromoting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
-                      Request Admin Access
+                      Admin-Zugang beantragen
                     </Button>
                   )}
                   {isAdmin && (
                     <div className="flex items-center justify-center p-4 bg-primary/5 rounded-xl border border-primary/10">
                       <Sparkles className="h-4 w-4 text-primary mr-2" />
-                      <span className="text-xs font-bold uppercase tracking-widest text-primary">Imperial oversight active</span>
+                      <span className="text-xs font-bold uppercase tracking-widest text-primary">Aufsicht aktiv</span>
                     </div>
                   )}
                 </CardContent>
@@ -316,16 +312,16 @@ export default function ProfilePage() {
 
               <Card className="glass-card border-none">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold">Identity</CardTitle>
+                  <CardTitle className="text-lg font-bold">Identität</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-primary" />
-                    <span className="text-sm truncate">{user.email || 'Anonymous Session'}</span>
+                    <span className="text-sm truncate">{user.email || 'Anonyme Sitzung'}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Last active: {new Date().toLocaleDateString()}</span>
+                    <span className="text-sm">Zuletzt aktiv: {new Date().toLocaleDateString()}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -336,14 +332,14 @@ export default function ProfilePage() {
         <TabsContent value="settings">
           <Card className="glass-card border-none max-w-2xl">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Personal Credentials</CardTitle>
-              <CardDescription>Update your presence in the Blubber Baron registry.</CardDescription>
+              <CardTitle className="font-headline text-2xl">Persönliche Referenzen</CardTitle>
+              <CardDescription>Aktualisieren Sie Ihre Präsenz im Blubber Baron Register.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleUpdateProfile} className="space-y-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">Vorname</Label>
                     <Input 
                       id="firstName" 
                       name="firstName" 
@@ -353,7 +349,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Nachname</Label>
                     <Input 
                       id="lastName" 
                       name="lastName" 
@@ -365,7 +361,7 @@ export default function ProfilePage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Preferred Email</Label>
+                  <Label htmlFor="email">Bevorzugte E-Mail</Label>
                   <Input 
                     id="email" 
                     name="email" 
@@ -374,7 +370,7 @@ export default function ProfilePage() {
                     className="bg-background border-border" 
                     disabled={!!user.email}
                   />
-                  {user.email && <p className="text-[10px] text-muted-foreground italic">Email managed via authentication provider.</p>}
+                  {user.email && <p className="text-[10px] text-muted-foreground italic">E-Mail wird über den Auth-Provider verwaltet.</p>}
                 </div>
 
                 <div className="pt-4">
@@ -386,7 +382,7 @@ export default function ProfilePage() {
                     {isSaving ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     ) : (
-                      'Synchronize Credentials'
+                      'Referenzen synchronisieren'
                     )}
                   </Button>
                 </div>

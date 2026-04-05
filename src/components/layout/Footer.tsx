@@ -9,29 +9,29 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-xl font-bold font-headline text-primary uppercase tracking-tighter">BLUBBER BARON</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Exquisite shisha experiences for the discerning enthusiast. Luxury, performance, and sophistication in every puff.
+              Exzellente Shisha-Erlebnisse für den anspruchsvollen Genießer. Luxus, Leistung und Raffinesse in jedem Zug.
             </p>
           </div>
           <div>
             <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Shop</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Hookahs</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Charcoal</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Flavors</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Accessories</Link></li>
+              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Wasserpfeifen</Link></li>
+              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Kohle</Link></li>
+              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Tabak & Aromen</Link></li>
+              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Zubehör</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Empire</h4>
+            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Imperium</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/story" className="hover:text-primary transition-colors">Our Story</Link></li>
-              <li><Link href="/careers" className="hover:text-primary transition-colors">Careers</Link></li>
-              <li><Link href="/profile" className="hover:text-primary transition-colors">The Registry</Link></li>
-              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin Console</Link></li>
+              <li><Link href="/story" className="hover:text-primary transition-colors">Unsere Geschichte</Link></li>
+              <li><Link href="/careers" className="hover:text-primary transition-colors">Karriere</Link></li>
+              <li><Link href="/profile" className="hover:text-primary transition-colors">Das Register</Link></li>
+              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin-Konsole</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Connect</h4>
+            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Kontakt</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/" className="hover:text-primary transition-colors">Instagram</Link></li>
               <li><Link href="/" className="hover:text-primary transition-colors">Twitter</Link></li>
@@ -40,7 +40,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-border mt-12 pt-8 text-center text-xs text-muted-foreground uppercase tracking-widest">
-          &copy; {new Date().getFullYear()} Blubber Baron. All rights reserved.
+          &copy; {new Date().getFullYear()} Blubber Baron. Alle Rechte vorbehalten.
         </div>
       </div>
     </footer>

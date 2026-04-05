@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Product } from '@/app/types';
@@ -13,8 +14,8 @@ export function AddToCartButton({ product }: { product: Product }) {
   const handleAdd = () => {
     addItem(product);
     toast({
-      title: "Added to Cart",
-      description: `${product.name} has been added to your selection.`,
+      title: "Hinzugefügt",
+      description: `${product.name} wurde Ihrer Auswahl hinzugefügt.`,
     });
   };
 
@@ -25,7 +26,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       onClick={handleAdd}
     >
       <ShoppingBag className="mr-3 h-6 w-6" />
-      Secure Purchase
+      Sicherer Erwerb
     </Button>
   );
 }

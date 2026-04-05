@@ -59,7 +59,7 @@ export default function NewProductPage() {
 
   const handleAIDescription = async () => {
     if (!formData.name) {
-      toast({ title: "Product Name Required", variant: "destructive" });
+      toast({ title: "Produktname erforderlich", variant: "destructive" });
       return;
     }
     setIsGeneratingDesc(true);
@@ -70,7 +70,7 @@ export default function NewProductPage() {
       });
       setFormData(prev => ({ ...prev, description: result.description }));
     } catch (e) {
-      toast({ title: "AI Generation Failed", variant: "destructive" });
+      toast({ title: "KI-Generierung fehlgeschlagen", variant: "destructive" });
     } finally {
       setIsGeneratingDesc(false);
     }
@@ -78,7 +78,7 @@ export default function NewProductPage() {
 
   const handleAIImage = async () => {
     if (!formData.name) {
-      toast({ title: "Product Name Required", variant: "destructive" });
+      toast({ title: "Produktname erforderlich", variant: "destructive" });
       return;
     }
     setIsGeneratingImg(true);
@@ -89,9 +89,9 @@ export default function NewProductPage() {
       });
       setImagePreview(result.imageUrl);
       setFormData(prev => ({ ...prev, imageUrl: result.imageUrl }));
-      toast({ title: "AI Image Generated", description: "The Baron's visual has been manifested." });
+      toast({ title: "KI-Bild manifestiert", description: "Das visuelle Abbild des Barons wurde erstellt." });
     } catch (e) {
-      toast({ title: "AI Image Failed", variant: "destructive" });
+      toast({ title: "KI-Bild fehlgeschlagen", variant: "destructive" });
     } finally {
       setIsGeneratingImg(false);
     }
@@ -118,48 +118,38 @@ export default function NewProductPage() {
       updatedAt: timestamp
     });
 
-    toast({ title: "Manifested", description: "The item has been added to the Baron's inventory." });
+    toast({ title: "Manifestiert", description: "Der Artikel wurde dem Inventar des Barons hinzugefügt." });
     router.push('/admin');
   };
 
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8 max-w-5xl space-y-8">
       <Link href="/admin" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors gap-2">
-        <ArrowLeft className="h-4 w-4" /> Back to Console
+        <ArrowLeft className="h-4 w-4" /> Zurück zur Konsole
       </Link>
 
       <div className="space-y-2">
-        <h1 className="text-4xl font-headline font-bold">Add New Masterpiece</h1>
-        <p className="text-muted-foreground">Register a new premium product into the Blubber Baron catalog.</p>
+        <h1 className="text-4xl font-headline font-bold">Neues Meisterwerk hinzufügen</h1>
+        <p className="text-muted-foreground">Registrieren Sie ein neues Premium-Produkt im Blubber Baron Katalog.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-1 space-y-8">
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-2">
-              <h3 className="text-xl font-bold font-headline">Product Media</h3>
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="sm" 
-                className="h-8 gold-glow text-xs" 
-                onClick={handleAIImage}
-                disabled={isGeneratingImg}
-              >
+              <h3 className="text-xl font-bold font-headline">Produkt-Medien</h3>
+              <Button type="button" variant="outline" size="sm" className="h-8 gold-glow text-xs" onClick={handleAIImage} disabled={isGeneratingImg}>
                 {isGeneratingImg ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-2" />}
-                AI Manifest
+                KI-Manifest
               </Button>
             </div>
-            <div 
-              className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card border-dashed border-2 border-border/50 group cursor-pointer flex flex-col items-center justify-center gap-4"
-              onClick={() => fileInputRef.current?.click()}
-            >
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card border-dashed border-2 border-border/50 group cursor-pointer flex flex-col items-center justify-center gap-4" onClick={() => fileInputRef.current?.click()}>
               {imagePreview ? (
-                <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                <Image src={imagePreview} alt="Vorschau" fill className="object-cover" />
               ) : (
                 <div className="text-center px-6 text-muted-foreground">
                   <Upload className="h-8 w-8 mx-auto mb-2" />
-                  <p className="font-bold text-sm">Upload or AI Generate</p>
+                  <p className="font-bold text-sm">Hochladen oder KI-generieren</p>
                 </div>
               )}
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
@@ -167,14 +157,14 @@ export default function NewProductPage() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Inventory</h3>
+            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Bestand</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="brand">Brand</Label>
+                <Label htmlFor="brand">Marke</Label>
                 <Input id="brand" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} className="bg-card" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="stock">Initial Stock</Label>
+                <Label htmlFor="stock">Bestand</Label>
                 <Input id="stock" type="number" value={formData.stockQuantity} onChange={(e) => setFormData({ ...formData, stockQuantity: e.target.value })} className="bg-card" />
               </div>
             </div>
@@ -183,45 +173,39 @@ export default function NewProductPage() {
 
         <div className="lg:col-span-2 space-y-8">
           <div className="space-y-6">
-            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Core Details</h3>
+            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Kerndaten</h3>
             <div className="space-y-2">
-              <Label htmlFor="name">Product Name</Label>
-              <Input 
-                id="name" 
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="bg-card text-lg h-12"
-                required
-              />
+              <Label htmlFor="name">Produktname</Label>
+              <Input id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-card text-lg h-12" required />
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">Kategorie</Label>
                 <Select onValueChange={(v) => setFormData({ ...formData, category: v })}>
                   <SelectTrigger className="bg-card h-12">
-                    <SelectValue placeholder="Select..." />
+                    <SelectValue placeholder="Wählen..." />
                   </SelectTrigger>
                   <SelectContent className="bg-card">
-                    <SelectItem value="hookah">Hookah</SelectItem>
-                    <SelectItem value="coal">Charcoal</SelectItem>
-                    <SelectItem value="flavor">Flavor</SelectItem>
-                    <SelectItem value="accessory">Accessory</SelectItem>
+                    <SelectItem value="hookah">Wasserpfeife</SelectItem>
+                    <SelectItem value="coal">Kohle</SelectItem>
+                    <SelectItem value="flavor">Aroma</SelectItem>
+                    <SelectItem value="accessory">Zubehör</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="price">Price (€)</Label>
+                <Label htmlFor="price">Preis (€)</Label>
                 <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="bg-card h-12 text-secondary font-bold" required />
               </div>
             </div>
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Product Narrative</Label>
+                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Produkt-Narrativ</Label>
                 <Button type="button" size="sm" variant="secondary" className="gold-glow h-8 text-xs font-bold" onClick={handleAIDescription} disabled={isGeneratingDesc}>
                   {isGeneratingDesc ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 mr-2" />}
-                  AI Write
+                  KI-Beschreibung
                 </Button>
               </div>
               <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[200px] bg-card leading-relaxed" required />
@@ -230,10 +214,10 @@ export default function NewProductPage() {
 
           <div className="pt-8 flex gap-4">
             <Button type="submit" className="flex-1 bg-primary h-14 text-lg font-bold rounded-xl crimson-glow">
-              <Save className="mr-2 h-6 w-6" /> Save Item
+              <Save className="mr-2 h-6 w-6" /> Artikel speichern
             </Button>
             <Button type="button" variant="outline" className="h-14 px-8" onClick={() => router.push('/admin')}>
-              Cancel
+              Abbrechen
             </Button>
           </div>
         </div>

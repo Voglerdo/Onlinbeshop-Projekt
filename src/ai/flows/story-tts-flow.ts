@@ -1,7 +1,7 @@
 
 'use server';
 /**
- * @fileOverview AI flow to convert the Baron's story into speech.
+ * @fileOverview KI-Flow zur Umwandlung der Geschichte des Barons in Sprache.
  */
 
 import { ai } from '@/ai/genkit';
@@ -10,11 +10,11 @@ import { z } from 'genkit';
 import wav from 'wav';
 
 const StoryTTSInputSchema = z.object({
-  text: z.string().describe('The philosophy text to read.'),
+  text: z.string().describe('Der Philosophie-Text zum Vorlesen.'),
 });
 
 const StoryTTSOutputSchema = z.object({
-  audioUri: z.string().describe('The data URI of the generated audio.'),
+  audioUri: z.string().describe('Die Daten-URI des generierten Audios.'),
 });
 
 export async function storyTTS(input: z.infer<typeof StoryTTSInputSchema>) {
@@ -38,11 +38,11 @@ const storyTTSFlow = ai.defineFlow(
           },
         },
       },
-      prompt: `Read the following philosophy with a sophisticated, calm, and authoritative tone: ${input.text}`,
+      prompt: `Lies die folgende Philosophie mit einem anspruchsvollen, ruhigen und autoritären Ton auf DEUTSCH vor: ${input.text}`,
     });
 
     if (!media) {
-      throw new Error('No audio returned');
+      throw new Error('Kein Audio zurückgegeben');
     }
 
     const audioBuffer = Buffer.from(

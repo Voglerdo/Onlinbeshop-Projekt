@@ -34,8 +34,8 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     zip: '',
-    country: 'USA',
-    paymentMethod: 'Credit Card'
+    country: 'Deutschland',
+    paymentMethod: 'Kreditkarte'
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +47,8 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!user || !db) {
       toast({
-        title: "Access Restricted",
-        description: "Please sign in to complete your acquisition.",
+        title: "Zugriff eingeschränkt",
+        description: "Bitte melden Sie sich an, um Ihren Erwerb abzuschließen.",
         variant: "destructive"
       });
       router.push('/profile');
@@ -57,8 +57,8 @@ export default function CheckoutPage() {
 
     if (items.length === 0) {
       toast({
-        title: "Cart Empty",
-        description: "Your selection is empty. Please add items to your cart.",
+        title: "Warenkorb leer",
+        description: "Ihre Auswahl ist leer. Bitte fügen Sie Artikel hinzu.",
         variant: "destructive"
       });
       return;
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    const orderId = doc(collection(db, 'placeholder')).id; // Generate a unique ID
+    const orderId = doc(collection(db, 'placeholder')).id;
     const orderRef = doc(db, 'users', user.uid, 'orders', orderId);
     const timestamp = new Date().toISOString();
 
@@ -75,25 +75,19 @@ export default function CheckoutPage() {
       userId: user.uid,
       orderDate: timestamp,
       totalAmount: totalPrice,
-      status: 'Pending',
+      status: 'Ausstehend',
       shippingAddressStreet: formData.street,
       shippingAddressCity: formData.city,
       shippingAddressState: formData.state,
       shippingAddressZip: formData.zip,
       shippingAddressCountry: formData.country,
-      billingAddressStreet: formData.street, // Simple assumption for demo
-      billingAddressCity: formData.city,
-      billingAddressZip: formData.zip,
-      billingAddressCountry: formData.country,
       paymentMethod: formData.paymentMethod,
       createdAt: timestamp,
       updatedAt: timestamp
     };
 
-    // Save Order
     setDocumentNonBlocking(orderRef, orderData, { merge: true });
 
-    // Save Order Items
     items.forEach(item => {
       const orderItemRef = doc(collection(db, 'users', user.uid, 'orders', orderId, 'orderItems'));
       const orderItemData = {
@@ -102,14 +96,14 @@ export default function CheckoutPage() {
         productId: item.id,
         quantity: item.quantity,
         unitPrice: item.price,
-        userId: user.uid // Denormalized for security rules
+        userId: user.uid
       };
       setDocumentNonBlocking(orderItemRef, orderItemData, { merge: true });
     });
 
     toast({
-      title: "Order Placed",
-      description: "Your masterpieces are being prepared for dispatch.",
+      title: "Bestellung aufgegeben",
+      description: "Ihre Meisterwerke werden für den Versand vorbereitet.",
     });
 
     setTimeout(() => {
@@ -129,12 +123,12 @@ export default function CheckoutPage() {
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-20 text-center space-y-8">
-        <h1 className="text-4xl font-headline font-bold">Secure Your Acquisition</h1>
+        <h1 className="text-4xl font-headline font-bold">Sichern Sie Ihren Erwerb</h1>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Please identify yourself at the Baron Registry to proceed with your luxury purchase.
+          Bitte identifizieren Sie sich im Baron-Register, um mit Ihrem Luxuskauf fortzufahren.
         </p>
         <Button asChild size="lg" className="bg-primary px-10">
-          <Link href="/profile">Sign In to Continue</Link>
+          <Link href="/profile">Anmelden zum Fortfahren</Link>
         </Button>
       </div>
     );
@@ -146,73 +140,55 @@ export default function CheckoutPage() {
         <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <h1 className="text-4xl md:text-5xl font-headline font-bold">Secure Checkout</h1>
+        <h1 className="text-4xl md:text-5xl font-headline font-bold">Sicherer Checkout</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-12">
-          {/* Shipping Information */}
+          {/* Versandinformationen */}
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-border pb-2">
               <Truck className="h-5 w-5 text-secondary" />
-              <h2 className="text-xl font-bold uppercase tracking-widest">Shipping Destination</h2>
+              <h2 className="text-xl font-bold uppercase tracking-widest">Versandziel</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input 
-                  id="firstName" name="firstName" required 
-                  className="bg-card" value={formData.firstName} onChange={handleInputChange}
-                />
+                <Label htmlFor="firstName">Vorname</Label>
+                <Input id="firstName" name="firstName" required className="bg-card" value={formData.firstName} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input 
-                  id="lastName" name="lastName" required 
-                  className="bg-card" value={formData.lastName} onChange={handleInputChange}
-                />
+                <Label htmlFor="lastName">Nachname</Label>
+                <Input id="lastName" name="lastName" required className="bg-card" value={formData.lastName} onChange={handleInputChange} />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="street">Street Address</Label>
-              <Input 
-                id="street" name="street" required 
-                className="bg-card" value={formData.street} onChange={handleInputChange}
-              />
+              <Label htmlFor="street">Straße & Hausnummer</Label>
+              <Input id="street" name="street" required className="bg-card" value={formData.street} onChange={handleInputChange} />
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="col-span-2 space-y-2">
-                <Label htmlFor="city">City</Label>
-                <Input 
-                  id="city" name="city" required 
-                  className="bg-card" value={formData.city} onChange={handleInputChange}
-                />
+                <Label htmlFor="city">Stadt</Label>
+                <Input id="city" name="city" required className="bg-card" value={formData.city} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="state">State</Label>
-                <Input 
-                  id="state" name="state" required 
-                  className="bg-card" value={formData.state} onChange={handleInputChange}
-                />
+                <Label htmlFor="state">Bundesland</Label>
+                <Input id="state" name="state" required className="bg-card" value={formData.state} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="zip">ZIP Code</Label>
-                <Input 
-                  id="zip" name="zip" required 
-                  className="bg-card" value={formData.zip} onChange={handleInputChange}
-                />
+                <Label htmlFor="zip">Postleitzahl</Label>
+                <Input id="zip" name="zip" required className="bg-card" value={formData.zip} onChange={handleInputChange} />
               </div>
             </div>
           </section>
 
-          {/* Payment Information */}
+          {/* Zahlungsinformationen */}
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-border pb-2">
               <CreditCard className="h-5 w-5 text-secondary" />
-              <h2 className="text-xl font-bold uppercase tracking-widest">Payment Credentials</h2>
+              <h2 className="text-xl font-bold uppercase tracking-widest">Zahlungsmittel</h2>
             </div>
             
             <Card className="glass-card border-none bg-secondary/5">
@@ -223,26 +199,26 @@ export default function CheckoutPage() {
                       <CreditCard className="h-6 w-6 text-secondary" />
                     </div>
                     <div>
-                      <p className="font-bold">Baron Credit</p>
-                      <p className="text-xs text-muted-foreground">Ending in •••• 1234</p>
+                      <p className="font-bold">Baron Kredit</p>
+                      <p className="text-xs text-muted-foreground">Endet auf •••• 1234</p>
                     </div>
                   </div>
-                  <Badge className="bg-secondary text-background">Primary</Badge>
+                  <Badge className="bg-secondary text-background">Standard</Badge>
                 </div>
                 <p className="text-[10px] text-muted-foreground text-center uppercase tracking-widest">
-                  Sensitive data is handled by our secure payment vaults
+                  Sensible Daten werden in unseren sicheren Tresoren verarbeitet
                 </p>
               </CardContent>
             </Card>
           </section>
         </div>
 
-        {/* Order Summary */}
+        {/* Zusammenfassung */}
         <div className="lg:col-span-1">
           <Card className="glass-card border-none sticky top-24">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Order Summary</CardTitle>
-              <CardDescription>Your curated selection.</CardDescription>
+              <CardTitle className="font-headline text-2xl">Zusammenfassung</CardTitle>
+              <CardDescription>Ihre kuratierte Auswahl.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -254,10 +230,10 @@ export default function CheckoutPage() {
                       </div>
                       <div>
                         <p className="text-sm font-bold line-clamp-1">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                        <p className="text-xs text-muted-foreground">Anzahl: {item.quantity}</p>
                       </div>
                     </div>
-                    <p className="font-bold">€{(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-bold">{(item.price * item.quantity).toFixed(2)}€</p>
                   </div>
                 ))}
               </div>
@@ -266,36 +242,25 @@ export default function CheckoutPage() {
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span>€{totalPrice.toFixed(2)}</span>
+                  <span className="text-muted-foreground">Zwischensumme</span>
+                  <span>{totalPrice.toFixed(2)}€</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Premium Shipping</span>
-                  <span className="text-green-500 font-bold">Complimentary</span>
+                  <span className="text-muted-foreground">Premium-Versand</span>
+                  <span className="text-green-500 font-bold">Kostenfrei</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold pt-4">
-                  <span>Total</span>
-                  <span className="text-secondary">€{totalPrice.toFixed(2)}</span>
+                  <span>Gesamt</span>
+                  <span className="text-secondary">{totalPrice.toFixed(2)}€</span>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button 
-                type="submit" 
-                className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-bold crimson-glow"
-                disabled={isSubmitting || items.length === 0}
-              >
-                {isSubmitting ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <ShieldCheck className="mr-2 h-5 w-5" />
-                    Complete Acquisition
-                  </>
-                )}
+              <Button type="submit" className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-bold crimson-glow" disabled={isSubmitting || items.length === 0}>
+                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <><ShieldCheck className="mr-2 h-5 w-5" /> Erwerb abschließen</>}
               </Button>
               <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest font-bold">
-                By completing, you agree to the Baron's Terms of Service
+                Mit dem Abschluss stimmen Sie den Bedingungen des Barons zu.
               </p>
             </CardFooter>
           </Card>

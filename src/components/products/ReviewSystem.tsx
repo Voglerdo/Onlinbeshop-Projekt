@@ -27,14 +27,12 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch user profile for their name
   const profileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
     return doc(db, 'users', user.uid);
   }, [db, user]);
   const { data: profile } = useDoc(profileRef);
 
-  // Fetch reviews
   const reviewsQuery = useMemoFirebase(() => {
     if (!db || !productId) return null;
     return query(collection(db, 'products', productId, 'reviews'), orderBy('createdAt', 'desc'));
@@ -45,12 +43,12 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !db) {
-      toast({ title: "Identification Required", description: "Please sign in to the Baron Registry to leave a review.", variant: "destructive" });
+      toast({ title: "Identifizierung erforderlich", description: "Bitte melden Sie sich im Baron-Register an, um eine Bewertung abzugeben.", variant: "destructive" });
       return;
     }
 
     if (comment.trim().length < 5) {
-      toast({ title: "Narrative Too Short", description: "Your feedback must be at least 5 characters.", variant: "destructive" });
+      toast({ title: "Narrativ zu kurz", description: "Ihr Feedback muss mindestens 5 Zeichen lang sein.", variant: "destructive" });
       return;
     }
 
@@ -60,7 +58,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     const newReview = {
       productId,
       userId: user.uid,
-      userName: profile?.firstName ? `${profile.firstName} ${profile.lastName}` : 'Anonymous Baron',
+      userName: profile?.firstName ? `${profile.firstName} ${profile.lastName}` : 'Anonymer Baron',
       rating,
       comment,
       createdAt: new Date().toISOString()
@@ -68,7 +66,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
 
     addDocumentNonBlocking(reviewsRef, newReview);
 
-    toast({ title: "Decree Received", description: "Your experience has been logged in the Imperial archives." });
+    toast({ title: "Dekret erhalten", description: "Ihre Erfahrung wurde in den imperialen Archiven protokolliert." });
     setComment('');
     setRating(5);
     setIsSubmitting(false);
@@ -78,8 +76,8 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     <div className="space-y-16">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8">
         <div className="space-y-3">
-          <h2 className="text-4xl font-headline font-bold">The Consensus</h2>
-          <p className="text-muted-foreground font-medium">Voices from the Baron's inner circle.</p>
+          <h2 className="text-4xl font-headline font-bold">Der Konsens</h2>
+          <p className="text-muted-foreground font-medium">Stimmen aus dem inneren Kreis des Barons.</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
@@ -88,11 +86,11 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
                 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
                 : "5.0"}
             </div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Imperial Rating</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Imperiales Rating</div>
           </div>
           <div className="h-10 w-px bg-border" />
           <Badge variant="outline" className="h-10 px-4 border-border text-muted-foreground">
-            {reviews?.length || 0} Decrees
+            {reviews?.length || 0} Dekrete
           </Badge>
         </div>
       </div>
@@ -102,57 +100,36 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
         <div className="lg:col-span-1">
           <div className="glass-card p-8 rounded-3xl sticky top-24 space-y-8 border-none gold-glow">
             <div className="space-y-2">
-              <h3 className="text-xl font-bold font-headline">Manifest Feedback</h3>
-              <p className="text-sm text-muted-foreground">Share your sensory experience with this piece.</p>
+              <h3 className="text-xl font-bold font-headline">Feedback manifestieren</h3>
+              <p className="text-sm text-muted-foreground">Teilen Sie Ihre sensorische Erfahrung mit diesem Stück.</p>
             </div>
 
             <form onSubmit={handleSubmitReview} className="space-y-6">
               <div className="space-y-3">
-                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Quality Score</Label>
+                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Qualitäts-Score</Label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      className="focus:outline-none transition-transform active:scale-90"
-                    >
-                      <Star 
-                        className={cn(
-                          "h-8 w-8 transition-colors duration-300",
-                          star <= rating ? "fill-secondary text-secondary" : "text-muted-foreground/30"
-                        )} 
-                      />
+                    <button key={star} type="button" onClick={() => setRating(star)} className="focus:outline-none transition-transform active:scale-90">
+                      <Star className={cn("h-8 w-8 transition-colors duration-300", star <= rating ? "fill-secondary text-secondary" : "text-muted-foreground/30")} />
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className="space-y-3">
-                <Label htmlFor="comment" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Narrative</Label>
-                <Textarea 
-                  id="comment"
-                  placeholder="Describe the density, the flavor, the craft..."
-                  className="bg-background/50 border-border min-h-[120px] resize-none focus:border-secondary transition-all"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  required
-                />
+                <Label htmlFor="comment" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Narrativ</Label>
+                <Textarea id="comment" placeholder="Beschreiben Sie die Dichte, den Geschmack, das Handwerk..." className="bg-background/50 border-border min-h-[120px] resize-none focus:border-secondary transition-all" value={comment} onChange={(e) => setComment(e.target.value)} required />
               </div>
 
-              <Button 
-                type="submit" 
-                disabled={isSubmitting || !user}
-                className="w-full h-14 bg-primary hover:bg-primary/90 font-bold text-lg crimson-glow"
-              >
+              <Button type="submit" disabled={isSubmitting || !user} className="w-full h-14 bg-primary hover:bg-primary/90 font-bold text-lg crimson-glow">
                 {isSubmitting ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : !user ? (
-                  "Sign in to Review"
+                  "Anmelden für Review"
                 ) : (
                   <>
                     <Send className="mr-2 h-5 w-5" />
-                    Publish Decree
+                    Dekret veröffentlichen
                   </>
                 )}
               </Button>
@@ -199,9 +176,9 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
           ) : (
             <div className="text-center py-32 glass-card rounded-[3rem] border-dashed border-2 border-border/50">
               <Star className="h-16 w-16 text-muted-foreground/20 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold font-headline">Uncharted Territory</h3>
+              <h3 className="text-2xl font-bold font-headline">Unentdecktes Territorium</h3>
               <p className="text-muted-foreground max-w-sm mx-auto mt-2">
-                This masterpiece has yet to be chronicled. Be the first to publish your imperial decree.
+                Dieses Meisterwerk wurde noch nicht chronisch festgehalten. Seien Sie der Erste, der sein imperiales Dekret veröffentlicht.
               </p>
             </div>
           )}

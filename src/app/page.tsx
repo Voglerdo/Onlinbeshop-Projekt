@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -15,11 +16,11 @@ import { cn } from '@/lib/utils';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 const CATEGORIES = [
-  { id: 'all', label: 'Full Collection' },
-  { id: 'hookah', label: 'Hookahs' },
-  { id: 'flavor', label: 'Flavors' },
-  { id: 'coal', label: 'Charcoal' },
-  { id: 'accessory', label: 'Accessories' },
+  { id: 'all', label: 'Gesamte Kollektion' },
+  { id: 'hookah', label: 'Wasserpfeifen' },
+  { id: 'flavor', label: 'Aromen' },
+  { id: 'coal', label: 'Kohle' },
+  { id: 'accessory', label: 'Zubehör' },
 ];
 
 export default function Home() {
@@ -59,7 +60,7 @@ export default function Home() {
       <section className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden">
         <Image
           src={heroImg?.imageUrl || ''}
-          alt="Luxury Shisha Experience"
+          alt="Luxus-Shisha-Erlebnis"
           fill
           priority
           className="object-cover opacity-40 scale-105"
@@ -72,25 +73,25 @@ export default function Home() {
           <div className="space-y-6 max-w-5xl mx-auto">
             <div className="flex items-center justify-center gap-3 text-secondary animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="h-px w-12 bg-secondary/30" />
-              <span className="uppercase tracking-[0.6em] text-[10px] font-black">Imperial Standard</span>
+              <span className="uppercase tracking-[0.6em] text-[10px] font-black">Imperialer Standard</span>
               <div className="h-px w-12 bg-secondary/30" />
             </div>
             <h1 className="text-7xl md:text-9xl font-black font-headline tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              CRAFTING <br /><span className="text-secondary italic font-serif">EXCELLENCE</span>
+              EXZELLENZ <br /><span className="text-secondary italic font-serif">ERSCHAFFEN</span>
             </h1>
             <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
-              Experience the pinnacle of shisha sophistication. Curated for the few who demand absolute perfection in every draw.
+              Erleben Sie den Gipfel der Shisha-Raffinesse. Kuratiert für jene Wenigen, die bei jedem Zug absolute Perfektion verlangen.
             </p>
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-16 duration-1000">
             <Link href="/#catalog">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-16 px-12 rounded-full crimson-glow transition-all hover:scale-105">
-                Explore The Vault
+                Die Schatzkammer erkunden
               </Button>
             </Link>
             <Button asChild size="lg" variant="outline" className="border-white/10 text-white hover:bg-white/5 h-16 px-12 rounded-full backdrop-blur-sm">
-              <Link href="/story">The Narrative</Link>
+              <Link href="/story">Die Geschichte</Link>
             </Button>
           </div>
         </div>
@@ -106,13 +107,13 @@ export default function Home() {
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-secondary font-black uppercase tracking-[0.4em] text-[10px]">
               <Sparkles className="h-3 w-3" />
-              Curated Selections
+              Kuratierte Auswahl
             </div>
-            <h2 className="text-5xl md:text-6xl font-headline font-bold leading-none">The Collection</h2>
+            <h2 className="text-5xl md:text-6xl font-headline font-bold leading-none">Die Kollektion</h2>
             {searchQuery && (
               <div className="flex items-center gap-2 mt-4">
                 <Badge variant="secondary" className="px-4 py-1.5 bg-secondary/10 text-secondary border-secondary/20 rounded-full flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
-                  Search: "{searchQuery}"
+                  Suche: "{searchQuery}"
                   <button onClick={clearSearch} className="hover:text-foreground">
                     <X className="h-3 w-3" />
                   </button>
@@ -143,7 +144,7 @@ export default function Home() {
         {isLoading ? (
           <div className="flex flex-col justify-center items-center py-40 gap-6">
             <Loader2 className="h-12 w-12 animate-spin text-secondary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Filtering Masterpieces...</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Meisterwerke werden gefiltert...</p>
           </div>
         ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
@@ -157,15 +158,15 @@ export default function Home() {
               <div className="p-6 rounded-full bg-white/5 inline-block">
                 <Filter className="h-10 w-10 text-muted-foreground/50" />
               </div>
-              <h3 className="text-2xl font-bold font-headline">No Discoveries Made</h3>
+              <h3 className="text-2xl font-bold font-headline">Keine Funde</h3>
               <p className="text-muted-foreground font-light">
                 {searchQuery 
-                  ? `Our archives hold no matches for "${searchQuery}". Try a broader term.`
-                  : `This specific collection is currently in curation.`
+                  ? `Unsere Archive enthalten keine Treffer für "${searchQuery}". Versuchen Sie es mit einem anderen Begriff.`
+                  : `Diese spezifische Kollektion befindet sich derzeit in der Kuratierung.`
                 }
               </p>
               <Button variant="link" onClick={() => { setSelectedCategory('all'); clearSearch(); }} className="text-secondary font-black uppercase tracking-widest text-xs">
-                Reset Imperial Filters
+                Filter zurücksetzen
               </Button>
             </div>
           </div>
@@ -179,10 +180,10 @@ export default function Home() {
           
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
             <div className="max-w-2xl space-y-8 text-center lg:text-left">
-              <Badge className="bg-secondary/10 text-secondary border-secondary/20 px-5 py-1.5 text-[10px] font-black tracking-[0.3em]">THE INNER CIRCLE</Badge>
-              <h3 className="text-5xl md:text-7xl font-headline font-bold leading-[0.9] tracking-tighter">Elevate Your Existence</h3>
+              <Badge className="bg-secondary/10 text-secondary border-secondary/20 px-5 py-1.5 text-[10px] font-black tracking-[0.3em]">DER INNERE KREIS</Badge>
+              <h3 className="text-5xl md:text-7xl font-headline font-bold leading-[0.9] tracking-tighter">Erheben Sie Ihre Existenz</h3>
               <p className="text-xl text-muted-foreground leading-relaxed font-light">
-                Join the Baron's elite registry for early access to limited edition drops, exclusive flavor prototypes, and private global events.
+                Treten Sie dem exklusiven Register des Barons bei, um frühen Zugang zu limitierten Editionen, exklusiven Geschmacksprototypen und privaten globalen Events zu erhalten.
               </p>
             </div>
             
@@ -190,15 +191,15 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <input 
                   type="email" 
-                  placeholder="The Baron's Email" 
+                  placeholder="Die E-Mail des Barons" 
                   className="bg-black/40 border border-white/10 rounded-2xl px-8 h-16 flex-1 md:w-96 outline-none focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all font-light"
                 />
                 <Button className="h-16 px-12 bg-secondary hover:bg-secondary/90 text-background font-black text-xs uppercase tracking-widest rounded-2xl transition-transform hover:scale-105">
-                  Join Elite
+                  Dem Kreis beitreten
                 </Button>
               </div>
               <p className="text-[10px] text-center lg:text-left text-muted-foreground uppercase tracking-[0.3em] font-medium opacity-50">
-                Discretion Guaranteed • Strictly Confidential
+                Diskretion garantiert • Streng vertraulich
               </p>
             </div>
           </div>

@@ -37,7 +37,7 @@ export function CartSheet() {
         <SheetHeader className="p-6 border-b border-border">
           <SheetTitle className="font-headline text-2xl flex items-center gap-2">
             <ShoppingBag className="text-primary" />
-            Your Selection
+            Ihre Auswahl
           </SheetTitle>
         </SheetHeader>
 
@@ -47,9 +47,9 @@ export function CartSheet() {
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
                 <ShoppingBag className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground font-medium">Your cart is currently empty.</p>
+              <p className="text-muted-foreground font-medium">Ihr Warenkorb ist derzeit leer.</p>
               <Button variant="link" asChild className="text-secondary">
-                <Link href="/#catalog">Continue Shopping</Link>
+                <Link href="/#catalog">Weiter einkaufen</Link>
               </Button>
             </div>
           ) : (
@@ -75,24 +75,14 @@ export function CartSheet() {
                       </button>
                     </div>
                     <div className="text-sm text-secondary font-bold">
-                      €{item.price.toFixed(2)}
+                      {item.price.toFixed(2)}€
                     </div>
                     <div className="flex items-center gap-3 mt-2">
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-7 w-7 rounded-sm"
-                        onClick={() => updateQuantity(item.id, -1)}
-                      >
+                      <Button variant="outline" size="icon" className="h-7 w-7 rounded-sm" onClick={() => updateQuantity(item.id, -1)}>
                         <Minus className="h-3 w-3" />
                       </Button>
                       <span className="text-sm w-4 text-center">{item.quantity}</span>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-7 w-7 rounded-sm"
-                        onClick={() => updateQuantity(item.id, 1)}
-                      >
+                      <Button variant="outline" size="icon" className="h-7 w-7 rounded-sm" onClick={() => updateQuantity(item.id, 1)}>
                         <Plus className="h-3 w-3" />
                       </Button>
                     </div>
@@ -107,15 +97,15 @@ export function CartSheet() {
           <SheetFooter className="p-6 border-t border-border bg-background/50 backdrop-blur-sm">
             <div className="w-full space-y-4">
               <div className="flex justify-between items-center text-lg">
-                <span className="text-muted-foreground">Total</span>
-                <span className="font-bold text-secondary text-2xl">€{totalPrice.toFixed(2)}</span>
+                <span className="text-muted-foreground">Gesamtsumme</span>
+                <span className="font-bold text-secondary text-2xl">{totalPrice.toFixed(2)}€</span>
               </div>
               <Separator />
               <Button asChild className="w-full bg-primary hover:bg-primary/90 h-12 text-lg font-bold">
-                <Link href="/checkout">Proceed to Checkout</Link>
+                <Link href="/checkout">Zur Kasse gehen</Link>
               </Button>
               <p className="text-center text-[10px] text-muted-foreground uppercase tracking-widest">
-                Secure checkout powered by Blubber Baron
+                Sicherer Checkout durch Blubber Baron
               </p>
             </div>
           </SheetFooter>

@@ -1,27 +1,24 @@
+
 'use server';
 /**
- * @fileOverview An AI assistant for administrators to generate product descriptions.
- *
- * - adminGenerateProductDescription - A function that handles the generation of product descriptions.
- * - AdminGenerateProductDescriptionInput - The input type for the adminGenerateProductDescription function.
- * - AdminGenerateProductDescriptionOutput - The return type for the adminGenerateProductDescription function.
+ * @fileOverview Ein KI-Assistent für Administratoren zur Erstellung von Produktbeschreibungen.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AdminGenerateProductDescriptionInputSchema = z.object({
-  productName: z.string().describe('The name of the product.'),
+  productName: z.string().describe('Der Name des Produkts.'),
   keyFeatures: z
     .array(z.string())
-    .describe('A list of key features for the product.'),
+    .describe('Eine Liste der Hauptmerkmale des Produkts.'),
 });
 export type AdminGenerateProductDescriptionInput = z.infer<
   typeof AdminGenerateProductDescriptionInputSchema
 >;
 
 const AdminGenerateProductDescriptionOutputSchema = z.object({
-  description: z.string().describe('The comprehensive and engaging product description.'),
+  description: z.string().describe('Die umfassende und ansprechende Produktbeschreibung.'),
 });
 export type AdminGenerateProductDescriptionOutput = z.infer<
   typeof AdminGenerateProductDescriptionOutputSchema
@@ -37,15 +34,16 @@ const productDescriptionPrompt = ai.definePrompt({
   name: 'productDescriptionPrompt',
   input: {schema: AdminGenerateProductDescriptionInputSchema},
   output: {schema: AdminGenerateProductDescriptionOutputSchema},
-  prompt: `You are an expert copywriter for an online shisha shop called Blubber Baron.
-Your task is to generate a comprehensive, engaging, and enticing product description for a shisha product.
-Highlight the key features and make it appealing to customers, using sophisticated and luxurious language.
+  prompt: `Du bist ein Experten-Copywriter für einen Online-Shisha-Shop namens Blubber Baron.
+Deine Aufgabe ist es, eine umfassende, ansprechende und verlockende Produktbeschreibung für ein Shisha-Produkt zu erstellen.
+Hebe die Hauptmerkmale hervor und mache es für Kunden attraktiv, indem du eine anspruchsvolle und luxuriöse Sprache verwendest.
+Schreibe die Antwort auf Deutsch.
 
-Product Name: {{{productName}}}
-Key Features:{{#each keyFeatures}}
+Produktname: {{{productName}}}
+Hauptmerkmale:{{#each keyFeatures}}
 - {{{this}}}{{/each}}
 
-Generate a detailed product description based on the information provided, focusing on luxury and quality.`,
+Erstelle eine detaillierte Produktbeschreibung basierend auf den bereitgestellten Informationen, mit Fokus auf Luxus und Qualität.`,
 });
 
 const adminGenerateProductDescriptionFlow = ai.defineFlow(

@@ -29,7 +29,6 @@ export function ProductCard({ product }: ProductCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-60" />
           
-          {/* Hover Overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">
             <div className="bg-white/10 p-3 rounded-full border border-white/20">
               <Eye className="h-6 w-6 text-white" />
@@ -41,7 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="text-xs font-bold text-secondary uppercase tracking-widest mb-1">{product.category}</div>
           <h3 className="font-headline text-lg group-hover:text-primary transition-colors mb-1 line-clamp-1">{product.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-2 min-h-[2.5rem]">{product.description}</p>
-          <div className="text-xl font-bold text-secondary">€{product.price.toFixed(2)}</div>
+          <div className="text-xl font-bold text-secondary">{product.price.toFixed(2)}€</div>
         </CardContent>
       </Link>
 
@@ -55,7 +54,7 @@ export function ProductCard({ product }: ProductCardProps) {
           }}
         >
           <Plus className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
-          Add to Cart
+          In den Warenkorb
         </Button>
       </CardFooter>
     </Card>

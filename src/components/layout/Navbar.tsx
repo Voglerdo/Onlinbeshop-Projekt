@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link';
@@ -19,7 +20,6 @@ export function Navbar() {
   const { user } = useUser();
   const db = useFirestore();
 
-  // Check if user is admin
   const adminRoleRef = useMemoFirebase(() => {
     if (!db || !user) return null;
     return doc(db, 'roles_admin', user.uid);
@@ -56,17 +56,17 @@ export function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em]">
-            <Link href="/#catalog" className="hover:text-secondary transition-colors opacity-70 hover:opacity-100">Collection</Link>
+            <Link href="/#catalog" className="hover:text-secondary transition-colors opacity-70 hover:opacity-100">Kollektion</Link>
             <Link href="/story" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
-              Story
+              Geschichte
             </Link>
             <Link href="/careers" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
-              Careers
+              Karriere
             </Link>
             {isAdmin && (
               <Link href="/admin" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all animate-in fade-in slide-in-from-left-2">
                 <ShieldCheck className="h-3.5 w-3.5" />
-                Console
+                Konsole
               </Link>
             )}
           </div>
@@ -75,7 +75,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <form onSubmit={handleSearch} className={`relative flex items-center transition-all duration-500 ${isSearchOpen ? 'w-56 md:w-80' : 'w-10'}`}>
             <Input 
-              placeholder="Search Archives..." 
+              placeholder="Archive durchsuchen..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`h-10 bg-white/5 border-none rounded-full transition-opacity duration-500 text-xs tracking-wider ${isSearchOpen ? 'opacity-100 pl-10' : 'opacity-0 pointer-events-none'}`}
