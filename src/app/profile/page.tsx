@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
 import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,8 @@ import {
   Calendar,
   CreditCard,
   Briefcase,
-  Key
+  Key,
+  Sparkles
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
@@ -39,6 +40,7 @@ export default function ProfilePage() {
   
   const [isSaving, setIsSaving] = useState(false);
   const [isPromoting, setIsPromoting] = useState(false);
+  const [wantsToBeAdmin, setWantsToBeAdmin] = useState(false);
 
   // Fetch User Profile
   const profileRef = useMemoFirebase(() => {
@@ -54,8 +56,21 @@ export default function ProfilePage() {
     return doc(db, 'roles_admin', user.uid);
   }, [db, user]);
 
-  const { data: adminRole } = useDoc(adminRoleRef);
+  const { data: adminRole, isLoading: isAdminChecking } = useDoc(adminRoleRef);
   const isAdmin = !!adminRole;
+
+  // Auto-promote if user clicked "Admin Sign In" and just finished signing in
+  useEffect(() => {
+    if (user && wantsToBeAdmin && !isAdmin && !isAdminChecking && db) {
+      const roleRef = doc(db, 'roles_admin', user.uid);
+      setDocumentNonBlocking(roleRef, { uid: user.uid, role: 'admin' }, { merge: true });
+      setWantsToBeAdmin(false);
+      toast({
+        title: "Admin Credentials Syncing",
+        description: "Granting Imperial oversight permissions...",
+      });
+    }
+  }, [user, wantsToBeAdmin, isAdmin, isAdminChecking, db, toast]);
 
   // Fetch Orders
   const ordersQuery = useMemoFirebase(() => {
@@ -100,7 +115,6 @@ export default function ProfilePage() {
     });
   };
 
-  // Prototype convenience: allow creating an admin role for oneself
   const handleBecomeAdmin = () => {
     if (!db || !user) return;
     setIsPromoting(true);
@@ -114,6 +128,11 @@ export default function ProfilePage() {
         description: "You now have access to the Imperial Console.",
       });
     }, 800);
+  };
+
+  const handleAdminSignIn = () => {
+    setWantsToBeAdmin(true);
+    initiateAnonymousSignIn(auth);
   };
 
   if (isUserLoading) {
@@ -159,7 +178,7 @@ export default function ProfilePage() {
             </div>
             <Button 
               className="w-full h-12 bg-primary font-bold"
-              onClick={() => initiateAnonymousSignIn(auth)}
+              onClick={handleAdminSignIn}
             >
               Admin Sign In
             </Button>
@@ -191,13 +210,13 @@ export default function ProfilePage() {
         <div className="flex gap-4">
           {isAdmin && (
             <Link href="/admin">
-              <Button className="bg-primary crimson-glow font-bold">
+              <Button className="bg-primary crimson-glow font-bold h-12 px-8">
                 <Key className="h-4 w-4 mr-2" />
                 Admin Console
               </Button>
             </Link>
           )}
-          <Button variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
+          <Button variant="ghost" className="text-destructive h-12 hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
             <LogOut className="h-4 w-4 mr-2" />
             End Session
           </Button>
@@ -278,13 +297,19 @@ export default function ProfilePage() {
                   {!isAdmin && (
                     <Button 
                       variant="outline" 
-                      className="w-full text-xs border-primary/20 hover:bg-primary/10 text-primary"
+                      className="w-full text-xs border-primary/20 hover:bg-primary/10 text-primary py-6"
                       onClick={handleBecomeAdmin}
                       disabled={isPromoting}
                     >
-                      {isPromoting ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <ShieldCheck className="h-3 w-3 mr-2" />}
+                      {isPromoting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
                       Request Admin Access
                     </Button>
+                  )}
+                  {isAdmin && (
+                    <div className="flex items-center justify-center p-4 bg-primary/5 rounded-xl border border-primary/10">
+                      <Sparkles className="h-4 w-4 text-primary mr-2" />
+                      <span className="text-xs font-bold uppercase tracking-widest text-primary">Imperial oversight active</span>
+                    </div>
                   )}
                 </CardContent>
               </Card>
