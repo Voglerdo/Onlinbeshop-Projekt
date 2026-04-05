@@ -35,6 +35,22 @@
       },
       "required": ["id", "name", "description", "price", "imageUrl", "category", "brand", "stockQuantity", "createdAt", "updatedAt"]
     },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "A customer review for a product.",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "userId", "userName", "rating", "comment", "createdAt"]
+    },
     "JobOffer": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "JobOffer",
@@ -104,6 +120,14 @@
           "entityName": "Product",
           "schema": { "$ref": "#/backend/entities/Product" },
           "description": "The public catalog of all available shisha products."
+        }
+      },
+      {
+        "path": "/products/{productId}/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": { "$ref": "#/backend/entities/Review" },
+          "description": "Customer reviews for a specific product."
         }
       },
       {
