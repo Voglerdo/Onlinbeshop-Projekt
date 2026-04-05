@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -256,7 +257,7 @@ export default function CheckoutPage() {
                         <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                       </div>
                     </div>
-                    <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-bold">€{(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -266,7 +267,7 @@ export default function CheckoutPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>€{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Premium Shipping</span>
@@ -274,7 +275,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-xl font-bold pt-4">
                   <span>Total</span>
-                  <span className="text-secondary">${totalPrice.toFixed(2)}</span>
+                  <span className="text-secondary">€{totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>

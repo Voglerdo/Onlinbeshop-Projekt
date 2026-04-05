@@ -118,7 +118,7 @@ export default function ProductPage() {
               </div>
 
               <div className="flex items-baseline gap-4">
-                <div className="text-5xl font-black text-secondary">${product.price.toFixed(2)}</div>
+                <div className="text-5xl font-black text-secondary">€{product.price.toFixed(2)}</div>
                 <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Incl. VAT</div>
               </div>
             </div>

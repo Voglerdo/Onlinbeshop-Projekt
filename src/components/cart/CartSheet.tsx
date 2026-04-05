@@ -1,3 +1,4 @@
+
 "use client"
 
 import { ShoppingBag, Trash2, Plus, Minus } from 'lucide-react';
@@ -74,7 +75,7 @@ export function CartSheet() {
                       </button>
                     </div>
                     <div className="text-sm text-secondary font-bold">
-                      ${item.price.toFixed(2)}
+                      €{item.price.toFixed(2)}
                     </div>
                     <div className="flex items-center gap-3 mt-2">
                       <Button 
@@ -107,7 +108,7 @@ export function CartSheet() {
             <div className="w-full space-y-4">
               <div className="flex justify-between items-center text-lg">
                 <span className="text-muted-foreground">Total</span>
-                <span className="font-bold text-secondary text-2xl">${totalPrice.toFixed(2)}</span>
+                <span className="font-bold text-secondary text-2xl">€{totalPrice.toFixed(2)}</span>
               </div>
               <Separator />
               <Button asChild className="w-full bg-primary hover:bg-primary/90 h-12 text-lg font-bold">

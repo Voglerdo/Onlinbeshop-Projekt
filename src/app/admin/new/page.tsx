@@ -211,7 +211,7 @@ export default function NewProductPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
+                <Label htmlFor="price">Price (€)</Label>
                 <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="bg-card h-12 text-secondary font-bold" required />
               </div>
             </div>

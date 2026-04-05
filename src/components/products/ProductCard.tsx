@@ -41,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="text-xs font-bold text-secondary uppercase tracking-widest mb-1">{product.category}</div>
           <h3 className="font-headline text-lg group-hover:text-primary transition-colors mb-1 line-clamp-1">{product.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-2 min-h-[2.5rem]">{product.description}</p>
-          <div className="text-xl font-bold text-secondary">${product.price.toFixed(2)}</div>
+          <div className="text-xl font-bold text-secondary">€{product.price.toFixed(2)}</div>
         </CardContent>
       </Link>
 

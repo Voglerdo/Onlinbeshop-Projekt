@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -195,7 +196,7 @@ export default function AdminPage() {
                         <span className="font-medium">{product.name}</span>
                       </TableCell>
                       <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
-                      <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
+                      <TableCell className="font-bold">€{product.price.toFixed(2)}</TableCell>
                       <TableCell>{product.stockQuantity} units</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -228,7 +229,7 @@ export default function AdminPage() {
                 <TrendingUp className="h-4 w-4 text-secondary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold font-headline">$36,400</div>
+                <div className="text-2xl font-bold font-headline">€36,400</div>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <ArrowUpRight className="h-3 w-3 text-green-500" /> +12.5% from last week
                 </p>
