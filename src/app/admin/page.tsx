@@ -1,4 +1,3 @@
-
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,6 @@ import {
   Plus, 
   MoreHorizontal, 
   Trash2, 
-  Sparkles,
   LayoutGrid,
   Loader2,
   ExternalLink,
@@ -38,9 +36,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCollection, useFirestore, useMemoFirebase, useUser, useDoc } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Product, JobOffer } from '@/app/types';
-import { deleteDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
@@ -69,7 +67,6 @@ export default function AdminPage() {
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const router = useRouter();
-  const [isSeeding, setIsSeeding] = useState(false);
 
   // Admin Check
   const adminRoleRef = useMemoFirebase(() => {
@@ -110,20 +107,10 @@ export default function AdminPage() {
     toast({ title: "Item Deleted", variant: "destructive" });
   };
 
-  const seedSampleJobs = () => {
+  const handleDeleteJob = (jobId: string) => {
     if (!db) return;
-    setIsSeeding(true);
-    const jobsRef = collection(db, 'jobs');
-    addDocumentNonBlocking(jobsRef, {
-      title: "Master Shisha Tester",
-      department: "Sensory Research",
-      location: "Dubai / Global",
-      type: "Full-time",
-      description: "Evaluate ultra-premium blends and airflow dynamics in the Baron's private lab.",
-      requirements: ["5+ years experience", "Exceptional palate"],
-      createdAt: new Date().toISOString()
-    });
-    setTimeout(() => setIsSeeding(false), 500);
+    deleteDocumentNonBlocking(doc(db, 'jobs', jobId));
+    toast({ title: "Position Removed", variant: "destructive" });
   };
 
   if (isUserLoading || isAdminChecking) {
@@ -159,10 +146,6 @@ export default function AdminPage() {
           <h1 className="text-4xl font-headline font-bold">Imperial Console</h1>
           <p className="text-muted-foreground">Orchestrate the Blubber Baron empire.</p>
         </div>
-        <Button variant="outline" onClick={seedSampleJobs} disabled={isSeeding} className="border-secondary text-secondary">
-          {isSeeding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="mr-2 h-5 w-5" />}
-          Seed Elite Roles
-        </Button>
       </div>
 
       <Tabs defaultValue="inventory" className="space-y-8">
@@ -339,7 +322,7 @@ export default function AdminPage() {
                       <TableCell>{job.department}</TableCell>
                       <TableCell><MapPin className="h-3 w-3 inline mr-1" />{job.location}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => deleteDocumentNonBlocking(doc(db, 'jobs', job.id))}>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeleteJob(job.id)}>
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </TableCell>
