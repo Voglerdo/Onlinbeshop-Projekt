@@ -21,13 +21,15 @@ Die App nutzt Google Genkit für generative Features:
 - **Gemini 2.5:** Generierung von Verkaufs-Narrativen und Text-to-Speech (TTS) für die Marken-Philosophie.
 - **Flows:** Server-Side Logik für KI-Workflows in `src/ai/flows/`.
 
-### 4. Datenmodell (Relationaler Entwurf)
-Die App ist darauf vorbereitet, auf ein SQL-Schema (MySQL) umgestellt zu werden:
-- `users`: Barone und Personal.
-- `products`: Der Luxuskatalog inkl. `product_images` Galerie.
-- `orders` & `order_items`: Transaktionshistorie.
-- `reviews`: Das Konsens-Archiv der Kunden.
-- `jobs` & `applications`: Das Karriereportal.
+### 4. Datenbank-Verwaltung (Firebase Console)
+Um deine Daten (Produkte, Bestellungen, Reviews) live zu sehen oder zu bearbeiten, besuche die Firebase Console:
+
+- **Projekt-URL:** [https://console.firebase.google.com/project/studio-5861391911-8fffa/firestore](https://console.firebase.google.com/project/studio-5861391911-8fffa/firestore)
+- **Struktur:**
+  - `products`: Der Luxuskatalog.
+  - `users/{uid}/orders`: Bestellhistorie der Kunden.
+  - `jobs`: Aktuelle Stellenausschreibungen.
+  - `roles_admin`: Verwaltung der Admin-Berechtigungen (UID des Nutzers eintragen).
 
 ## Entwicklung
 
