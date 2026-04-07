@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Zentraler API-Client für die Kommunikation mit einem externen REST-Backend.
  * Erlaubt den parallelen Betrieb zu Firebase.
@@ -13,30 +12,40 @@ export async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
   
-  const response = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      // Hier könnten später Auth-Tokens für das Spring Boot Backend hinzugefügt werden
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `API-Anfrage fehlgeschlagen: ${response.status}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `API-Anfrage fehlgeschlagen: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(`REST-API Fehler (${method} ${endpoint}):`, error);
+    throw error;
   }
-
-  return response.json();
 }
 
 export const externalApiService = {
-  // Beispiel: Produkte von externer API laden
+  // Produkte
   getProducts: () => apiRequest<any[]>('/products'),
+  syncProduct: (productData: any) => apiRequest<any>('/products', 'POST', productData),
   
-  // Beispiel: Bestellung an externes Backend synchronisieren
+  // Bestellungen
   syncOrder: (orderData: any) => apiRequest<any>('/orders', 'POST', orderData),
   
-  // Beispiel: Bewerbung synchronisieren
+  // Karriere & Bewerbungen
+  getJobs: () => apiRequest<any[]>('/jobs'),
+  syncJob: (jobData: any) => apiRequest<any>('/jobs', 'POST', jobData),
   syncApplication: (appData: any) => apiRequest<any>('/applications', 'POST', appData),
+  
+  // Reviews
+  syncReview: (reviewData: any) => apiRequest<any>('/reviews', 'POST', reviewData),
 };

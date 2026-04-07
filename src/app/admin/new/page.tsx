@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useRef } from 'react';
@@ -16,14 +15,15 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Wand2, Trash2, Check } from 'lucide-react';
+import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Wand2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { externalApiService } from '@/services/api-client';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function NewProductPage() {
     brand: 'Blubber Baron',
     stockQuantity: '10',
     features: [''],
-    imageUrl: '' // We will set the first image as the primary one
+    imageUrl: '' 
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +115,7 @@ export default function NewProductPage() {
     setFormData({ ...formData, features: newFeatures.length ? newFeatures : [''] });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!db) return;
     
@@ -127,16 +127,26 @@ export default function NewProductPage() {
     const productsRef = collection(db, 'products');
     const timestamp = new Date().toISOString();
     
-    addDocumentNonBlocking(productsRef, {
+    const productData = {
       ...formData,
-      imageUrl: images[0], // Primary image
-      imageUrls: images,    // Full gallery
+      imageUrl: images[0], 
+      imageUrls: images,    
       price: parseFloat(formData.price),
       stockQuantity: parseInt(formData.stockQuantity),
       features: formData.features.filter(f => f.trim() !== ''),
       createdAt: timestamp,
       updatedAt: timestamp
-    });
+    };
+
+    // 1. Firebase Sync
+    addDocumentNonBlocking(productsRef, productData);
+
+    // 2. REST API Sync
+    try {
+      await externalApiService.syncProduct(productData);
+    } catch (err) {
+      console.warn('REST API Produkt-Sync fehlgeschlagen:', err);
+    }
 
     toast({ title: "Manifestiert", description: "Der Artikel wurde dem Inventar des Barons hinzugefügt." });
     router.push('/admin');

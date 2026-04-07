@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useRef } from 'react';
@@ -7,7 +6,7 @@ import { collection, query, orderBy } from 'firebase/firestore';
 import { JobOffer } from '@/app/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Dialog, 
   DialogContent, 
@@ -24,6 +23,7 @@ import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send, Paperc
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { externalApiService } from '@/services/api-client';
 
 export default function CareersPage() {
   const db = useFirestore();
@@ -70,7 +70,7 @@ export default function CareersPage() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleApply = (e: React.FormEvent) => {
+  const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!db || !selectedJob) return;
 
@@ -90,7 +90,15 @@ export default function CareersPage() {
       createdAt: timestamp
     };
 
+    // 1. Firebase Sync
     addDocumentNonBlocking(applicationsRef, application);
+
+    // 2. REST API Sync
+    try {
+      await externalApiService.syncApplication(application);
+    } catch (err) {
+      console.warn('REST API Bewerbung-Sync fehlgeschlagen:', err);
+    }
 
     toast({
       title: "Referenzen erhalten",
@@ -124,7 +132,7 @@ export default function CareersPage() {
             DIE ZUKUNFT <br /><span className="text-secondary">GESTALTEN</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
-            Bei Blubber Baron bieten wir nicht nur Jobs an; wir bieten einen Platz am Tisch für Luxus und Innovation.
+            Bei Blubber Baron bieten wir nicht nur Jobs an; wir bieten einen Platz am ITable für Luxus und Innovation.
           </p>
         </div>
       </section>
@@ -169,7 +177,7 @@ export default function CareersPage() {
       <section className="container mx-auto px-4 lg:px-8 space-y-12">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-border pb-8">
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.3em] text-xs">
+            <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.4em] text-[10px]">
               <Sparkles className="h-3 w-3" />
               Offene Positionen
             </div>

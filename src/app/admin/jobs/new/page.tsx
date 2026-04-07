@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -20,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { externalApiService } from '@/services/api-client';
 
 export default function NewJobPage() {
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function NewJobPage() {
     setFormData({ ...formData, requirements: newReqs.length ? newReqs : [''] });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!db) return;
 
@@ -67,7 +67,15 @@ export default function NewJobPage() {
       createdAt: timestamp
     };
 
+    // 1. Firebase Sync
     addDocumentNonBlocking(jobsRef, newJob);
+
+    // 2. REST API Sync
+    try {
+      await externalApiService.syncJob(newJob);
+    } catch (err) {
+      console.warn('REST API Job-Sync fehlgeschlagen:', err);
+    }
 
     toast({
       title: "Position veröffentlicht",

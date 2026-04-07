@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { externalApiService } from '@/services/api-client';
 
 interface ReviewSystemProps {
   productId: string;
@@ -40,7 +40,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
 
   const { data: reviews, isLoading } = useCollection<Review>(reviewsQuery);
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !db) {
       toast({ title: "Identifizierung erforderlich", description: "Bitte melden Sie sich im Baron-Register an, um eine Bewertung abzugeben.", variant: "destructive" });
@@ -64,7 +64,15 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
       createdAt: new Date().toISOString()
     };
 
+    // 1. Firebase Sync
     addDocumentNonBlocking(reviewsRef, newReview);
+
+    // 2. REST API Sync
+    try {
+      await externalApiService.syncReview(newReview);
+    } catch (err) {
+      console.warn('REST API Review-Sync fehlgeschlagen:', err);
+    }
 
     toast({ title: "Dekret erhalten", description: "Ihre Erfahrung wurde in den imperialen Archiven protokolliert." });
     setComment('');
