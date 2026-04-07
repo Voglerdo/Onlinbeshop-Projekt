@@ -1,8 +1,7 @@
+
 "use client"
 
-import { useState, useRef } from 'react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useState, useRef, useEffect } from 'react';
 import { JobOffer } from '@/app/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,14 +21,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send, Paperclip, FileText, X } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
-import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { externalApiService } from '@/services/api-client';
 
 export default function CareersPage() {
-  const db = useFirestore();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  const [jobs, setJobs] = useState<JobOffer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isApplying, setIsApplying] = useState(false);
   const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
   const [resumeBase64, setResumeBase64] = useState<string | null>(null);
@@ -40,12 +39,20 @@ export default function CareersPage() {
     message: ''
   });
 
-  const jobsQuery = useMemoFirebase(() => {
-    if (!db) return null;
-    return query(collection(db, 'jobs'), orderBy('createdAt', 'desc'));
-  }, [db]);
-
-  const { data: jobs, isLoading } = useCollection<JobOffer>(jobsQuery);
+  useEffect(() => {
+    async function fetchJobs() {
+      setIsLoading(true);
+      try {
+        const data = await externalApiService.getJobs();
+        setJobs(data);
+      } catch (err) {
+        console.error('Fehler beim Laden der Jobs:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchJobs();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,11 +79,9 @@ export default function CareersPage() {
 
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!db || !selectedJob) return;
+    if (!selectedJob) return;
 
     setIsApplying(true);
-    
-    const applicationsRef = collection(db, 'jobs', selectedJob.id, 'applications');
     const timestamp = new Date().toISOString();
 
     const application = {
@@ -90,26 +95,25 @@ export default function CareersPage() {
       createdAt: timestamp
     };
 
-    // 1. Firebase Sync
-    addDocumentNonBlocking(applicationsRef, application);
-
-    // 2. REST API Sync
     try {
       await externalApiService.syncApplication(application);
+      toast({
+        title: "Referenzen erhalten",
+        description: "Der Rat des Barons wird Ihre Vision in Kürze prüfen.",
+      });
+      setApplicationData({ name: '', email: '', message: '' });
+      setResumeBase64(null);
+      setFileName(null);
+      setSelectedJob(null);
     } catch (err) {
-      console.warn('REST API Bewerbung-Sync fehlgeschlagen:', err);
+      toast({
+        title: "Übermittlung fehlgeschlagen",
+        description: "Bitte versuchen Sie es später erneut oder kontaktieren Sie uns direkt.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsApplying(false);
     }
-
-    toast({
-      title: "Referenzen erhalten",
-      description: "Der Rat des Barons wird Ihre Vision in Kürze prüfen.",
-    });
-
-    setApplicationData({ name: '', email: '', message: '' });
-    setResumeBase64(null);
-    setFileName(null);
-    setSelectedJob(null);
-    setIsApplying(false);
   };
 
   return (
@@ -132,7 +136,7 @@ export default function CareersPage() {
             DIE ZUKUNFT <br /><span className="text-secondary">GESTALTEN</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
-            Bei Blubber Baron bieten wir nicht nur Jobs an; wir bieten einen Platz am ITable für Luxus und Innovation.
+            Bei Blubber Baron bieten wir nicht nur Jobs an; wir bieten einen Platz am Tisch für Luxus und Innovation.
           </p>
         </div>
       </section>
@@ -206,14 +210,10 @@ export default function CareersPage() {
                       {job.title}
                     </CardTitle>
                     <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        {job.location}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-primary" />
-                        Gepostet am {new Date(job.createdAt).toLocaleDateString()}
-                      </div>
+                      <MapPin className="h-4 w-4 text-primary" />
+                      {job.location}
+                      <Clock className="h-4 w-4 text-primary ml-4" />
+                      Gepostet am {new Date(job.createdAt).toLocaleDateString()}
                     </div>
                   </div>
                   

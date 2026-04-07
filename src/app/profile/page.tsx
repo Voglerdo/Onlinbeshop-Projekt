@@ -2,8 +2,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
-import { doc, collection, query, orderBy, limit } from 'firebase/firestore';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,113 +21,87 @@ import {
   Mail,
   Calendar,
   CreditCard,
-  Briefcase,
   Key,
   Sparkles
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
-import { getAuth, signOut } from 'firebase/auth';
+import { externalApiService } from '@/services/api-client';
 import Link from 'next/link';
 
 export default function ProfilePage() {
-  const { user, isUserLoading } = useUser();
-  const db = useFirestore();
-  const auth = getAuth();
+  const { user, isUserLoading, logout, login } = useAuth();
   const { toast } = useToast();
   
+  const [profile, setProfile] = useState<any>(null);
+  const [orders, setOrders] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isPromoting, setIsPromoting] = useState(false);
-  const [wantsToBeAdmin, setWantsToBeAdmin] = useState(false);
-
-  const profileRef = useMemoFirebase(() => {
-    if (!db || !user) return null;
-    return doc(db, 'users', user.uid);
-  }, [db, user]);
-
-  const { data: profile } = useDoc(profileRef);
-
-  const adminRoleRef = useMemoFirebase(() => {
-    if (!db || !user) return null;
-    return doc(db, 'roles_admin', user.uid);
-  }, [db, user]);
-
-  const { data: adminRole, isLoading: isAdminChecking } = useDoc(adminRoleRef);
-  const isAdmin = !!adminRole;
+  const [isDataLoading, setIsDataLoading] = useState(false);
 
   useEffect(() => {
-    if (user && wantsToBeAdmin && !isAdmin && !isAdminChecking && db) {
-      const roleRef = doc(db, 'roles_admin', user.uid);
-      setDocumentNonBlocking(roleRef, { uid: user.uid, role: 'admin' }, { merge: true });
-      setWantsToBeAdmin(false);
-      toast({
-        title: "Admin-Referenzen werden synchronisiert",
-        description: "Berechtigungen für imperiale Aufsicht werden erteilt...",
-      });
+    async function fetchProfileData() {
+      if (!user) return;
+      setIsDataLoading(true);
+      try {
+        const [profileData, ordersData] = await Promise.all([
+          externalApiService.getUserProfile(user.uid),
+          externalApiService.getOrders(user.uid)
+        ]);
+        setProfile(profileData);
+        setOrders(ordersData);
+      } catch (err) {
+        console.warn('REST API Profil-Laden fehlgeschlagen, nutze lokale Session-Daten.');
+        setProfile(user);
+      } finally {
+        setIsDataLoading(false);
+      }
     }
-  }, [user, wantsToBeAdmin, isAdmin, isAdminChecking, db, toast]);
+    fetchProfileData();
+  }, [user]);
 
-  const ordersQuery = useMemoFirebase(() => {
-    if (!db || !user) return null;
-    return query(collection(db, 'users', user.uid, 'orders'), orderBy('createdAt', 'desc'), limit(5));
-  }, [db, user]);
-
-  const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
-
-  const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!profileRef || !user) return;
+    if (!user) return;
 
     setIsSaving(true);
     const formData = new FormData(e.currentTarget);
     const data = {
-      id: user.uid,
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
-      email: user.email || (formData.get('email') as string),
+      email: formData.get('email') as string,
       updatedAt: new Date().toISOString(),
-      createdAt: profile?.createdAt || new Date().toISOString(),
     };
 
-    setDocumentNonBlocking(profileRef, data, { merge: true });
-    
-    setTimeout(() => {
-      setIsSaving(false);
+    try {
+      await externalApiService.updateUserProfile(user.uid, data);
+      setProfile({ ...profile, ...data });
       toast({
         title: "Profil aktualisiert",
         description: "Ihre Baron-Referenzen wurden synchronisiert.",
       });
-    }, 500);
+    } catch (err) {
+      toast({ title: "Fehler bei der Synchronisation", variant: "destructive" });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleSignOut = () => {
-    signOut(auth).then(() => {
-      toast({
-        title: "Abgemeldet",
-        description: "Bis zum nächsten Mal, Baron.",
-      });
-    });
-  };
-
-  const handleBecomeAdmin = () => {
-    if (!db || !user) return;
+  const handleBecomeAdmin = async () => {
+    if (!user) return;
     setIsPromoting(true);
-    const roleRef = doc(db, 'roles_admin', user.uid);
-    setDocumentNonBlocking(roleRef, { uid: user.uid, role: 'admin' }, { merge: true });
-    
-    setTimeout(() => {
-      setIsPromoting(false);
+    try {
+      // Simuliere Admin-Promotion via API
+      await externalApiService.updateUserProfile(user.uid, { isAdmin: true });
+      login(user.email || 'baron@elite.de', true); // Update lokale Session
       toast({
         title: "Admin-Zugang gewährt",
         description: "Sie haben nun Zugriff auf die Imperiale Konsole.",
       });
-    }, 800);
-  };
-
-  const handleAdminSignIn = () => {
-    setWantsToBeAdmin(true);
-    initiateAnonymousSignIn(auth);
+    } catch (err) {
+      toast({ title: "Promotion fehlgeschlagen", variant: "destructive" });
+    } finally {
+      setIsPromoting(false);
+    }
   };
 
   if (isUserLoading) {
@@ -156,10 +129,7 @@ export default function ProfilePage() {
               <h2 className="text-2xl font-bold font-headline">Kundenzugang</h2>
               <p className="text-sm text-muted-foreground">Verwalten Sie Ihre Kollektion, verfolgen Sie Erwerbe und stöbern Sie im Katalog.</p>
             </div>
-            <Button 
-              className="w-full h-12 bg-secondary text-background font-bold"
-              onClick={() => initiateAnonymousSignIn(auth)}
-            >
+            <Button className="w-full h-12 bg-secondary text-background font-bold" onClick={() => login('baron@elite.de')}>
               Als Kunde eintreten
             </Button>
           </Card>
@@ -170,12 +140,9 @@ export default function ProfilePage() {
             </div>
             <div className="space-y-2">
               <h2 className="text-2xl font-bold font-headline">Imperiales Personal</h2>
-              <p className="text-sm text-muted-foreground">Für Administratoren zur Verwaltung von Inventar, Rollen und Stellenangeboten.</p>
+              <p className="text-sm text-muted-foreground">Für Administratoren zur Verwaltung von Inventar und Stellenangeboten.</p>
             </div>
-            <Button 
-              className="w-full h-12 bg-primary font-bold"
-              onClick={handleAdminSignIn}
-            >
+            <Button className="w-full h-12 bg-primary font-bold" onClick={() => login('admin@blubberbaron.de', true)}>
               Admin-Anmeldung
             </Button>
           </Card>
@@ -189,22 +156,22 @@ export default function ProfilePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.3em] text-xs">
-            {isAdmin ? <ShieldCheck className="h-3 w-3 text-primary" /> : <User className="h-3 w-3" />}
-            {isAdmin ? 'Imperiale Administration' : 'Authentifizierter Baron'}
+            {user.isAdmin ? <ShieldCheck className="h-3 w-3 text-primary" /> : <User className="h-3 w-3" />}
+            {user.isAdmin ? 'Imperiale Administration' : 'Authentifizierter Baron'}
           </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">
             Willkommen, {profile?.firstName || 'Baron'}
           </h1>
           <p className="text-muted-foreground">
-            {isAdmin 
+            {user.isAdmin 
               ? 'Sie haben die volle Aufsicht über das Blubber Baron Imperium.' 
-              : `Wir verwalten Ihren Elite-Lifestyle seit ${profile?.createdAt ? new Date(profile.createdAt).getFullYear() : 'heute'}.`
+              : `Wir verwalten Ihren Elite-Lifestyle.`
             }
           </p>
         </div>
         
         <div className="flex gap-4">
-          {isAdmin && (
+          {user.isAdmin && (
             <Link href="/admin">
               <Button className="bg-primary crimson-glow font-bold h-12 px-8">
                 <Key className="h-4 w-4 mr-2" />
@@ -212,7 +179,7 @@ export default function ProfilePage() {
               </Button>
             </Link>
           )}
-          <Button variant="ghost" className="text-destructive h-12 hover:text-destructive hover:bg-destructive/10" onClick={handleSignOut}>
+          <Button variant="ghost" className="text-destructive h-12 hover:text-destructive hover:bg-destructive/10" onClick={logout}>
             <LogOut className="h-4 w-4 mr-2" />
             Sitzung beenden
           </Button>
@@ -237,9 +204,9 @@ export default function ProfilePage() {
                 <CardDescription>Eine Chronik Ihrer Luxustransaktionen.</CardDescription>
               </CardHeader>
               <CardContent>
-                {isOrdersLoading ? (
+                {isDataLoading ? (
                   <div className="py-12 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-                ) : !orders || orders.length === 0 ? (
+                ) : orders.length === 0 ? (
                   <div className="text-center py-12 space-y-4">
                     <p className="text-muted-foreground">Ihre Historie ist noch ein leeres Blatt.</p>
                     <Link href="/#catalog">
@@ -248,7 +215,7 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {orders.map((order) => (
+                    {orders.map((order: any) => (
                       <div key={order.id} className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-white/5 transition-colors group cursor-pointer">
                         <div className="flex items-center gap-4">
                           <div className="p-3 rounded-lg bg-muted text-secondary">
@@ -281,16 +248,12 @@ export default function ProfilePage() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Mitgliedschaft</span>
-                    <Badge className={isAdmin ? "bg-primary text-white font-bold border-none" : "bg-secondary text-background font-bold border-none"}>
-                      {isAdmin ? 'IMPERIALES PERSONAL' : 'ELITE BARON'}
+                    <Badge className={user.isAdmin ? "bg-primary text-white font-bold border-none" : "bg-secondary text-background font-bold border-none"}>
+                      {user.isAdmin ? 'IMPERIALES PERSONAL' : 'ELITE BARON'}
                     </Badge>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Beigetreten</span>
-                    <span className="text-sm font-medium">{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}</span>
-                  </div>
                   <Separator className="bg-border/50" />
-                  {!isAdmin && (
+                  {!user.isAdmin && (
                     <Button 
                       variant="outline" 
                       className="w-full text-xs border-primary/20 hover:bg-primary/10 text-primary py-6"
@@ -300,12 +263,6 @@ export default function ProfilePage() {
                       {isPromoting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
                       Admin-Zugang beantragen
                     </Button>
-                  )}
-                  {isAdmin && (
-                    <div className="flex items-center justify-center p-4 bg-primary/5 rounded-xl border border-primary/10">
-                      <Sparkles className="h-4 w-4 text-primary mr-2" />
-                      <span className="text-xs font-bold uppercase tracking-widest text-primary">Aufsicht aktiv</span>
-                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -317,7 +274,7 @@ export default function ProfilePage() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-primary" />
-                    <span className="text-sm truncate">{user.email || 'Anonyme Sitzung'}</span>
+                    <span className="text-sm truncate">{user.email}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-primary" />
@@ -340,50 +297,20 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">Vorname</Label>
-                    <Input 
-                      id="firstName" 
-                      name="firstName" 
-                      defaultValue={profile?.firstName || ''} 
-                      className="bg-background border-border" 
-                      required
-                    />
+                    <Input id="firstName" name="firstName" defaultValue={profile?.firstName || ''} className="bg-background border-border" required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="lastName">Nachname</Label>
-                    <Input 
-                      id="lastName" 
-                      name="lastName" 
-                      defaultValue={profile?.lastName || ''} 
-                      className="bg-background border-border" 
-                      required
-                    />
+                    <Input id="lastName" name="lastName" defaultValue={profile?.lastName || ''} className="bg-background border-border" required />
                   </div>
                 </div>
-                
                 <div className="space-y-2">
-                  <Label htmlFor="email">Bevorzugte E-Mail</Label>
-                  <Input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    defaultValue={user.email || profile?.email || ''} 
-                    className="bg-background border-border" 
-                    disabled={!!user.email}
-                  />
-                  {user.email && <p className="text-[10px] text-muted-foreground italic">E-Mail wird über den Auth-Provider verwaltet.</p>}
+                  <Label htmlFor="email">E-Mail</Label>
+                  <Input id="email" name="email" type="email" defaultValue={profile?.email || ''} className="bg-background border-border" required />
                 </div>
-
                 <div className="pt-4">
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 bg-primary hover:bg-primary/90 font-bold crimson-glow"
-                    disabled={isSaving}
-                  >
-                    {isSaving ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                      'Referenzen synchronisieren'
-                    )}
+                  <Button type="submit" className="w-full h-12 bg-primary hover:bg-primary/90 font-bold crimson-glow" disabled={isSaving}>
+                    {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : 'Referenzen synchronisieren'}
                   </Button>
                 </div>
               </form>

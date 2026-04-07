@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound, useParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
@@ -9,38 +9,43 @@ import { Star, ShieldCheck, Truck, RefreshCw, Loader2, ChevronRight, ChevronLeft
 import { ProductCard } from '@/components/products/ProductCard';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { ReviewSystem } from '@/components/products/ReviewSystem';
-import { useCollection, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc, collection, query, limit, where } from 'firebase/firestore';
 import { Product } from '@/app/types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { externalApiService } from '@/services/api-client';
 
 export default function ProductPage() {
   const params = useParams();
   const id = params.id as string;
-  const db = useFirestore();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
 
-  const docRef = useMemoFirebase(() => {
-    if (!db || !id) return null;
-    return doc(db, 'products', id);
-  }, [db, id]);
+  useEffect(() => {
+    async function fetchData() {
+      if (!id) return;
+      setIsLoading(true);
+      try {
+        const productData = await externalApiService.getProduct(id);
+        setProduct(productData);
+        
+        // Verwandte Produkte laden
+        const allProducts = await externalApiService.getProducts();
+        const related = allProducts
+          .filter(p => p.category === productData.category && p.id !== id)
+          .slice(0, 4);
+        setRelatedProducts(related);
+      } catch (err) {
+        console.error('Fehler beim Laden des Produkts:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, [id]);
 
-  const { data: product, isLoading } = useDoc<Product>(docRef);
-
-  const relatedQuery = useMemoFirebase(() => {
-    if (!db || !product) return null;
-    return query(
-      collection(db, 'products'), 
-      where('category', '==', product.category),
-      limit(5)
-    );
-  }, [db, product]);
-
-  const { data: relatedProductsRaw } = useCollection<Product>(relatedQuery);
-  const relatedProducts = relatedProductsRaw?.filter(p => p.id !== id).slice(0, 4) || [];
-
-  if (isLoading || !id) {
+  if (isLoading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6">
         <div className="relative">
