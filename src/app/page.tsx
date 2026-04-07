@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProductCard } from '@/components/products/ProductCard';
@@ -9,11 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Star, Loader2, Sparkles, Filter, X } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
 import { Product } from '@/app/types';
 import { cn } from '@/lib/utils';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { externalApiService } from '@/services/api-client';
 
 const CATEGORIES = [
   { id: 'all', label: 'Gesamte Kollektion' },
@@ -24,23 +23,31 @@ const CATEGORIES = [
 ];
 
 export default function Home() {
-  const db = useFirestore();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const searchQuery = searchParams.get('q') || '';
-  
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-shisha');
 
-  const productsQuery = useMemoFirebase(() => {
-    if (!db) return null;
-    return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
-  }, [db]);
+  useEffect(() => {
+    async function fetchProducts() {
+      setIsLoading(true);
+      try {
+        const data = await externalApiService.getProducts();
+        setProducts(data);
+      } catch (err) {
+        console.error('Fehler beim Laden der Produkte:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
 
-  const { data: allProducts, isLoading } = useCollection<Product>(productsQuery);
-
-  const filteredProducts = allProducts?.filter(product => {
+  const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -48,7 +55,7 @@ export default function Home() {
       product.category.toLowerCase().includes(searchQuery.toLowerCase());
     
     return matchesCategory && matchesSearch;
-  }) || [];
+  });
 
   const clearSearch = () => {
     router.push('/#catalog');
@@ -64,27 +71,25 @@ export default function Home() {
           fill
           priority
           className="object-cover opacity-40 scale-105"
-          data-ai-hint="luxury shisha"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-        <div className="absolute inset-0 bg-black/20" />
         
         <div className="container relative z-10 px-4 text-center space-y-10">
           <div className="space-y-6 max-w-5xl mx-auto">
-            <div className="flex items-center justify-center gap-3 text-secondary animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex items-center justify-center gap-3 text-secondary">
               <div className="h-px w-12 bg-secondary/30" />
               <span className="uppercase tracking-[0.6em] text-[10px] font-black">Imperialer Standard</span>
               <div className="h-px w-12 bg-secondary/30" />
             </div>
-            <h1 className="text-7xl md:text-9xl font-black font-headline tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="text-7xl md:text-9xl font-black font-headline tracking-tighter leading-[0.9]">
               EXZELLENZ <br /><span className="text-secondary italic font-serif">ERSCHAFFEN</span>
             </h1>
-            <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
               Erleben Sie den Gipfel der Shisha-Raffinesse. Kuratiert für jene Wenigen, die bei jedem Zug absolute Perfektion verlangen.
             </p>
           </div>
           
-          <div className="flex flex-wrap items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-16 duration-1000">
+          <div className="flex flex-wrap items-center justify-center gap-6">
             <Link href="/#catalog">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-16 px-12 rounded-full crimson-glow transition-all hover:scale-105">
                 Die Schatzkammer erkunden
@@ -94,10 +99,6 @@ export default function Home() {
               <Link href="/story">Die Geschichte</Link>
             </Button>
           </div>
-        </div>
-        
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
-          <div className="w-[1px] h-16 bg-gradient-to-b from-secondary to-transparent" />
         </div>
       </section>
 
@@ -171,39 +172,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        {/* Newsletter Section */}
-        <div className="mt-32 p-16 lg:p-24 glass-card rounded-[4rem] relative overflow-hidden border-none gold-glow">
-          <div className="absolute -top-24 -right-24 p-8 opacity-[0.03]">
-            <Sparkles className="h-[30rem] w-[30rem] text-secondary" />
-          </div>
-          
-          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
-            <div className="max-w-2xl space-y-8 text-center lg:text-left">
-              <Badge className="bg-secondary/10 text-secondary border-secondary/20 px-5 py-1.5 text-[10px] font-black tracking-[0.3em]">DER INNERE KREIS</Badge>
-              <h3 className="text-5xl md:text-7xl font-headline font-bold leading-[0.9] tracking-tighter">Erheben Sie Ihre Existenz</h3>
-              <p className="text-xl text-muted-foreground leading-relaxed font-light">
-                Treten Sie dem exklusiven Register des Barons bei, um frühen Zugang zu limitierten Editionen, exklusiven Geschmacksprototypen und privaten globalen Events zu erhalten.
-              </p>
-            </div>
-            
-            <div className="w-full lg:w-auto space-y-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <input 
-                  type="email" 
-                  placeholder="Die E-Mail des Barons" 
-                  className="bg-black/40 border border-white/10 rounded-2xl px-8 h-16 flex-1 md:w-96 outline-none focus:border-secondary/50 focus:ring-1 focus:ring-secondary/20 transition-all font-light"
-                />
-                <Button className="h-16 px-12 bg-secondary hover:bg-secondary/90 text-background font-black text-xs uppercase tracking-widest rounded-2xl transition-transform hover:scale-105">
-                  Dem Kreis beitreten
-                </Button>
-              </div>
-              <p className="text-[10px] text-center lg:text-left text-muted-foreground uppercase tracking-[0.3em] font-medium opacity-50">
-                Diskretion garantiert • Streng vertraulich
-              </p>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );

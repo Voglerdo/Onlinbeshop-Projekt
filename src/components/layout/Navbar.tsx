@@ -2,14 +2,13 @@
 "use client"
 
 import Link from 'next/link';
-import { Search, User, Sparkles, BookOpen, Briefcase, ShieldCheck } from 'lucide-react';
+import { Search, User, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartSheet } from '@/components/cart/CartSheet';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
@@ -17,16 +16,7 @@ export function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user } = useUser();
-  const db = useFirestore();
-
-  const adminRoleRef = useMemoFirebase(() => {
-    if (!db || !user) return null;
-    return doc(db, 'roles_admin', user.uid);
-  }, [db, user]);
-
-  const { data: adminRole } = useDoc(adminRoleRef);
-  const isAdmin = !!adminRole;
+  const { user } = useAuth();
 
   useEffect(() => {
     const query = searchParams.get('q');
@@ -63,8 +53,8 @@ export function Navbar() {
             <Link href="/careers" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
               Karriere
             </Link>
-            {isAdmin && (
-              <Link href="/admin" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all animate-in fade-in slide-in-from-left-2">
+            {user?.isAdmin && (
+              <Link href="/admin" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Konsole
               </Link>
