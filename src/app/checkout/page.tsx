@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/cart/CartProvider';
 import { useUser, useFirestore } from '@/firebase';
-import { collection, doc, serverTimestamp } from 'firebase/firestore';
-import { setDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { collection, doc } from 'firebase/firestore';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,7 @@ import { ShieldCheck, ArrowLeft, Loader2, CreditCard, Truck } from 'lucide-react
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
+import { externalApiService } from '@/services/api-client';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -82,24 +83,27 @@ export default function CheckoutPage() {
       shippingAddressZip: formData.zip,
       shippingAddressCountry: formData.country,
       paymentMethod: formData.paymentMethod,
+      items: items.map(item => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
       createdAt: timestamp,
       updatedAt: timestamp
     };
 
+    // 1. Firebase Update (Offline-First fähig)
     setDocumentNonBlocking(orderRef, orderData, { merge: true });
 
-    items.forEach(item => {
-      const orderItemRef = doc(collection(db, 'users', user.uid, 'orders', orderId, 'orderItems'));
-      const orderItemData = {
-        id: orderItemRef.id,
-        orderId: orderId,
-        productId: item.id,
-        quantity: item.quantity,
-        unitPrice: item.price,
-        userId: user.uid
-      };
-      setDocumentNonBlocking(orderItemRef, orderItemData, { merge: true });
-    });
+    // 2. REST-API Synchronisation (Zusätzlich zum Firebase-Speicher)
+    try {
+      await externalApiService.syncOrder(orderData);
+      console.log('Bestellung erfolgreich mit externer API synchronisiert');
+    } catch (error) {
+      console.warn('Externe API Synchronisation fehlgeschlagen, Firebase hat jedoch gespeichert.', error);
+      // Wir stören den User-Flow nicht, wenn nur das externe Backup fehlschlägt
+    }
 
     toast({
       title: "Bestellung aufgegeben",
