@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -13,18 +14,15 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { ArrowLeft, Plus, X, Save, Briefcase, MapPin, Building2 } from 'lucide-react';
+import { ArrowLeft, Plus, X, Save, Briefcase, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { useFirestore } from '@/firebase';
-import { collection } from 'firebase/firestore';
-import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { externalApiService } from '@/services/api-client';
 
 export default function NewJobPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const db = useFirestore();
+  const [isSaving, setIsSaving] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -52,37 +50,26 @@ export default function NewJobPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!db) return;
-
-    const jobsRef = collection(db, 'jobs');
-    const timestamp = new Date().toISOString();
+    setIsSaving(true);
     
     const newJob = {
-      title: formData.title,
-      department: formData.department,
-      location: formData.location,
-      type: formData.type,
-      description: formData.description,
+      ...formData,
       requirements: formData.requirements.filter(r => r.trim() !== ''),
-      createdAt: timestamp
+      createdAt: new Date().toISOString()
     };
 
-    // 1. Firebase Sync
-    addDocumentNonBlocking(jobsRef, newJob);
-
-    // 2. REST API Sync
     try {
       await externalApiService.syncJob(newJob);
+      toast({
+        title: "Position veröffentlicht",
+        description: "Das Angebot wurde erfolgreich an das Karriereregister gesendet.",
+      });
+      router.push('/admin');
     } catch (err) {
-      console.warn('REST API Job-Sync fehlgeschlagen:', err);
+      toast({ title: "Fehler", description: "Konnte die Position nicht speichern.", variant: "destructive" });
+    } finally {
+      setIsSaving(false);
     }
-
-    toast({
-      title: "Position veröffentlicht",
-      description: "Das Angebot ist nun im Karriereregister des Barons live.",
-    });
-    
-    router.push('/admin');
   };
 
   return (
@@ -94,85 +81,61 @@ export default function NewJobPage() {
       <div className="space-y-2">
         <h1 className="text-4xl font-headline font-bold flex items-center gap-3">
           <Briefcase className="h-8 w-8 text-secondary" />
-          Neue Position ausschreiben
+          Neue Ausschreibung
         </h1>
-        <p className="text-muted-foreground">Suchen Sie nach der nächsten Generation von Visionären für den Blubber Baron.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="glass-card p-8 rounded-3xl border-none space-y-8">
+      <form onSubmit={handleSubmit} className="glass-card p-8 rounded-3xl space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Titel der Position</Label>
-              <Input id="title" placeholder="z.B. Meister der Ästhetik" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card h-12 text-lg" required />
+              <Label htmlFor="title">Titel</Label>
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card h-12" required />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="department">Abteilung</Label>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="department" placeholder="z.B. Sensorische Forschung" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} className="bg-card h-12 pl-10" required />
-              </div>
+              <Input id="department" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} className="bg-card h-12" required />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="location">Standort</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="location" placeholder="z.B. Dubai / Remote" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-card h-12 pl-10" required />
-              </div>
+              <Input id="location" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-card h-12" required />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="type">Art der Beschäftigung</Label>
+              <Label htmlFor="type">Typ</Label>
               <Select defaultValue="Full-time" onValueChange={(v) => setFormData({ ...formData, type: v as any })}>
                 <SelectTrigger className="bg-card h-12">
-                  <SelectValue placeholder="Typ wählen..." />
+                  <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-card border-border">
+                <SelectContent className="bg-card">
                   <SelectItem value="Full-time">Vollzeit</SelectItem>
                   <SelectItem value="Part-time">Teilzeit</SelectItem>
-                  <SelectItem value="Contract">Vertrag / Projekt</SelectItem>
+                  <SelectItem value="Contract">Projekt</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Anforderungen des Barons</Label>
-                <Button type="button" variant="ghost" size="sm" onClick={addRequirement} className="text-secondary hover:text-secondary h-8">
-                  <Plus className="h-4 w-4 mr-1" /> Hinzufügen
-                </Button>
+          <div className="space-y-4">
+            <Label>Anforderungen</Label>
+            {formData.requirements.map((req, index) => (
+              <div key={index} className="flex gap-2">
+                <Input value={req} onChange={(e) => handleRequirementChange(index, e.target.value)} className="bg-card h-10" />
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeRequirement(index)}><X className="h-4 w-4" /></Button>
               </div>
-              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                {formData.requirements.map((req, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input placeholder={`Anforderung #${index + 1}`} value={req} onChange={(e) => handleRequirementChange(index, e.target.value)} className="bg-card h-10" />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeRequirement(index)} className="h-10 w-10 text-muted-foreground hover:text-destructive shrink-0">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={addRequirement}><Plus className="h-4 w-4 mr-2" /> Hinzufügen</Button>
           </div>
         </div>
 
-        <div className="space-y-4 pt-4 border-t border-border">
-          <Label htmlFor="description" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Beschreibung der Rolle</Label>
-          <Textarea id="description" placeholder="Beschreiben Sie die Verantwortlichkeiten und die Vision für diese Rolle..." className="min-h-[200px] bg-card border-border resize-none leading-relaxed text-base" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+        <div className="space-y-2">
+          <Label htmlFor="description">Beschreibung</Label>
+          <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[200px] bg-card" required />
         </div>
 
-        <div className="pt-8 flex gap-4">
-          <Button type="submit" className="flex-1 bg-primary hover:bg-primary/90 h-14 text-lg font-bold rounded-xl crimson-glow">
-            <Save className="mr-2 h-6 w-6" /> Position veröffentlichen
-          </Button>
-          <Button type="button" variant="outline" className="h-14 px-8 border-border hover:bg-muted" onClick={() => router.push('/admin')}>
-            Abbrechen
-          </Button>
-        </div>
+        <Button type="submit" disabled={isSaving} className="w-full h-14 bg-primary text-lg font-bold">
+          {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : <Save className="mr-2 h-6 w-6" />}
+          Position veröffentlichen
+        </Button>
       </form>
     </div>
   );
