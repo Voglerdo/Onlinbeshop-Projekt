@@ -2,54 +2,10 @@
 "use client"
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Quote, History, Award, Users, Play, Loader2, Volume2 } from 'lucide-react';
-import { useState, useRef } from 'react';
-import { storyTTS } from '@/ai/flows/story-tts-flow';
-import { useToast } from '@/hooks/use-toast';
+import { Star, Quote, History, Award, Users } from 'lucide-react';
 
 export default function StoryPage() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { toast } = useToast();
-
-  const handleListen = async () => {
-    if (audioUrl) {
-      if (audioRef.current) {
-        if (isPlaying) {
-          audioRef.current.pause();
-          setIsPlaying(false);
-        } else {
-          audioRef.current.play();
-          setIsPlaying(true);
-        }
-      }
-      return;
-    }
-
-    setIsLoadingAudio(true);
-    try {
-      const philosophyText = "Der Baron glaubt, dass wahrer Luxus in der Stille eines perfekten Zugs und der Dichte einer Wolke zu spüren ist, die wie eine Erinnerung verweilt. Eine Session ist nicht bloß Rauch; sie ist ein Gespräch zwischen der Seele und den Sinnen.";
-      const result = await storyTTS({ text: philosophyText });
-      setAudioUrl(result.audioUri);
-      
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.play();
-          setIsPlaying(true);
-        }
-      }, 100);
-    } catch (e) {
-      toast({ title: "Manifestierung der Stimme fehlgeschlagen", variant: "destructive" });
-    } finally {
-      setIsLoadingAudio(false);
-    }
-  };
-
   return (
     <div className="flex flex-col gap-24 pb-20">
       <section className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
@@ -60,16 +16,6 @@ export default function StoryPage() {
           <h1 className="text-6xl md:text-8xl font-black font-headline tracking-tighter leading-none">DIE LEGENDE VOM <br /><span className="text-primary">BARON</span></h1>
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium italic">"Eine Session ist nicht bloß Rauch; sie ist ein Gespräch zwischen der Seele und den Sinnen."</p>
-            <Button 
-              variant="outline" 
-              onClick={handleListen} 
-              disabled={isLoadingAudio}
-              className="mt-4 border-secondary text-secondary hover:bg-secondary/10 rounded-full px-8 h-12 gold-glow"
-            >
-              {isLoadingAudio ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : isPlaying ? <Volume2 className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
-              {isLoadingAudio ? "Stimme wird beschworen..." : isPlaying ? "Den Baron pausieren" : "Das Dekret anhören"}
-            </Button>
-            {audioUrl && <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} className="hidden" />}
           </div>
         </div>
       </section>

@@ -1,9 +1,8 @@
+
 "use client"
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminGenerateProductDescription } from '@/ai/flows/admin-generate-product-description-flow';
-import { generateProductImage } from '@/ai/flows/generate-product-image-flow';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +14,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Sparkles, ArrowLeft, Plus, X, Loader2, Save, Upload, Wand2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, X, Save, Upload, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
@@ -31,8 +30,6 @@ export default function NewProductPage() {
   const db = useFirestore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
-  const [isGeneratingImg, setIsGeneratingImg] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -59,45 +56,6 @@ export default function NewProductPage() {
 
   const removeImage = (index: number) => {
     setImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleAIDescription = async () => {
-    if (!formData.name) {
-      toast({ title: "Produktname erforderlich", variant: "destructive" });
-      return;
-    }
-    setIsGeneratingDesc(true);
-    try {
-      const result = await adminGenerateProductDescription({
-        productName: formData.name,
-        keyFeatures: formData.features.filter(f => f.trim() !== '')
-      });
-      setFormData(prev => ({ ...prev, description: result.description }));
-    } catch (e) {
-      toast({ title: "KI-Generierung fehlgeschlagen", variant: "destructive" });
-    } finally {
-      setIsGeneratingDesc(false);
-    }
-  };
-
-  const handleAIImage = async () => {
-    if (!formData.name) {
-      toast({ title: "Produktname erforderlich", variant: "destructive" });
-      return;
-    }
-    setIsGeneratingImg(true);
-    try {
-      const result = await generateProductImage({
-        productName: formData.name,
-        description: formData.category + " " + formData.description.substring(0, 100)
-      });
-      setImages(prev => [...prev, result.imageUrl]);
-      toast({ title: "KI-Bild manifestiert", description: "Das visuelle Abbild des Barons wurde erstellt." });
-    } catch (e) {
-      toast({ title: "KI-Bild fehlgeschlagen", variant: "destructive" });
-    } finally {
-      setIsGeneratingImg(false);
-    }
   };
 
   const handleFeatureChange = (index: number, value: string) => {
@@ -169,10 +127,6 @@ export default function NewProductPage() {
             <div className="flex items-center justify-between border-b border-border pb-2">
               <h3 className="text-xl font-bold font-headline">Produkt-Medien</h3>
               <div className="flex gap-2">
-                <Button type="button" variant="outline" size="sm" className="h-8 gold-glow text-xs" onClick={handleAIImage} disabled={isGeneratingImg}>
-                  {isGeneratingImg ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-2" />}
-                  KI-Generieren
-                </Button>
                 <Button type="button" variant="secondary" size="sm" className="h-8 text-xs" onClick={() => fileInputRef.current?.click()}>
                   <Plus className="h-3 w-3 mr-2" /> Hinzufügen
                 </Button>
@@ -247,13 +201,7 @@ export default function NewProductPage() {
             </div>
 
             <div className="space-y-4 pt-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Produkt-Narrativ</Label>
-                <Button type="button" size="sm" variant="secondary" className="gold-glow h-8 text-xs font-bold" onClick={handleAIDescription} disabled={isGeneratingDesc}>
-                  {isGeneratingDesc ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 mr-2" />}
-                  KI-Beschreibung
-                </Button>
-              </div>
+              <Label htmlFor="description" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Produkt-Beschreibung</Label>
               <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[150px] bg-card leading-relaxed" required />
             </div>
 
