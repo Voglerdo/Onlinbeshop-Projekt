@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -15,7 +14,8 @@ import {
   TrendingUp,
   Package,
   ArrowUpRight,
-  ShieldAlert
+  ShieldAlert,
+  Clock
 } from 'lucide-react';
 import { 
   Table, 
@@ -38,7 +38,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Product, JobOffer } from '@/app/types';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   BarChart, 
   Bar, 
@@ -46,8 +46,7 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer, 
-  Cell
+  ResponsiveContainer 
 } from 'recharts';
 import { externalApiService } from '@/services/api-client';
 import { useAuth } from '@/context/AuthContext';
@@ -87,8 +86,8 @@ export default function AdminPage() {
     async function fetchData() {
       try {
         const [productsData, jobsData] = await Promise.all([
-          externalApiService.getProducts(),
-          externalApiService.getJobs()
+          externalApiService.getProducts().catch(() => []),
+          externalApiService.getJobs().catch(() => [])
         ]);
         setProducts(productsData);
         setJobs(jobsData);
@@ -195,41 +194,111 @@ export default function AdminPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 rounded overflow-hidden">
-                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
-                        </div>
-                        <span className="font-medium">{product.name}</span>
-                      </TableCell>
-                      <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
-                      <TableCell className="font-bold">{product.price.toFixed(2)}€</TableCell>
-                      <TableCell>{product.stockQuantity} Einheiten</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-card border-border">
-                            <DropdownMenuItem asChild>
-                              <Link href={`/products/${product.id}`}><ExternalLink className="h-4 w-4 mr-2" /> Ansehen</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteProduct(product.id)}>
-                              <Trash2 className="h-4 w-4 mr-2" /> Löschen
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                  {products.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">Keine Produkte im Register gefunden.</TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    products.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell className="flex items-center gap-3">
+                          <div className="relative h-10 w-10 rounded overflow-hidden">
+                            <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+                          </div>
+                          <span className="font-medium">{product.name}</span>
+                        </TableCell>
+                        <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
+                        <TableCell className="font-bold">{product.price.toFixed(2)}€</TableCell>
+                        <TableCell>{product.stockQuantity} Einheiten</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-card border-border">
+                              <DropdownMenuItem asChild>
+                                <Link href={`/products/${product.id}`}><ExternalLink className="h-4 w-4 mr-2" /> Ansehen</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteProduct(product.id)}>
+                                <Trash2 className="h-4 w-4 mr-2" /> Löschen
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             )}
           </div>
         </TabsContent>
 
-        {/* Analytics & Careers Tab content kept similar to previous versions, just using local state */}
+        <TabsContent value="careers" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-headline font-bold">Stellenmarkt</h2>
+            <Link href="/admin/jobs/new">
+              <Button className="bg-primary font-bold">
+                <Plus className="mr-2 h-4 w-4" /> Neue Ausschreibung
+              </Button>
+            </Link>
+          </div>
+
+          <div className="glass-card rounded-2xl overflow-hidden">
+            {isJobsLoading ? (
+              <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-card">
+                  <TableRow>
+                    <TableHead>Position</TableHead>
+                    <TableHead>Abteilung</TableHead>
+                    <TableHead>Typ</TableHead>
+                    <TableHead>Erstellt am</TableHead>
+                    <TableHead className="text-right">Aktionen</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {jobs.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">Keine offenen Positionen registriert.</TableCell>
+                    </TableRow>
+                  ) : (
+                    jobs.map((job) => (
+                      <TableRow key={job.id}>
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="font-bold">{job.title}</span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.location}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell><Badge variant="outline" className="bg-secondary/10 text-secondary border-none">{job.department}</Badge></TableCell>
+                        <TableCell>{job.type}</TableCell>
+                        <TableCell className="text-muted-foreground text-xs"><Clock className="h-3 w-3 inline mr-1" /> {new Date(job.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-card border-border">
+                              <DropdownMenuItem asChild>
+                                <Link href="/careers"><ExternalLink className="h-4 w-4 mr-2" /> Zur Karriereseite</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteJob(job.id)}>
+                                <Trash2 className="h-4 w-4 mr-2" /> Entfernen
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TabsContent>
+
         <TabsContent value="analytics" className="space-y-8">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="glass-card border-none">
@@ -239,13 +308,52 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold font-headline">36.400€</div>
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <p className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
                   <ArrowUpRight className="h-3 w-3 text-green-500" /> +12.5% zur Vorwoche
                 </p>
               </CardContent>
             </Card>
-            {/* ... other cards ... */}
+            <Card className="glass-card border-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Aktive Inventarposten</CardTitle>
+                <Package className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold font-headline">{products.length}</div>
+                <p className="text-xs text-muted-foreground pt-1">Kuratierte Meisterwerke</p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card border-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Offene Vakanzen</CardTitle>
+                <Briefcase className="h-4 w-4 text-secondary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold font-headline">{jobs.length}</div>
+                <p className="text-xs text-muted-foreground pt-1">Wachsende Elite</p>
+              </CardContent>
+            </Card>
           </div>
+
+          <Card className="glass-card border-none p-6">
+            <CardHeader className="px-0">
+              <CardTitle className="font-headline text-xl">Umsatzverlauf (Simulation)</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px] px-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={ANALYTICS_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 12}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 12}} />
+                  <Tooltip 
+                    contentStyle={{backgroundColor: '#0f0f14', border: '1px solid #1a1a1f', borderRadius: '8px'}}
+                    itemStyle={{color: '#d1a347'}}
+                  />
+                  <Bar dataKey="revenue" fill="#df2030" radius={[4, 4, 0, 0]} barSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
