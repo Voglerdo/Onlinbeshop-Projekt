@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: blubber-baron-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blubber_baron
+      MYSQL_USER: blubber_user
+      MYSQL_PASSWORD: blubber_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/docker/mysql/init:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql_data:

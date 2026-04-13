@@ -18,6 +18,7 @@ export async function apiRequest<T>(
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
       body: body ? JSON.stringify(body) : undefined,
     });
 
@@ -26,7 +27,12 @@ export async function apiRequest<T>(
       throw new Error(errorData.message || `API-Anfrage fehlgeschlagen: ${response.status}`);
     }
 
-    return response.json();
+    if (response.status === 204) {
+      return null as T;
+    }
+
+    const text = await response.text();
+    return text ? JSON.parse(text) as T : null as T;
   } catch (error) {
     console.error(`REST-API Fehler (${method} ${endpoint}):`, error);
     throw error;

@@ -6,13 +6,13 @@ export interface Product {
   price: number;
   category: 'hookah' | 'coal' | 'flavor' | 'accessory' | string;
   imageUrl: string;
-  imageUrls: string[];
-  imageHint: string;
-  brand: string;
-  stockQuantity: number;
-  features: string[];
-  createdAt: string;
-  updatedAt: string;
+  imageUrls?: string[];
+  imageHint?: string;
+  brand?: string;
+  stockQuantity?: number;
+  features?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Review {
@@ -36,8 +36,8 @@ export interface JobOffer {
   location: string;
   type: 'Full-time' | 'Part-time' | 'Contract';
   description: string;
-  requirements: string[];
-  createdAt: string;
+  requirements?: string[];
+  createdAt?: string;
 }
 
 export interface JobApplication {
