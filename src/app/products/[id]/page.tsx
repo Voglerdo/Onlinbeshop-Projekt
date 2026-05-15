@@ -13,6 +13,7 @@ import { Product } from '@/app/types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { externalApiService } from '@/services/api-client';
+import styles from './page.styles.module.css';
 
 export default function ProductPage() {
   const params = useParams();
@@ -47,12 +48,12 @@ export default function ProductPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6">
-        <div className="relative">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <div className="absolute inset-0 blur-xl bg-primary/20 animate-pulse" />
+      <div className={styles.productsLayoutPrimary}>
+        <div className={styles.productsContainerPrimary}>
+          <Loader2 className={styles.loader2Icon} />
+          <div className={styles.overlay} />
         </div>
-        <p className="text-muted-foreground font-medium animate-pulse">Produktdaten werden beschworen...</p>
+        <p className={styles.produktdatenWerdenBeschworenText}>Produktdaten werden beschworen...</p>
       </div>
     );
   }
@@ -66,137 +67,137 @@ export default function ProductPage() {
     : [product.imageUrl];
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 space-y-24">
-      <div className="space-y-8">
-        <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-8">
-          <Link href="/" className="hover:text-primary transition-colors">Katalog</Link>
-          <ChevronRight className="h-3 w-3" />
-          <span className="text-foreground font-bold truncate max-w-[200px]">{product.name}</span>
+    <div className={styles.productsContainerSecondary}>
+      <div className={styles.productsContainerPrimary}>
+        <nav className={styles.productsLayoutSecondary}>
+          <Link href="/" className={styles.link9}>Katalog</Link>
+          <ChevronRight className={styles.chevronright10} />
+          <span className={styles.inlineText}>{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div className="space-y-6">
-            <div className="aspect-[4/5] relative overflow-hidden rounded-[2rem] glass-card gold-glow border-none group">
+        <div className={styles.grid}>
+          <div className={styles.productsContainerTertiary}>
+            <div className={styles.productsPanelPrimary}>
               <Image
                 src={gallery[activeImageIdx]}
                 alt={product.name}
                 fill
-                className="object-cover transition-all duration-700"
+                className={styles.productsUtilityPrimary}
                 priority
                 data-ai-hint={product.imageHint || "shisha hookah"}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+              <div className={styles.overlay2} />
               
               {gallery.length > 1 && (
-                <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className={styles.overlay3}>
                   <button 
                     onClick={() => setActiveImageIdx(prev => (prev - 1 + gallery.length) % gallery.length)}
-                    className="p-3 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md"
+                    className={styles.productsPanelSecondary}
                   >
-                    <ChevronLeft className="h-6 w-6" />
+                    <ChevronLeft className={styles.chevronleft19} />
                   </button>
                   <button 
                     onClick={() => setActiveImageIdx(prev => (prev + 1) % gallery.length)}
-                    className="p-3 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md"
+                    className={styles.productsPanelSecondary}
                   >
-                    <ChevronRight className="h-6 w-6" />
+                    <ChevronRight className={styles.chevronleft19} />
                   </button>
                 </div>
               )}
             </div>
             
             {gallery.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
+              <div className={styles.productsLayoutTertiary}>
                 {gallery.map((img, idx) => (
                   <button 
                     key={idx} 
                     onClick={() => setActiveImageIdx(idx)}
                     className={cn(
-                      "relative h-24 w-20 rounded-xl overflow-hidden glass-card flex-shrink-0 transition-all border-2",
-                      activeImageIdx === idx ? "border-secondary gold-glow scale-105" : "border-transparent opacity-50 grayscale hover:grayscale-0 hover:opacity-100"
+                      styles.productsPanelQuaternary,
+                      activeImageIdx === idx ? styles.productsUtilitySecondary : styles.productsUtilityTertiary
                     )}
                   >
-                    <Image src={img} alt={`Vorschau ${idx + 1}`} fill className="object-cover" />
+                    <Image src={img} alt={`Vorschau ${idx + 1}`} fill className={styles.productsImage} />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="space-y-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-bold border-none gold-glow">
+          <div className={styles.productsContainerQuinary}>
+            <div className={styles.productsContainerTertiary}>
+              <div className={styles.productsLayoutQuaternary}>
+                <Badge variant="secondary" className={styles.statusBadge}>
                   Premium Auswahl
                 </Badge>
-                <Badge variant="outline" className="px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-medium border-border">
+                <Badge variant="outline" className={styles.statusBadge2}>
                   {product.category}
                 </Badge>
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-headline font-black tracking-tight leading-[1.1]">{product.name}</h1>
+              <h1 className={styles.productsTitle}>{product.name}</h1>
               
-              <div className="flex items-center gap-6">
-                <div className="flex text-secondary">
-                  {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-5 w-5 fill-secondary" />)}
+              <div className={styles.productsLayoutQuinary}>
+                <div className={styles.productsLayoutSenary}>
+                  {[1, 2, 3, 4, 5].map((s) => <Star key={s} className={styles.starIcon} />)}
                 </div>
-                <div className="h-4 w-px bg-border" />
-                <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Zertifizierter Luxus</span>
+                <div className={styles.productsIconPrimary} />
+                <span className={styles.zertifizierterLuxusText}>Zertifizierter Luxus</span>
               </div>
 
-              <div className="flex items-baseline gap-4">
-                <div className="text-5xl font-black text-secondary">{product.price.toFixed(2)}€</div>
-                <div className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Inkl. MwSt.</div>
+              <div className={styles.productsLayoutSeptenary}>
+                <div className={styles.productsTextPrimary}>{product.price.toFixed(2)}€</div>
+                <div className={styles.productsIconSecondary}>Inkl. MwSt.</div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Das Narrativ</h3>
-              <p className="text-xl text-muted-foreground leading-relaxed font-light whitespace-pre-wrap">
+            <div className={styles.productsContainerSenary}>
+              <h3 className={styles.dasNarrativHeading}>Das Narrativ</h3>
+              <p className={styles.bodyText}>
                 {product.description}
               </p>
             </div>
 
             {product.features && product.features.length > 0 && (
-              <div className="space-y-6 pt-6 border-t border-border">
-                <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Hauptmerkmale</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+              <div className={styles.productsContainerSeptenary}>
+                <h3 className={styles.dasNarrativHeading}>Hauptmerkmale</h3>
+                <div className={styles.grid2}>
                   {product.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="h-1.5 w-1.5 rotate-45 bg-secondary shadow-[0_0_8px_rgba(209,163,71,0.8)]" />
-                      <span className="text-sm font-medium text-foreground/80">{feature}</span>
+                    <div key={index} className={styles.productsLayoutQuaternary}>
+                      <div className={styles.productsContainerOctonary} />
+                      <span className={styles.inlineText2}>{feature}</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="pt-10 space-y-8">
-              <div className="flex flex-col gap-4">
+            <div className={styles.productsContainerNonary}>
+              <div className={styles.productsLayoutOctonary}>
                 <AddToCartButton product={product} />
-                <p className="text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">
+                <p className={styles.bodyText2}>
                   Limitierte Verfügbarkeit • Weltweiter Versand
                 </p>
               </div>
               
-              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border">
-                <div className="flex flex-col items-center text-center gap-3 group">
-                  <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
-                    <ShieldCheck className="h-6 w-6 text-secondary" />
+              <div className={styles.grid3}>
+                <div className={styles.productsLayoutNonary}>
+                  <div className={styles.productsPanelTertiary}>
+                    <ShieldCheck className={styles.shieldcheck48} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Authentisch</span>
+                  <span className={styles.authentischText}>Authentisch</span>
                 </div>
-                <div className="flex flex-col items-center text-center gap-3 group">
-                  <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
-                    <Truck className="h-6 w-6 text-secondary" />
+                <div className={styles.productsLayoutNonary}>
+                  <div className={styles.productsPanelTertiary}>
+                    <Truck className={styles.shieldcheck48} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Priorität</span>
+                  <span className={styles.authentischText}>Priorität</span>
                 </div>
-                <div className="flex flex-col items-center text-center gap-3 group">
-                  <div className="p-3 rounded-full bg-muted/30 group-hover:bg-primary/10 transition-colors">
-                    <RefreshCw className="h-6 w-6 text-secondary" />
+                <div className={styles.productsLayoutNonary}>
+                  <div className={styles.productsPanelTertiary}>
+                    <RefreshCw className={styles.shieldcheck48} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Premium Pflege</span>
+                  <span className={styles.authentischText}>Premium Pflege</span>
                 </div>
               </div>
             </div>
@@ -207,15 +208,15 @@ export default function ProductPage() {
       <ReviewSystem productId={id} />
 
       {relatedProducts.length > 0 && (
-        <section className="space-y-12 pt-24 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-            <div className="space-y-3">
-              <h2 className="text-4xl font-headline font-bold">Das komplette Set</h2>
-              <div className="h-1 w-20 bg-primary" />
-              <p className="text-muted-foreground font-medium">Ergänzende Auswahlen, kuratiert für dieses Stück.</p>
+        <section className={styles.productsSection}>
+          <div className={styles.productsLayoutDenary}>
+            <div className={styles.productsContainerDenary}>
+              <h2 className={styles.dasKompletteSetHeading}>Das komplette Set</h2>
+              <div className={styles.productsContainerEleventh} />
+              <p className={styles.bodyText3}>Ergänzende Auswahlen, kuratiert für dieses Stück.</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className={styles.grid4}>
             {relatedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

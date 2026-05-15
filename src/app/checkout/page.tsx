@@ -16,6 +16,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { externalApiService } from '@/services/api-client';
+import styles from './page.styles.module.css';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -100,102 +101,102 @@ export default function CheckoutPage() {
 
   if (isUserLoading) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className={styles.checkoutLayoutPrimary}>
+        <Loader2 className={styles.loader2Icon} />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 max-w-7xl">
-      <div className="flex items-center gap-4 mb-12">
-        <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
-          <ArrowLeft className="h-6 w-6" />
+    <div className={styles.checkoutContainerPrimary}>
+      <div className={styles.checkoutLayoutSecondary}>
+        <Link href="/" className={styles.link5}>
+          <ArrowLeft className={styles.arrowLeftIcon} />
         </Link>
-        <h1 className="text-4xl md:text-5xl font-headline font-bold">Sicherer Checkout</h1>
+        <h1 className={styles.sichererCheckoutTitle}>Sicherer Checkout</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-12">
-          <section className="space-y-6">
-            <div className="flex items-center gap-3 border-b border-border pb-2">
-              <Truck className="h-5 w-5 text-secondary" />
-              <h2 className="text-xl font-bold uppercase tracking-widest">Versandziel</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.checkoutContainerTertiary}>
+          <section className={styles.checkoutSection}>
+            <div className={styles.checkoutLayoutTertiary}>
+              <Truck className={styles.checkoutIconPrimary} />
+              <h2 className={styles.versandzielHeading}>Versandziel</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
+            <div className={styles.grid}>
+              <div className={styles.checkoutContainerTertiary}>
                 <Label htmlFor="firstName">Vorname</Label>
-                <Input id="firstName" name="firstName" required className="bg-card" value={formData.firstName} onChange={handleInputChange} />
+                <Input id="firstName" name="firstName" required className={styles.input16} value={formData.firstName} onChange={handleInputChange} />
               </div>
-              <div className="space-y-2">
+              <div className={styles.checkoutContainerTertiary}>
                 <Label htmlFor="lastName">Nachname</Label>
-                <Input id="lastName" name="lastName" required className="bg-card" value={formData.lastName} onChange={handleInputChange} />
+                <Input id="lastName" name="lastName" required className={styles.input16} value={formData.lastName} onChange={handleInputChange} />
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className={styles.checkoutContainerTertiary}>
               <Label htmlFor="street">Straße & Hausnummer</Label>
-              <Input id="street" name="street" required className="bg-card" value={formData.street} onChange={handleInputChange} />
+              <Input id="street" name="street" required className={styles.input16} value={formData.street} onChange={handleInputChange} />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="col-span-2 space-y-2">
+            <div className={styles.grid2}>
+              <div className={styles.checkoutContainerQuaternary}>
                 <Label htmlFor="city">Stadt</Label>
-                <Input id="city" name="city" required className="bg-card" value={formData.city} onChange={handleInputChange} />
+                <Input id="city" name="city" required className={styles.input16} value={formData.city} onChange={handleInputChange} />
               </div>
-              <div className="space-y-2">
+              <div className={styles.checkoutContainerTertiary}>
                 <Label htmlFor="zip">PLZ</Label>
-                <Input id="zip" name="zip" required className="bg-card" value={formData.zip} onChange={handleInputChange} />
+                <Input id="zip" name="zip" required className={styles.input16} value={formData.zip} onChange={handleInputChange} />
               </div>
             </div>
           </section>
 
-          <section className="space-y-6">
-            <div className="flex items-center gap-3 border-b border-border pb-2">
-              <CreditCard className="h-5 w-5 text-secondary" />
-              <h2 className="text-xl font-bold uppercase tracking-widest">Zahlungsmittel</h2>
+          <section className={styles.checkoutSection}>
+            <div className={styles.checkoutLayoutTertiary}>
+              <CreditCard className={styles.checkoutIconPrimary} />
+              <h2 className={styles.versandzielHeading}>Zahlungsmittel</h2>
             </div>
-            <Card className="glass-card border-none bg-secondary/5">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between p-4 border border-secondary/30 rounded-xl bg-card">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-6 w-6 text-secondary" />
+            <Card className={styles.checkoutCardPrimary}>
+              <CardContent className={styles.cardcontent20}>
+                <div className={styles.checkoutLayoutQuaternary}>
+                  <div className={styles.checkoutLayoutQuinary}>
+                    <CreditCard className={styles.creditcard23} />
                     <div>
-                      <p className="font-bold">Baron Kredit</p>
-                      <p className="text-[10px] text-muted-foreground uppercase">Gesicherte Transaktion</p>
+                      <p className={styles.baronKreditText}>Baron Kredit</p>
+                      <p className={styles.gesicherteTransaktionText}>Gesicherte Transaktion</p>
                     </div>
                   </div>
-                  <Badge className="bg-secondary text-background">Standard</Badge>
+                  <Badge className={styles.standardBadge}>Standard</Badge>
                 </div>
               </CardContent>
             </Card>
           </section>
         </div>
 
-        <div className="lg:col-span-1">
-          <Card className="glass-card border-none sticky top-24">
+        <div className={styles.checkoutContainerQuinary}>
+          <Card className={styles.checkoutCardSecondary}>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">Zusammenfassung</CardTitle>
+              <CardTitle className={styles.cardtitle29}>Zusammenfassung</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
+            <CardContent className={styles.checkoutSection}>
+              <div className={styles.checkoutContainerSenary}>
                 {items.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center gap-4">
-                    <span className="text-sm font-bold line-clamp-1">{item.name} x{item.quantity}</span>
-                    <span className="font-bold">{(item.price * item.quantity).toFixed(2)}€</span>
+                  <div key={item.id} className={styles.checkoutLayoutSenary}>
+                    <span className={styles.inlineText}>{item.name} x{item.quantity}</span>
+                    <span className={styles.baronKreditText}>{(item.price * item.quantity).toFixed(2)}€</span>
                   </div>
                 ))}
               </div>
-              <Separator className="bg-border/50" />
-              <div className="flex justify-between text-xl font-bold">
+              <Separator className={styles.separator33} />
+              <div className={styles.checkoutLayoutSeptenary}>
                 <span>Gesamt</span>
-                <span className="text-secondary">{totalPrice.toFixed(2)}€</span>
+                <span className={styles.inlineText2}>{totalPrice.toFixed(2)}€</span>
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full h-14 bg-primary hover:bg-primary/90 text-lg font-bold crimson-glow" disabled={isSubmitting}>
-                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <><ShieldCheck className="mr-2 h-5 w-5" /> Erwerb abschließen</>}
+              <Button type="submit" className={styles.actionButton} disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className={styles.loader2Icon2} /> : <><ShieldCheck className={styles.loader2Icon3} /> Erwerb abschließen</>}
               </Button>
             </CardFooter>
           </Card>

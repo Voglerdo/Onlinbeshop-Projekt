@@ -18,6 +18,7 @@ import { ArrowLeft, Plus, X, Save, Briefcase, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { externalApiService } from '@/services/api-client';
+import styles from './page.styles.module.css';
 
 export default function NewJobPage() {
   const router = useRouter();
@@ -73,40 +74,40 @@ export default function NewJobPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 max-w-4xl space-y-8">
-      <Link href="/admin" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors gap-2">
-        <ArrowLeft className="h-4 w-4" /> Zurück zur Konsole
+    <div className={styles.adminJobsNewContainerPrimary}>
+      <Link href="/admin" className={styles.adminJobsNewLayoutPrimary}>
+        <ArrowLeft className={styles.arrowLeftIcon} /> Zurück zur Konsole
       </Link>
 
-      <div className="space-y-2">
-        <h1 className="text-4xl font-headline font-bold flex items-center gap-3">
-          <Briefcase className="h-8 w-8 text-secondary" />
+      <div className={styles.adminJobsNewContainerSecondary}>
+        <h1 className={styles.adminjobsnewTitle}>
+          <Briefcase className={styles.briefcaseIcon} />
           Neue Ausschreibung
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="glass-card p-8 rounded-3xl space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="space-y-2">
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.grid}>
+          <div className={styles.adminJobsNewContainerTertiary}>
+            <div className={styles.adminJobsNewContainerSecondary}>
               <Label htmlFor="title">Titel</Label>
-              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="bg-card h-12" required />
+              <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={styles.input10} required />
             </div>
-            <div className="space-y-2">
+            <div className={styles.adminJobsNewContainerSecondary}>
               <Label htmlFor="department">Abteilung</Label>
-              <Input id="department" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} className="bg-card h-12" required />
+              <Input id="department" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} className={styles.input10} required />
             </div>
-            <div className="space-y-2">
+            <div className={styles.adminJobsNewContainerSecondary}>
               <Label htmlFor="location">Standort</Label>
-              <Input id="location" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-card h-12" required />
+              <Input id="location" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className={styles.input10} required />
             </div>
-            <div className="space-y-2">
+            <div className={styles.adminJobsNewContainerSecondary}>
               <Label htmlFor="type">Typ</Label>
               <Select defaultValue="Full-time" onValueChange={(v) => setFormData({ ...formData, type: v as any })}>
-                <SelectTrigger className="bg-card h-12">
+                <SelectTrigger className={styles.input10}>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-card">
+                <SelectContent className={styles.selectcontent11}>
                   <SelectItem value="Full-time">Vollzeit</SelectItem>
                   <SelectItem value="Part-time">Teilzeit</SelectItem>
                   <SelectItem value="Contract">Projekt</SelectItem>
@@ -115,28 +116,29 @@ export default function NewJobPage() {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className={styles.adminJobsNewContainerTertiary}>
             <Label>Anforderungen</Label>
             {formData.requirements.map((req, index) => (
-              <div key={index} className="flex gap-2">
-                <Input value={req} onChange={(e) => handleRequirementChange(index, e.target.value)} className="bg-card h-10" />
-                <Button type="button" variant="ghost" size="icon" onClick={() => removeRequirement(index)}><X className="h-4 w-4" /></Button>
+              <div key={index} className={styles.adminJobsNewLayoutSecondary}>
+                <Input value={req} onChange={(e) => handleRequirementChange(index, e.target.value)} className={styles.input13} />
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeRequirement(index)}><X className={styles.arrowLeftIcon} /></Button>
               </div>
             ))}
-            <Button type="button" variant="outline" size="sm" onClick={addRequirement}><Plus className="h-4 w-4 mr-2" /> Hinzufügen</Button>
+            <Button type="button" variant="outline" size="sm" onClick={addRequirement}><Plus className={styles.hinzufugenButton} /> Hinzufügen</Button>
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className={styles.adminJobsNewContainerSecondary}>
           <Label htmlFor="description">Beschreibung</Label>
-          <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="min-h-[200px] bg-card" required />
+          <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={styles.textarea15} required />
         </div>
 
-        <Button type="submit" disabled={isSaving} className="w-full h-14 bg-primary text-lg font-bold">
-          {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : <Save className="mr-2 h-6 w-6" />}
+        <Button type="submit" disabled={isSaving} className={styles.actionButton}>
+          {isSaving ? <Loader2 className={styles.loader2Icon} /> : <Save className={styles.loader2Icon2} />}
           Position veröffentlichen
         </Button>
       </form>
     </div>
   );
 }
+

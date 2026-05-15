@@ -1,0 +1,23 @@
+.separatorUtilityPrimary {
+  flex-shrink: 0;
+}
+
+.separatorUtilityPrimary {
+  background-color: hsl(var(--border));
+}
+
+.separatorUtilitySecondary {
+  height: 1px;
+}
+
+.separatorUtilitySecondary {
+  width: 100%;
+}
+
+.separatorUtilityTertiary {
+  height: 100%;
+}
+
+.separatorUtilityTertiary {
+  width: 1px;
+}

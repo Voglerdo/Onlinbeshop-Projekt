@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/use-products';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import styles from './page.module.css';
+import generatedStyles from './page.styles.module.css';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const router = useRouter();
@@ -69,7 +71,7 @@ export default function Home() {
 
           <div className={styles.heroActions}>
             <Link href="/#catalog">
-              <Button size="lg" className={`crimson-glow ${styles.primaryAction}`}>
+              <Button size="lg" className={cn(generatedStyles.actionButton, styles.primaryAction)}>
                 Die Schatzkammer erkunden
               </Button>
             </Link>
@@ -143,7 +145,7 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className={`glass-card ${styles.emptyState}`}>
+          <div className={cn(generatedStyles.homePageContainerPrimary, styles.emptyState)}>
             <div className={styles.emptyContent}>
               <div className={styles.emptyIconWrap}>
                 <Filter className={styles.emptyIcon} />
@@ -168,3 +170,4 @@ export default function Home() {
     </div>
   );
 }
+

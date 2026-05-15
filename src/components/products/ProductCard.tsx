@@ -10,6 +10,8 @@ import { useCart } from '@/components/cart/CartProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import styles from './ProductCard.module.css';
+import generatedStyles from './ProductCard.styles.module.css';
+import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -25,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Card className={`glass-card ${styles.card}`}>
+    <Card className={cn(generatedStyles.productsProductcardCardPrimary, styles.card)}>
       <Link href={`/products/${product.id}`} className={styles.link}>
         <div className={styles.imageFrame}>
           <Image

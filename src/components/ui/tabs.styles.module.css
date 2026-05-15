@@ -1,0 +1,134 @@
+.tabsLayoutPrimary {
+  display: inline-flex;
+}
+
+.tabsLayoutPrimary {
+  height: 2.5rem;
+}
+
+.tabsLayoutPrimary {
+  align-items: center;
+}
+
+.tabsLayoutPrimary {
+  justify-content: center;
+}
+
+.tabsLayoutPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.tabsLayoutPrimary {
+  background-color: hsl(var(--muted));
+}
+
+.tabsLayoutPrimary {
+  padding: 0.25rem;
+}
+
+.tabsLayoutPrimary {
+  color: hsl(var(--muted-foreground));
+}
+
+.tabsLayoutSecondary {
+  display: inline-flex;
+}
+
+.tabsLayoutSecondary {
+  align-items: center;
+}
+
+.tabsLayoutSecondary {
+  justify-content: center;
+}
+
+.tabsLayoutSecondary {
+  white-space: nowrap;
+}
+
+.tabsLayoutSecondary {
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.tabsLayoutSecondary {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.tabsLayoutSecondary {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+.tabsLayoutSecondary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.tabsLayoutSecondary {
+  font-weight: 500;
+}
+
+.tabsLayoutSecondary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.tabsLayoutSecondary {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.tabsLayoutSecondary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.tabsLayoutSecondary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.tabsLayoutSecondary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.tabsLayoutSecondary:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.tabsLayoutSecondary:disabled {
+  pointer-events: none;
+}
+
+.tabsLayoutSecondary:disabled {
+  opacity: 0.5;
+}
+
+.tabsUtilityPrimary {
+  margin-top: 0.5rem;
+}
+
+.tabsUtilityPrimary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.tabsUtilityPrimary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.tabsUtilityPrimary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.tabsUtilityPrimary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.tabsUtilityPrimary:focus-visible {
+  --style-ring-offset-width: 2px;
+}

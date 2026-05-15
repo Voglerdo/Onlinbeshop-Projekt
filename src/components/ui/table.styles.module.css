@@ -1,0 +1,120 @@
+.tableContainerPrimary {
+  position: relative;
+}
+
+.tableContainerPrimary {
+  width: 100%;
+}
+
+.tableContainerPrimary {
+  overflow: auto;
+}
+
+.tableIconPrimary {
+  width: 100%;
+}
+
+.tableIconPrimary {
+  caption-side: bottom;
+}
+
+.tableIconPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.thead3 tr {
+  border-bottom-width: 1px;
+}
+
+.tableUtilityPrimary tr:last-child {
+  border-width: 0px;
+}
+
+.tableUtilitySecondary {
+  border-top-width: 1px;
+}
+
+.tableUtilitySecondary {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.tableUtilitySecondary {
+  font-weight: 500;
+}
+
+.tableUtilitySecondary:last-child>tr {
+  border-bottom-width: 0px;
+}
+
+.tableUtilityTertiary {
+  border-bottom-width: 1px;
+}
+
+.tableUtilityTertiary {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.tableUtilityTertiary:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.tableUtilityQuaternary {
+  height: 3rem;
+}
+
+.tableUtilityQuaternary {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.tableUtilityQuaternary {
+  text-align: left;
+}
+
+.tableUtilityQuaternary {
+  vertical-align: middle;
+}
+
+.tableUtilityQuaternary {
+  font-weight: 500;
+}
+
+.tableUtilityQuaternary {
+  color: hsl(var(--muted-foreground));
+}
+
+.tableUtilityQuaternary:has([role=checkbox]) {
+  padding-right: 0px;
+}
+
+.tableUtilityQuinary {
+  padding: 1rem;
+}
+
+.tableUtilityQuinary {
+  vertical-align: middle;
+}
+
+.tableUtilityQuinary:has([role=checkbox]) {
+  padding-right: 0px;
+}
+
+.tableIconSecondary {
+  margin-top: -1rem;
+}
+
+.tableIconSecondary {
+  margin-top: 1rem;
+}
+
+.tableIconSecondary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.tableIconSecondary {
+  color: hsl(var(--muted-foreground));
+}

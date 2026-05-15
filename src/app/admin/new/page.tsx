@@ -20,6 +20,7 @@ import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { externalApiService } from '@/services/api-client';
+import styles from './page.styles.module.css';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -98,56 +99,56 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 max-w-6xl space-y-8">
-      <Link href="/admin" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors gap-2">
-        <ArrowLeft className="h-4 w-4" /> Zurück zur Konsole
+    <div className={styles.adminNewContainerPrimary}>
+      <Link href="/admin" className={styles.adminNewLayoutPrimary}>
+        <ArrowLeft className={styles.arrowLeftIcon} /> Zurück zur Konsole
       </Link>
 
-      <div className="space-y-2">
-        <h1 className="text-4xl font-headline font-bold">Neues Meisterwerk</h1>
-        <p className="text-muted-foreground">Erweitern Sie die imperiale Schatzkammer manuell.</p>
+      <div className={styles.adminNewContainerSecondary}>
+        <h1 className={styles.neuesMeisterwerkTitle}>Neues Meisterwerk</h1>
+        <p className={styles.bodyText}>Erweitern Sie die imperiale Schatzkammer manuell.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-1 space-y-8">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold font-headline border-b border-border pb-2">Medien</h3>
-            <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.adminNewContainerTertiary}>
+          <div className={styles.adminNewContainerTertiary}>
+            <h3 className={styles.medienHeading}>Medien</h3>
+            <div className={styles.grid}>
               {images.map((img, idx) => (
-                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden glass-card group">
-                  <Image src={img} alt="Vorschau" fill className="object-cover" />
-                  <button type="button" onClick={() => removeImage(idx)} className="absolute top-2 right-2 p-1 bg-destructive rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Trash2 className="h-3 w-3 text-white" />
+                <div key={idx} className={styles.adminNewPanelPrimary}>
+                  <Image src={img} alt="Vorschau" fill className={styles.vorschauImage} />
+                  <button type="button" onClick={() => removeImage(idx)} className={styles.adminNewPanelSecondary}>
+                    <Trash2 className={styles.trash215} />
                   </button>
-                  {idx === 0 && <Badge className="absolute top-2 left-2 bg-secondary text-background">Cover</Badge>}
+                  {idx === 0 && <Badge className={styles.coverBadge}>Cover</Badge>}
                 </div>
               ))}
               <div 
-                className="aspect-square rounded-xl border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/5"
+                className={styles.adminNewLayoutSecondary}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="h-6 w-6 text-muted-foreground" />
-                <span className="text-[10px] uppercase font-bold text-muted-foreground">Neu</span>
+                <Upload className={styles.upload18} />
+                <span className={styles.neuText}>Neu</span>
               </div>
             </div>
-            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
+            <input type="file" ref={fileInputRef} className={styles.input20} accept="image/*" onChange={handleImageChange} />
           </div>
         </div>
 
-        <div className="lg:col-span-2 space-y-8">
-          <div className="grid grid-cols-1 gap-6">
-            <div className="space-y-2">
+        <div className={styles.adminNewContainerQuinary}>
+          <div className={styles.grid2}>
+            <div className={styles.adminNewContainerSecondary}>
               <Label htmlFor="name">Produktname</Label>
-              <Input id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-card h-12" required />
+              <Input id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={styles.input23} required />
             </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
+            <div className={styles.grid3}>
+              <div className={styles.adminNewContainerSecondary}>
                 <Label htmlFor="category">Kategorie</Label>
                 <Select onValueChange={(v) => setFormData({ ...formData, category: v })}>
-                  <SelectTrigger className="bg-card h-12">
+                  <SelectTrigger className={styles.input23}>
                     <SelectValue placeholder="Wählen..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-card">
+                  <SelectContent className={styles.selectcontent25}>
                     <SelectItem value="hookah">Wasserpfeife</SelectItem>
                     <SelectItem value="flavor">Aroma</SelectItem>
                     <SelectItem value="coal">Kohle</SelectItem>
@@ -155,18 +156,18 @@ export default function NewProductPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              <div className={styles.adminNewContainerSecondary}>
                 <Label htmlFor="price">Preis (€)</Label>
-                <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="bg-card h-12" required />
+                <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className={styles.input23} required />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className={styles.adminNewContainerSecondary}>
               <Label htmlFor="description">Beschreibung</Label>
-              <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="bg-card min-h-[150px]" required />
+              <Textarea id="description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={styles.textarea26} required />
             </div>
           </div>
-          <Button type="submit" disabled={isSaving} className="w-full h-14 bg-primary text-lg font-bold crimson-glow">
-            {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : <><Save className="mr-2 h-6 w-6" /> Artikel speichern</>}
+          <Button type="submit" disabled={isSaving} className={styles.actionButton}>
+            {isSaving ? <Loader2 className={styles.loader2Icon} /> : <><Save className={styles.loader2Icon2} /> Artikel speichern</>}
           </Button>
         </div>
       </form>

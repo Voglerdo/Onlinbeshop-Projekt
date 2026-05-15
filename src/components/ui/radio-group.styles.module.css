@@ -1,0 +1,94 @@
+.radioGroupLayoutPrimary {
+  display: flex;
+}
+
+.radioGroupLayoutPrimary {
+  align-items: center;
+}
+
+.radioGroupLayoutPrimary {
+  justify-content: center;
+}
+
+.circle2 {
+  height: 0.625rem;
+}
+
+.circle2 {
+  width: 0.625rem;
+}
+
+.circle2 {
+  fill: currentColor;
+}
+
+.circle2 {
+  color: currentColor;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid {
+  gap: 0.5rem;
+}
+
+.radioGroupIconPrimary {
+  aspect-ratio: 1 / 1;
+}
+
+.radioGroupIconPrimary {
+  height: 1rem;
+}
+
+.radioGroupIconPrimary {
+  width: 1rem;
+}
+
+.radioGroupIconPrimary {
+  border-radius: 9999px;
+}
+
+.radioGroupIconPrimary {
+  border-width: 1px;
+}
+
+.radioGroupIconPrimary {
+  border-color: hsl(var(--primary));
+}
+
+.radioGroupIconPrimary {
+  color: hsl(var(--primary));
+}
+
+.radioGroupIconPrimary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.radioGroupIconPrimary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.radioGroupIconPrimary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.radioGroupIconPrimary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.radioGroupIconPrimary:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.radioGroupIconPrimary:disabled {
+  cursor: not-allowed;
+}
+
+.radioGroupIconPrimary:disabled {
+  opacity: 0.5;
+}

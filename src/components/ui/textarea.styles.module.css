@@ -1,0 +1,88 @@
+.textareaLayoutPrimary {
+  display: flex;
+}
+
+.textareaLayoutPrimary {
+  min-height: 80px;
+}
+
+.textareaLayoutPrimary {
+  width: 100%;
+}
+
+.textareaLayoutPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.textareaLayoutPrimary {
+  border-width: 1px;
+}
+
+.textareaLayoutPrimary {
+  border-color: hsl(var(--input));
+}
+
+.textareaLayoutPrimary {
+  background-color: hsl(var(--background));
+}
+
+.textareaLayoutPrimary {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.textareaLayoutPrimary {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.textareaLayoutPrimary {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.textareaLayoutPrimary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.textareaLayoutPrimary::-moz-placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.textareaLayoutPrimary::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.textareaLayoutPrimary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.textareaLayoutPrimary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.textareaLayoutPrimary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.textareaLayoutPrimary:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.textareaLayoutPrimary:disabled {
+  cursor: not-allowed;
+}
+
+.textareaLayoutPrimary:disabled {
+  opacity: 0.5;
+}
+
+@media (min-width: 768px) {
+  .textareaLayoutPrimary {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}

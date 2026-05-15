@@ -1,0 +1,38 @@
+.popoverPanelPrimary {
+  z-index: 50;
+}
+
+.popoverPanelPrimary {
+  width: 18rem;
+}
+
+.popoverPanelPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.popoverPanelPrimary {
+  border-width: 1px;
+}
+
+.popoverPanelPrimary {
+  background-color: hsl(var(--popover));
+}
+
+.popoverPanelPrimary {
+  padding: 1rem;
+}
+
+.popoverPanelPrimary {
+  color: hsl(var(--popover-foreground));
+}
+
+.popoverPanelPrimary {
+  --style-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --style-shadow-colored: 0 4px 6px -1px var(--style-shadow-color), 0 2px 4px -2px var(--style-shadow-color);
+  box-shadow: var(--style-ring-offset-shadow, 0 0 #0000), var(--style-ring-shadow, 0 0 #0000), var(--style-shadow);
+}
+
+.popoverPanelPrimary {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}

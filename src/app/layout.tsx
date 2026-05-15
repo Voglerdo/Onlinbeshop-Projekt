@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import { CartProvider } from '@/components/cart/CartProvider';
 import { AuthProvider } from '@/context/AuthContext';
+import styles from './layout.styles.module.css';
 
 export const metadata: Metadata = {
   title: 'Blubber Baron | Premium Shisha Experience',
@@ -18,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className="dark">
+    <html lang="de" className={styles.rootDocument}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -27,9 +28,9 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <CartProvider>
-            <div className="app-shell">
+            <div className={styles.appShell}>
               <Navbar />
-              <main className="app-main">{children}</main>
+              <main className={styles.pageContent}>{children}</main>
               <Footer />
             </div>
             <Toaster />

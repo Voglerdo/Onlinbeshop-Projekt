@@ -1,0 +1,208 @@
+.root {
+  display: inline-flex;
+}
+
+.root {
+  align-items: center;
+}
+
+.root {
+  justify-content: center;
+}
+
+.root {
+  gap: 0.5rem;
+}
+
+.root {
+  white-space: nowrap;
+}
+
+.root {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.root {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.root {
+  font-weight: 500;
+}
+
+.root {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.root {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.root:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.root:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.root:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.root:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.root:disabled {
+  pointer-events: none;
+}
+
+.root:disabled {
+  opacity: 0.5;
+}
+
+.root svg {
+  pointer-events: none;
+}
+
+.root svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.root svg {
+  flex-shrink: 0;
+}
+
+.variantDefault {
+  background-color: hsl(var(--primary));
+}
+
+.variantDefault {
+  color: hsl(var(--primary-foreground));
+}
+
+.variantDefault:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.variantDestructive {
+  background-color: hsl(var(--destructive));
+}
+
+.variantDestructive {
+  color: hsl(var(--destructive-foreground));
+}
+
+.variantDestructive:hover {
+  background-color: hsl(var(--destructive) / 0.9);
+}
+
+.variantOutline {
+  border-width: 1px;
+}
+
+.variantOutline {
+  border-color: hsl(var(--input));
+}
+
+.variantOutline {
+  background-color: hsl(var(--background));
+}
+
+.variantOutline:hover {
+  background-color: hsl(var(--accent));
+}
+
+.variantOutline:hover {
+  color: hsl(var(--accent-foreground));
+}
+
+.variantSecondary {
+  background-color: hsl(var(--secondary));
+}
+
+.variantSecondary {
+  color: hsl(var(--secondary-foreground));
+}
+
+.variantSecondary:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+.variantGhost:hover {
+  background-color: hsl(var(--accent));
+}
+
+.variantGhost:hover {
+  color: hsl(var(--accent-foreground));
+}
+
+.variantLink {
+  color: hsl(var(--primary));
+}
+
+.variantLink {
+  text-underline-offset: 4px;
+}
+
+.variantLink:hover {
+  text-decoration-line: underline;
+}
+
+.sizeDefault {
+  height: 2.5rem;
+}
+
+.sizeDefault {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.sizeDefault {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.sizeSmall {
+  height: 2.25rem;
+}
+
+.sizeSmall {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.sizeSmall {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.sizeLarge {
+  height: 2.75rem;
+}
+
+.sizeLarge {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.sizeLarge {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.sizeIcon {
+  height: 2.5rem;
+}
+
+.sizeIcon {
+  width: 2.5rem;
+}
+
+

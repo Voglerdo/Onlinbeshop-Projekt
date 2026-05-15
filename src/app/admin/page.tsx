@@ -50,6 +50,7 @@ import {
 } from 'recharts';
 import { externalApiService } from '@/services/api-client';
 import { useAuth } from '@/context/AuthContext';
+import styles from './page.styles.module.css';
 
 const ANALYTICS_DATA = [
   { name: 'Mo', acquisitions: 12, revenue: 2400 },
@@ -123,24 +124,24 @@ export default function AdminPage() {
 
   if (isUserLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-        <p className="text-muted-foreground animate-pulse">Imperiale Referenzen werden geprüft...</p>
+      <div className={styles.adminLayoutPrimary}>
+        <Loader2 className={styles.loader2Icon} />
+        <p className={styles.imperialeReferenzenWerdenGepruftText}>Imperiale Referenzen werden geprüft...</p>
       </div>
     );
   }
 
   if (!user?.isAdmin) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-8 space-y-6">
-        <div className="p-6 rounded-full bg-destructive/10">
-          <ShieldAlert className="h-16 w-16 text-destructive" />
+      <div className={styles.adminLayoutSecondary}>
+        <div className={styles.adminPanelPrimary}>
+          <ShieldAlert className={styles.shieldalert6} />
         </div>
-        <div className="space-y-2">
-          <h1 className="text-4xl font-headline font-bold">Nicht autorisierter Zugriff</h1>
-          <p className="text-muted-foreground max-w-md">Diese Konsole ist dem inneren Kreis des Barons vorbehalten.</p>
+        <div className={styles.adminContainerPrimary}>
+          <h1 className={styles.nichtAutorisierterZugriffTitle}>Nicht autorisierter Zugriff</h1>
+          <p className={styles.bodyText}>Diese Konsole ist dem inneren Kreis des Barons vorbehalten.</p>
         </div>
-        <Button asChild className="bg-primary">
+        <Button asChild className={styles.actionButton}>
           <Link href="/profile">Zurück zum Register</Link>
         </Button>
       </div>
@@ -148,79 +149,79 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 lg:px-8 space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <h1 className="text-4xl font-headline font-bold">Imperiale Konsole</h1>
-          <p className="text-muted-foreground">Orchestrieren Sie das Blubber Baron Imperium.</p>
+    <div className={styles.adminContainerSecondary}>
+      <div className={styles.adminLayoutTertiary}>
+        <div className={styles.adminContainerTertiary}>
+          <h1 className={styles.nichtAutorisierterZugriffTitle}>Imperiale Konsole</h1>
+          <p className={styles.bodyText2}>Orchestrieren Sie das Blubber Baron Imperium.</p>
         </div>
       </div>
 
-      <Tabs defaultValue="inventory" className="space-y-8">
-        <TabsList className="bg-muted/50 p-1 h-14 rounded-xl border border-border">
-          <TabsTrigger value="inventory" className="h-full px-8 font-bold">
-            <LayoutGrid className="h-4 w-4 mr-2" /> Inventar
+      <Tabs defaultValue="inventory" className={styles.tabs15}>
+        <TabsList className={styles.adminPanelSecondary}>
+          <TabsTrigger value="inventory" className={styles.tabstrigger17}>
+            <LayoutGrid className={styles.adminIconPrimary} /> Inventar
           </TabsTrigger>
-          <TabsTrigger value="careers" className="h-full px-8 font-bold">
-            <Briefcase className="h-4 w-4 mr-2" /> Karriere
+          <TabsTrigger value="careers" className={styles.tabstrigger17}>
+            <Briefcase className={styles.adminIconPrimary} /> Karriere
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="h-full px-8 font-bold">
-            <TrendingUp className="h-4 w-4 mr-2" /> Analysen
+          <TabsTrigger value="analytics" className={styles.tabstrigger17}>
+            <TrendingUp className={styles.adminIconPrimary} /> Analysen
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="inventory" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-headline font-bold">Luxuskatalog</h2>
+        <TabsContent value="inventory" className={styles.tabscontent19}>
+          <div className={styles.adminLayoutQuaternary}>
+            <h2 className={styles.luxuskatalogHeading}>Luxuskatalog</h2>
             <Link href="/admin/new">
-              <Button className="bg-primary font-bold">
-                <Plus className="mr-2 h-4 w-4" /> Neuer Artikel
+              <Button className={styles.actionButton2}>
+                <Plus className={styles.plusIcon} /> Neuer Artikel
               </Button>
             </Link>
           </div>
 
-          <div className="glass-card rounded-2xl overflow-hidden">
+          <div className={styles.adminPanelTertiary}>
             {isProductsLoading ? (
-              <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+              <div className={styles.adminLayoutQuinary}><Loader2 className={styles.adminContainerQuaternary} /></div>
             ) : (
               <Table>
-                <TableHeader className="bg-card">
+                <TableHeader className={styles.tableheader27}>
                   <TableRow>
                     <TableHead>Produkt</TableHead>
                     <TableHead>Kategorie</TableHead>
                     <TableHead>Preis</TableHead>
                     <TableHead>Lager</TableHead>
-                    <TableHead className="text-right">Aktionen</TableHead>
+                    <TableHead className={styles.tablehead28}>Aktionen</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {products.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">Keine Produkte im Register gefunden.</TableCell>
+                      <TableCell colSpan={5} className={styles.tablecell29}>Keine Produkte im Register gefunden.</TableCell>
                     </TableRow>
                   ) : (
                     products.map((product) => (
                       <TableRow key={product.id}>
-                        <TableCell className="flex items-center gap-3">
-                          <div className="relative h-10 w-10 rounded overflow-hidden">
-                            <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+                        <TableCell className={styles.adminLayoutSenary}>
+                          <div className={styles.adminContainerQuinary}>
+                            <Image src={product.imageUrl} alt={product.name} fill className={styles.adminImage} />
                           </div>
-                          <span className="font-medium">{product.name}</span>
+                          <span className={styles.inlineText}>{product.name}</span>
                         </TableCell>
                         <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
-                        <TableCell className="font-bold">{product.price.toFixed(2)}€</TableCell>
+                        <TableCell className={styles.tablecell34}>{product.price.toFixed(2)}€</TableCell>
                         <TableCell>{product.stockQuantity} Einheiten</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className={styles.tablehead28}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                              <Button variant="ghost" size="icon"><MoreHorizontal className={styles.actionButton3} /></Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-card border-border">
+                            <DropdownMenuContent align="end" className={styles.dropdownmenucontent36}>
                               <DropdownMenuItem asChild>
-                                <Link href={`/products/${product.id}`}><ExternalLink className="h-4 w-4 mr-2" /> Ansehen</Link>
+                                <Link href={`/products/${product.id}`}><ExternalLink className={styles.adminIconPrimary} /> Ansehen</Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteProduct(product.id)}>
-                                <Trash2 className="h-4 w-4 mr-2" /> Löschen
+                              <DropdownMenuItem className={styles.dropdownmenuitem37} onClick={() => handleDeleteProduct(product.id)}>
+                                <Trash2 className={styles.adminIconPrimary} /> Löschen
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -234,58 +235,58 @@ export default function AdminPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="careers" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-headline font-bold">Stellenmarkt</h2>
+        <TabsContent value="careers" className={styles.tabscontent19}>
+          <div className={styles.adminLayoutQuaternary}>
+            <h2 className={styles.luxuskatalogHeading}>Stellenmarkt</h2>
             <Link href="/admin/jobs/new">
-              <Button className="bg-primary font-bold">
-                <Plus className="mr-2 h-4 w-4" /> Neue Ausschreibung
+              <Button className={styles.actionButton2}>
+                <Plus className={styles.plusIcon} /> Neue Ausschreibung
               </Button>
             </Link>
           </div>
 
-          <div className="glass-card rounded-2xl overflow-hidden">
+          <div className={styles.adminPanelTertiary}>
             {isJobsLoading ? (
-              <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+              <div className={styles.adminLayoutQuinary}><Loader2 className={styles.adminContainerQuaternary} /></div>
             ) : (
               <Table>
-                <TableHeader className="bg-card">
+                <TableHeader className={styles.tableheader27}>
                   <TableRow>
                     <TableHead>Position</TableHead>
                     <TableHead>Abteilung</TableHead>
                     <TableHead>Typ</TableHead>
                     <TableHead>Erstellt am</TableHead>
-                    <TableHead className="text-right">Aktionen</TableHead>
+                    <TableHead className={styles.tablehead28}>Aktionen</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {jobs.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">Keine offenen Positionen registriert.</TableCell>
+                      <TableCell colSpan={5} className={styles.tablecell29}>Keine offenen Positionen registriert.</TableCell>
                     </TableRow>
                   ) : (
                     jobs.map((job) => (
                       <TableRow key={job.id}>
                         <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-bold">{job.title}</span>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.location}</span>
+                          <div className={styles.adminLayoutSeptenary}>
+                            <span className={styles.tablecell34}>{job.title}</span>
+                            <span className={styles.inlineText2}><MapPin className={styles.inlineText3} /> {job.location}</span>
                           </div>
                         </TableCell>
-                        <TableCell><Badge variant="outline" className="bg-secondary/10 text-secondary border-none">{job.department}</Badge></TableCell>
+                        <TableCell><Badge variant="outline" className={styles.tablecell41}>{job.department}</Badge></TableCell>
                         <TableCell>{job.type}</TableCell>
-                        <TableCell className="text-muted-foreground text-xs"><Clock className="h-3 w-3 inline mr-1" /> {new Date(job.createdAt).toLocaleDateString()}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className={styles.adminIconSecondary}><Clock className={styles.tablecell43} /> {new Date(job.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell className={styles.tablehead28}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                              <Button variant="ghost" size="icon"><MoreHorizontal className={styles.actionButton3} /></Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-card border-border">
+                            <DropdownMenuContent align="end" className={styles.dropdownmenucontent36}>
                               <DropdownMenuItem asChild>
-                                <Link href="/careers"><ExternalLink className="h-4 w-4 mr-2" /> Zur Karriereseite</Link>
+                                <Link href="/careers"><ExternalLink className={styles.adminIconPrimary} /> Zur Karriereseite</Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteJob(job.id)}>
-                                <Trash2 className="h-4 w-4 mr-2" /> Entfernen
+                              <DropdownMenuItem className={styles.dropdownmenuitem37} onClick={() => handleDeleteJob(job.id)}>
+                                <Trash2 className={styles.adminIconPrimary} /> Entfernen
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -299,47 +300,47 @@ export default function AdminPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-8">
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="glass-card border-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Wöchentlicher Umsatz</CardTitle>
-                <TrendingUp className="h-4 w-4 text-secondary" />
+        <TabsContent value="analytics" className={styles.tabs15}>
+           <div className={styles.grid}>
+            <Card className={styles.adminCardPrimary}>
+              <CardHeader className={styles.adminLayoutOctonary}>
+                <CardTitle className={styles.adminIconTertiary}>Wöchentlicher Umsatz</CardTitle>
+                <TrendingUp className={styles.adminIconQuaternary} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold font-headline">36.400€</div>
-                <p className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
-                  <ArrowUpRight className="h-3 w-3 text-green-500" /> +12.5% zur Vorwoche
+                <div className={styles.adminTextPrimary}>36.400€</div>
+                <p className={styles.bodyText3}>
+                  <ArrowUpRight className={styles.arrowUpRightIcon} /> +12.5% zur Vorwoche
                 </p>
               </CardContent>
             </Card>
-            <Card className="glass-card border-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Aktive Inventarposten</CardTitle>
-                <Package className="h-4 w-4 text-secondary" />
+            <Card className={styles.adminCardPrimary}>
+              <CardHeader className={styles.adminLayoutOctonary}>
+                <CardTitle className={styles.adminIconTertiary}>Aktive Inventarposten</CardTitle>
+                <Package className={styles.adminIconQuaternary} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold font-headline">{products.length}</div>
-                <p className="text-xs text-muted-foreground pt-1">Kuratierte Meisterwerke</p>
+                <div className={styles.adminTextPrimary}>{products.length}</div>
+                <p className={styles.kuratierteMeisterwerkeText}>Kuratierte Meisterwerke</p>
               </CardContent>
             </Card>
-            <Card className="glass-card border-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Offene Vakanzen</CardTitle>
-                <Briefcase className="h-4 w-4 text-secondary" />
+            <Card className={styles.adminCardPrimary}>
+              <CardHeader className={styles.adminLayoutOctonary}>
+                <CardTitle className={styles.adminIconTertiary}>Offene Vakanzen</CardTitle>
+                <Briefcase className={styles.adminIconQuaternary} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold font-headline">{jobs.length}</div>
-                <p className="text-xs text-muted-foreground pt-1">Wachsende Elite</p>
+                <div className={styles.adminTextPrimary}>{jobs.length}</div>
+                <p className={styles.kuratierteMeisterwerkeText}>Wachsende Elite</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="glass-card border-none p-6">
-            <CardHeader className="px-0">
-              <CardTitle className="font-headline text-xl">Umsatzverlauf (Simulation)</CardTitle>
+          <Card className={styles.adminCardSecondary}>
+            <CardHeader className={styles.cardheader54}>
+              <CardTitle className={styles.cardtitle55}>Umsatzverlauf (Simulation)</CardTitle>
             </CardHeader>
-            <CardContent className="h-[300px] px-0">
+            <CardContent className={styles.cardcontent56}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={ANALYTICS_DATA}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
@@ -359,3 +360,4 @@ export default function AdminPage() {
     </div>
   );
 }
+

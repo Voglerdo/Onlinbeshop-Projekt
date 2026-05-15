@@ -1,0 +1,137 @@
+.carouselContainerPrimary {
+  overflow: hidden;
+}
+
+.arrowLeftIcon {
+  height: 1rem;
+}
+
+.arrowLeftIcon {
+  width: 1rem;
+}
+
+.previousSlideText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.carouselUtilityPrimary {
+  position: relative;
+}
+
+.carouselLayoutPrimary {
+  display: flex;
+}
+
+.carouselUtilitySecondary {
+  flex-direction: column;
+}
+
+.carouselUtilityTertiary {
+  min-width: 0px;
+}
+
+.carouselUtilityTertiary {
+  flex-shrink: 0;
+}
+
+.carouselUtilityTertiary {
+  flex-grow: 0;
+}
+
+.carouselUtilityTertiary {
+  flex-basis: 100%;
+}
+
+.carouselUtilityQuaternary {
+  padding-left: 1rem;
+}
+
+.carouselUtilityQuinary {
+  padding-top: 1rem;
+}
+
+.carouselUtilitySenary {
+  position: absolute;
+}
+
+.carouselUtilitySenary {
+  height: 2rem;
+}
+
+.carouselUtilitySenary {
+  width: 2rem;
+}
+
+.carouselUtilitySenary {
+  border-radius: 9999px;
+}
+
+.carouselUtilitySeptenary {
+  left: -3rem;
+}
+
+.carouselUtilitySeptenary {
+  top: 50%;
+}
+
+.carouselUtilitySeptenary {
+  --style-translate-y: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.carouselUtilityOctonary {
+  top: -3rem;
+}
+
+.carouselUtilityOctonary {
+  left: 50%;
+}
+
+.carouselUtilityOctonary {
+  --style-translate-x: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.carouselUtilityOctonary {
+  --style-rotate: 90deg;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.carouselUtilityNonary {
+  right: -3rem;
+}
+
+.carouselUtilityNonary {
+  top: 50%;
+}
+
+.carouselUtilityNonary {
+  --style-translate-y: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.carouselUtilityDenary {
+  bottom: -3rem;
+}
+
+.carouselUtilityDenary {
+  left: 50%;
+}
+
+.carouselUtilityDenary {
+  --style-translate-x: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.carouselUtilityDenary {
+  --style-rotate: 90deg;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}

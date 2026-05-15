@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { externalApiService } from '@/services/api-client';
+import styles from './ReviewSystem.styles.module.css';
 
 interface ReviewSystemProps {
   productId: string;
@@ -79,89 +80,89 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
   };
 
   return (
-    <div className="space-y-16">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border pb-8">
-        <div className="space-y-3">
-          <h2 className="text-4xl font-headline font-bold">Der Konsens</h2>
-          <p className="text-muted-foreground font-medium">Stimmen aus dem inneren Kreis des Barons.</p>
+    <div className={styles.productsReviewsystemContainerPrimary}>
+      <div className={styles.productsReviewsystemLayoutPrimary}>
+        <div className={styles.productsReviewsystemContainerSecondary}>
+          <h2 className={styles.derKonsensHeading}>Der Konsens</h2>
+          <p className={styles.stimmenAusDemInnerenKreisDesBaronsText}>Stimmen aus dem inneren Kreis des Barons.</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-right">
-            <div className="text-3xl font-black text-secondary">
+        <div className={styles.productsReviewsystemLayoutSecondary}>
+          <div className={styles.productsReviewsystemContainerTertiary}>
+            <div className={styles.productsReviewsystemTextPrimary}>
               {reviews.length > 0 
                 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
                 : "5.0"}
             </div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Imperiales Rating</div>
+            <div className={styles.productsReviewsystemTextSecondary}>Imperiales Rating</div>
           </div>
-          <div className="h-10 w-px bg-border" />
-          <Badge variant="outline" className="h-10 px-4 border-border text-muted-foreground">
+          <div className={styles.productsReviewsystemContainerQuaternary} />
+          <Badge variant="outline" className={styles.statusBadge}>
             {reviews.length} Dekrete
           </Badge>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-        <div className="lg:col-span-1">
-          <div className="glass-card p-8 rounded-3xl sticky top-24 space-y-8 border-none gold-glow">
-            <h3 className="text-xl font-bold font-headline">Feedback manifestieren</h3>
-            <form onSubmit={handleSubmitReview} className="space-y-6">
-              <div className="space-y-3">
-                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Qualitäts-Score</Label>
-                <div className="flex gap-2">
+      <div className={styles.grid}>
+        <div className={styles.productsReviewsystemContainerQuinary}>
+          <div className={styles.productsReviewsystemPanelPrimary}>
+            <h3 className={styles.feedbackManifestierenHeading}>Feedback manifestieren</h3>
+            <form onSubmit={handleSubmitReview} className={styles.form}>
+              <div className={styles.productsReviewsystemContainerSecondary}>
+                <Label className={styles.productsReviewsystemIconPrimary}>Qualitäts-Score</Label>
+                <div className={styles.productsReviewsystemLayoutTertiary}>
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <button key={star} type="button" onClick={() => setRating(star)} className="focus:outline-none transition-transform active:scale-90">
-                      <Star className={cn("h-8 w-8 transition-colors duration-300", star <= rating ? "fill-secondary text-secondary" : "text-muted-foreground/30")} />
+                    <button key={star} type="button" onClick={() => setRating(star)} className={styles.button19}>
+                      <Star className={cn(styles.starIcon2, star <= rating ? styles.starIcon3 : styles.starIcon4)} />
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="space-y-3">
-                <Label htmlFor="comment" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Narrativ</Label>
-                <Textarea id="comment" placeholder="Beschreiben Sie Ihre Erfahrung..." className="bg-background/50 border-border min-h-[120px] resize-none" value={comment} onChange={(e) => setComment(e.target.value)} required />
+              <div className={styles.productsReviewsystemContainerSecondary}>
+                <Label htmlFor="comment" className={styles.productsReviewsystemIconPrimary}>Narrativ</Label>
+                <Textarea id="comment" placeholder="Beschreiben Sie Ihre Erfahrung..." className={styles.textarea20} value={comment} onChange={(e) => setComment(e.target.value)} required />
               </div>
-              <Button type="submit" disabled={isSubmitting || !user} className="w-full h-14 bg-primary hover:bg-primary/90 font-bold text-lg crimson-glow">
-                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : !user ? "Anmelden für Review" : <><Send className="mr-2 h-5 w-5" /> Dekret veröffentlichen</>}
+              <Button type="submit" disabled={isSubmitting || !user} className={styles.actionButton}>
+                {isSubmitting ? <Loader2 className={styles.loader2Icon} /> : !user ? "Anmelden für Review" : <><Send className={styles.loader2Icon2} /> Dekret veröffentlichen</>}
               </Button>
             </form>
           </div>
         </div>
 
-        <div className="lg:col-span-2 space-y-8">
+        <div className={styles.productsReviewsystemContainerSenary}>
           {isLoading ? (
-            <div className="py-20 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+            <div className={styles.productsReviewsystemLayoutQuaternary}><Loader2 className={styles.productsReviewsystemContainerSeptenary} /></div>
           ) : reviews.length > 0 ? (
-            <div className="grid grid-cols-1 gap-8">
+            <div className={styles.grid2}>
               {reviews.map((review) => (
-                <div key={review.id} className="group relative glass-card p-8 rounded-3xl border-none hover:bg-white/[0.02] transition-colors">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20">
-                        <User className="h-6 w-6 text-secondary" />
+                <div key={review.id} className={styles.productsReviewsystemPanelSecondary}>
+                  <div className={styles.productsReviewsystemLayoutQuinary}>
+                    <div className={styles.productsReviewsystemLayoutSecondary}>
+                      <div className={styles.productsReviewsystemLayoutSenary}>
+                        <User className={styles.user31} />
                       </div>
                       <div>
-                        <div className="font-bold text-lg">{review.userName}</div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-widest">
-                          <Calendar className="h-3 w-3 inline mr-1" />
+                        <div className={styles.productsReviewsystemTextTertiary}>{review.userName}</div>
+                        <div className={styles.productsReviewsystemIconSecondary}>
+                          <Calendar className={styles.calendar34} />
                           {new Date(review.createdAt).toLocaleDateString()}
                         </div>
                       </div>
                     </div>
-                    <div className="flex text-secondary">
+                    <div className={styles.productsReviewsystemLayoutSeptenary}>
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className={cn("h-4 w-4", s <= review.rating ? "fill-secondary" : "text-muted-foreground/30")} />
+                        <Star key={s} className={cn(styles.starIcon5, s <= review.rating ? styles.starIcon6 : styles.starIcon4)} />
                       ))}
                     </div>
                   </div>
-                  <p className="text-lg text-muted-foreground leading-relaxed font-light italic">"{review.comment}"</p>
+                  <p className={styles.bodyText}>"{review.comment}"</p>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-32 glass-card rounded-[3rem] border-dashed border-2 border-border/50">
-              <Star className="h-16 w-16 text-muted-foreground/20 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold font-headline">Keine Dekrete</h3>
-              <p className="text-muted-foreground max-w-sm mx-auto mt-2">Seien Sie der Erste, der dieses Meisterwerk bewertet.</p>
+            <div className={styles.productsReviewsystemPanelTertiary}>
+              <Star className={styles.starIcon} />
+              <h3 className={styles.keineDekreteHeading}>Keine Dekrete</h3>
+              <p className={styles.bodyText2}>Seien Sie der Erste, der dieses Meisterwerk bewertet.</p>
             </div>
           )}
         </div>
