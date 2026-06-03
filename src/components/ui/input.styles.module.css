@@ -1,0 +1,109 @@
+.inputLayoutPrimary {
+  display: flex;
+}
+
+.inputLayoutPrimary {
+  height: 2.5rem;
+}
+
+.inputLayoutPrimary {
+  width: 100%;
+}
+
+.inputLayoutPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.inputLayoutPrimary {
+  border-width: 1px;
+}
+
+.inputLayoutPrimary {
+  border-color: hsl(var(--input));
+}
+
+.inputLayoutPrimary {
+  background-color: hsl(var(--background));
+}
+
+.inputLayoutPrimary {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.inputLayoutPrimary {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.inputLayoutPrimary {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.inputLayoutPrimary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.inputLayoutPrimary::file-selector-button {
+  border-width: 0px;
+}
+
+.inputLayoutPrimary::file-selector-button {
+  background-color: transparent;
+}
+
+.inputLayoutPrimary::file-selector-button {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.inputLayoutPrimary::file-selector-button {
+  font-weight: 500;
+}
+
+.inputLayoutPrimary::file-selector-button {
+  color: hsl(var(--foreground));
+}
+
+.inputLayoutPrimary::-moz-placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.inputLayoutPrimary::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.inputLayoutPrimary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.inputLayoutPrimary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.inputLayoutPrimary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.inputLayoutPrimary:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.inputLayoutPrimary:disabled {
+  cursor: not-allowed;
+}
+
+.inputLayoutPrimary:disabled {
+  opacity: 0.5;
+}
+
+@media (min-width: 768px) {
+  .inputLayoutPrimary {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}

@@ -1,0 +1,179 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.05);
+  background: hsl(var(--background) / 0.6);
+  backdrop-filter: blur(40px);
+}
+
+.inner {
+  display: flex;
+  width: min(100% - 2rem, 80rem);
+  height: 5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: auto;
+}
+
+.leftCluster {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brandText {
+  color: hsl(var(--secondary));
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transition: color 500ms ease;
+}
+
+.brand:hover .brandText {
+  color: hsl(var(--primary));
+}
+
+.links {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.7;
+  transition: color 180ms ease, opacity 180ms ease;
+}
+
+.navLink:hover {
+  color: hsl(var(--secondary));
+  opacity: 1;
+}
+
+.adminLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--primary));
+  transition: color 180ms ease;
+}
+
+.adminLink:hover {
+  color: hsl(var(--primary) / 0.8);
+}
+
+.adminIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.searchForm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 2.5rem;
+  transition: width 500ms ease;
+}
+
+.searchFormOpen {
+  width: 14rem;
+}
+
+.searchInput {
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.05);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+.searchInputOpen {
+  padding-left: 2.5rem;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.searchButton {
+  position: absolute;
+  left: 0;
+  color: hsl(0 0% 100% / 0.5);
+  transition: color 500ms ease;
+}
+
+.searchButton:hover {
+  color: white;
+}
+
+.searchButtonOpen {
+  color: hsl(var(--secondary));
+}
+
+.divider {
+  display: none;
+  width: 1px;
+  height: 1.5rem;
+  margin-inline: 0.5rem;
+  background: hsl(0 0% 100% / 0.1);
+}
+
+.profileButton {
+  color: hsl(0 0% 100% / 0.5);
+  transition: color 180ms ease;
+}
+
+.profileButton:hover {
+  color: white;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .divider {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .searchFormOpen {
+    width: 20rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .links {
+    display: flex;
+  }
+
+  .inner {
+    width: min(100% - 4rem, 80rem);
+  }
+}

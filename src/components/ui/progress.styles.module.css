@@ -1,0 +1,45 @@
+.progressUtilityPrimary {
+  height: 100%;
+}
+
+.progressUtilityPrimary {
+  width: 100%;
+}
+
+.progressUtilityPrimary {
+  flex: 1 1 0%;
+}
+
+.progressUtilityPrimary {
+  background-color: hsl(var(--primary));
+}
+
+.progressUtilityPrimary {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.progressIconPrimary {
+  position: relative;
+}
+
+.progressIconPrimary {
+  height: 1rem;
+}
+
+.progressIconPrimary {
+  width: 100%;
+}
+
+.progressIconPrimary {
+  overflow: hidden;
+}
+
+.progressIconPrimary {
+  border-radius: 9999px;
+}
+
+.progressIconPrimary {
+  background-color: hsl(var(--secondary));
+}

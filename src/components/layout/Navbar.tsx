@@ -1,99 +1,93 @@
-
 "use client"
 
 import Link from 'next/link';
-import { Search, User, ShieldCheck } from 'lucide-react';
+import { Search, ShieldCheck, User } from 'lucide-react';
+
+import { CartSheet } from '@/components/cart/CartSheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CartSheet } from '@/components/cart/CartSheet';
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { cn } from '@/lib/utils';
+import { useNavbarSearch } from '@/hooks/use-navbar-search';
+import styles from './Navbar.module.css';
 
 export function Navbar() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const { user } = useAuth();
-
-  useEffect(() => {
-    const query = searchParams.get('q');
-    if (query) {
-      setSearchQuery(query);
-      setIsSearchOpen(true);
-    }
-  }, [searchParams]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/?q=${encodeURIComponent(searchQuery.trim())}#catalog`);
-    } else {
-      router.push('/#catalog');
-    }
-  };
+  const {
+    handleSearch,
+    handleSearchBlur,
+    isSearchOpen,
+    searchQuery,
+    setIsSearchOpen,
+    setSearchQuery,
+  } = useNavbarSearch();
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/60 backdrop-blur-2xl">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center gap-12">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-black tracking-tighter text-secondary group-hover:text-primary transition-all duration-500 font-headline uppercase">
-              Blubber Baron
-            </span>
+    <nav className={styles.navbar}>
+      <div className={styles.inner}>
+        <div className={styles.leftCluster}>
+          <Link href="/" className={styles.brand}>
+            <span className={styles.brandText}>Blubber Baron</span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em]">
-            <Link href="/#catalog" className="hover:text-secondary transition-colors opacity-70 hover:opacity-100">Kollektion</Link>
-            <Link href="/story" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
+          <div className={styles.links}>
+            <Link href="/#catalog" className={styles.navLink}>
+              Kollektion
+            </Link>
+            <Link href="/story" className={styles.navLink}>
               Geschichte
             </Link>
-            <Link href="/careers" className="flex items-center gap-2 hover:text-secondary transition-colors opacity-70 hover:opacity-100">
+            <Link href="/careers" className={styles.navLink}>
               Karriere
             </Link>
             {user?.isAdmin && (
-              <Link href="/admin" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-all">
-                <ShieldCheck className="h-3.5 w-3.5" />
+              <Link href="/admin" className={styles.adminLink}>
+                <ShieldCheck className={styles.adminIcon} />
                 Konsole
               </Link>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <form onSubmit={handleSearch} className={`relative flex items-center transition-all duration-500 ${isSearchOpen ? 'w-56 md:w-80' : 'w-10'}`}>
-            <Input 
-              placeholder="Archive durchsuchen..." 
+        <div className={styles.actions}>
+          <form
+            onSubmit={handleSearch}
+            className={[
+              styles.searchForm,
+              isSearchOpen ? styles.searchFormOpen : '',
+            ].join(' ')}
+          >
+            <Input
+              placeholder="Archive durchsuchen..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`h-10 bg-white/5 border-none rounded-full transition-opacity duration-500 text-xs tracking-wider ${isSearchOpen ? 'opacity-100 pl-10' : 'opacity-0 pointer-events-none'}`}
-              onBlur={() => {
-                if (!searchQuery) setIsSearchOpen(false);
-              }}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className={[
+                styles.searchInput,
+                isSearchOpen ? styles.searchInputOpen : '',
+              ].join(' ')}
+              onBlur={handleSearchBlur}
             />
-            <Button 
+            <Button
               type="button"
-              variant="ghost" 
-              size="icon" 
-              className={cn(
-                "absolute left-0 transition-colors duration-500",
-                isSearchOpen ? "text-secondary" : "text-white/50 hover:text-white"
-              )}
+              variant="ghost"
+              size="icon"
+              className={[
+                styles.searchButton,
+                isSearchOpen ? styles.searchButtonOpen : '',
+              ].join(' ')}
               onClick={() => setIsSearchOpen(true)}
+              aria-label="Suche oeffnen"
             >
-              <Search className="h-5 w-5" />
+              <Search className={styles.icon} />
             </Button>
           </form>
-          
-          <div className="h-6 w-[1px] bg-white/10 mx-2 hidden sm:block" />
-          
+
+          <div className={styles.divider} />
+
           <CartSheet />
-          
+
           <Link href="/profile">
-            <Button variant="ghost" size="icon" className="text-white/50 hover:text-white transition-colors">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className={styles.profileButton}>
+              <User className={styles.icon} />
             </Button>
           </Link>
         </div>

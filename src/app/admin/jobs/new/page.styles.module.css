@@ -1,0 +1,285 @@
+.adminJobsNewContainerPrimary {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .adminJobsNewContainerPrimary {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .adminJobsNewContainerPrimary {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .adminJobsNewContainerPrimary {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .adminJobsNewContainerPrimary {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .adminJobsNewContainerPrimary {
+    max-width: 1536px;
+  }
+}
+
+.adminJobsNewContainerPrimary {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.adminJobsNewContainerPrimary {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.adminJobsNewContainerPrimary {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .adminJobsNewContainerPrimary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.adminJobsNewContainerPrimary {
+  max-width: 56rem;
+}
+
+.adminJobsNewContainerPrimary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--style-space-y-reverse));
+}
+
+.adminJobsNewLayoutPrimary {
+  display: inline-flex;
+}
+
+.adminJobsNewLayoutPrimary {
+  align-items: center;
+}
+
+.adminJobsNewLayoutPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.adminJobsNewLayoutPrimary {
+  color: hsl(var(--muted-foreground));
+}
+
+.adminJobsNewLayoutPrimary:hover {
+  color: hsl(var(--primary));
+}
+
+.adminJobsNewLayoutPrimary {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.adminJobsNewLayoutPrimary {
+  gap: 0.5rem;
+}
+
+.arrowLeftIcon {
+  height: 1rem;
+}
+
+.arrowLeftIcon {
+  width: 1rem;
+}
+
+.adminJobsNewContainerSecondary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--style-space-y-reverse));
+}
+
+.adminjobsnewTitle {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.adminjobsnewTitle {
+  font-family: Inter, sans-serif;
+}
+
+.adminjobsnewTitle {
+  font-weight: 700;
+}
+
+.adminjobsnewTitle {
+  display: flex;
+}
+
+.adminjobsnewTitle {
+  align-items: center;
+}
+
+.adminjobsnewTitle {
+  gap: 0.75rem;
+}
+
+.briefcaseIcon {
+  height: 2rem;
+}
+
+.briefcaseIcon {
+  width: 2rem;
+}
+
+.briefcaseIcon {
+  color: hsl(var(--secondary));
+}
+
+.form {
+  background: rgba(15, 15, 20, 0.6);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.form {
+  padding: 2rem;
+}
+
+.form {
+  border-radius: 1.5rem;
+}
+
+.form > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--style-space-y-reverse));
+}
+
+.grid {
+  display: grid;
+}
+
+.grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.grid {
+  gap: 2rem;
+}
+
+.adminJobsNewContainerTertiary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--style-space-y-reverse));
+}
+
+.input10 {
+  background-color: hsl(var(--card));
+}
+
+.input10 {
+  height: 3rem;
+}
+
+.selectcontent11 {
+  background-color: hsl(var(--card));
+}
+
+.adminJobsNewLayoutSecondary {
+  display: flex;
+}
+
+.adminJobsNewLayoutSecondary {
+  gap: 0.5rem;
+}
+
+.input13 {
+  background-color: hsl(var(--card));
+}
+
+.input13 {
+  height: 2.5rem;
+}
+
+.hinzufugenButton {
+  height: 1rem;
+}
+
+.hinzufugenButton {
+  width: 1rem;
+}
+
+.hinzufugenButton {
+  margin-right: 0.5rem;
+}
+
+.textarea15 {
+  min-height: 200px;
+}
+
+.textarea15 {
+  background-color: hsl(var(--card));
+}
+
+.actionButton {
+  width: 100%;
+}
+
+.actionButton {
+  height: 3.5rem;
+}
+
+.actionButton {
+  background-color: hsl(var(--primary));
+}
+
+.actionButton {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.actionButton {
+  font-weight: 700;
+}
+
+.loader2Icon {
+  height: 1.5rem;
+}
+
+.loader2Icon {
+  width: 1.5rem;
+}
+
+.loader2Icon {
+  animation: spin 1s linear infinite;
+}
+
+.loader2Icon2 {
+  margin-right: 0.5rem;
+}
+
+.loader2Icon2 {
+  height: 1.5rem;
+}
+
+.loader2Icon2 {
+  width: 1.5rem;
+}

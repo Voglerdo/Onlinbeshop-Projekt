@@ -1,0 +1,31 @@
+.formContainerPrimary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--style-space-y-reverse));
+}
+
+.formUtilityPrimary {
+  color: hsl(var(--destructive));
+}
+
+.formIconPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.formIconPrimary {
+  color: hsl(var(--muted-foreground));
+}
+
+.formIconSecondary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.formIconSecondary {
+  font-weight: 500;
+}
+
+.formIconSecondary {
+  color: hsl(var(--destructive));
+}

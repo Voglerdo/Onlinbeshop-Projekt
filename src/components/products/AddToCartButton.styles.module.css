@@ -1,0 +1,44 @@
+.productsAddtocartbuttonTextPrimary {
+  width: 100%;
+}
+
+.productsAddtocartbuttonTextPrimary {
+  background-color: hsl(var(--primary));
+}
+
+.productsAddtocartbuttonTextPrimary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.productsAddtocartbuttonTextPrimary {
+  height: 3.5rem;
+}
+
+.productsAddtocartbuttonTextPrimary {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.productsAddtocartbuttonTextPrimary {
+  font-weight: 700;
+}
+
+.productsAddtocartbuttonTextPrimary {
+  border-radius: 0.75rem;
+}
+
+.productsAddtocartbuttonTextPrimary {
+  box-shadow: 0 0 35px rgba(223, 32, 48, 0.15);
+}
+
+.shoppingbag2 {
+  margin-right: 0.75rem;
+}
+
+.shoppingbag2 {
+  height: 1.5rem;
+}
+
+.shoppingbag2 {
+  width: 1.5rem;
+}

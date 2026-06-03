@@ -1,173 +1,167 @@
-
 "use client"
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ProductCard } from '@/components/products/ProductCard';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Star, Loader2, Sparkles, Filter, X } from 'lucide-react';
-import { Product } from '@/app/types';
-import { cn } from '@/lib/utils';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { externalApiService } from '@/services/api-client';
+import { useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Filter, Loader2, Sparkles, X } from 'lucide-react';
 
-const CATEGORIES = [
-  { id: 'all', label: 'Gesamte Kollektion' },
-  { id: 'hookah', label: 'Wasserpfeifen' },
-  { id: 'flavor', label: 'Aromen' },
-  { id: 'coal', label: 'Kohle' },
-  { id: 'accessory', label: 'Zubehör' },
-];
+import { PRODUCT_CATEGORIES, ProductCategoryId } from './home.constants';
+import { filterProducts } from './home.utils';
+import { ProductCard } from '@/components/products/ProductCard';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useProducts } from '@/hooks/use-products';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import styles from './page.module.css';
+import generatedStyles from './page.styles.module.css';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const [selectedCategory, setSelectedCategory] =
+    useState<ProductCategoryId>('all');
+  const { products, isLoading } = useProducts();
+
   const searchQuery = searchParams.get('q') || '';
-  const heroImg = PlaceHolderImages.find(img => img.id === 'hero-shisha');
+  const heroImg = PlaceHolderImages.find((img) => img.id === 'hero-shisha');
+  const filteredProducts = useMemo(
+    () => filterProducts(products, selectedCategory, searchQuery),
+    [products, searchQuery, selectedCategory],
+  );
 
-  useEffect(() => {
-    async function fetchProducts() {
-      setIsLoading(true);
-      try {
-        const data = await externalApiService.getProducts();
-        setProducts(data);
-      } catch (err) {
-        console.error('Fehler beim Laden der Produkte:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    return matchesCategory && matchesSearch;
-  });
-
-  const clearSearch = () => {
+  function clearSearch() {
     router.push('/#catalog');
-  };
+  }
+
+  function resetFilters() {
+    setSelectedCategory('all');
+    clearSearch();
+  }
 
   return (
-    <div className="flex flex-col gap-24 pb-20">
-      {/* Hero Section */}
-      <section className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden">
+    <div className={styles.home}>
+      <section className={styles.hero}>
         <Image
           src={heroImg?.imageUrl || ''}
           alt="Luxus-Shisha-Erlebnis"
           fill
           priority
-          className="object-cover opacity-40 scale-105"
+          className={styles.heroImage}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-        
-        <div className="container relative z-10 px-4 text-center space-y-10">
-          <div className="space-y-6 max-w-5xl mx-auto">
-            <div className="flex items-center justify-center gap-3 text-secondary">
-              <div className="h-px w-12 bg-secondary/30" />
-              <span className="uppercase tracking-[0.6em] text-[10px] font-black">Imperialer Standard</span>
-              <div className="h-px w-12 bg-secondary/30" />
+        <div className={styles.heroOverlay} />
+
+        <div className={styles.heroContent}>
+          <div className={styles.heroCopy}>
+            <div className={styles.eyebrow}>
+              <div className={styles.eyebrowLine} />
+              <span className={styles.eyebrowText}>Imperialer Standard</span>
+              <div className={styles.eyebrowLine} />
             </div>
-            <h1 className="text-7xl md:text-9xl font-black font-headline tracking-tighter leading-[0.9]">
-              EXZELLENZ <br /><span className="text-secondary italic font-serif">ERSCHAFFEN</span>
+            <h1 className={styles.heroTitle}>
+              EXZELLENZ <br />
+              <span className={styles.heroTitleAccent}>ERSCHAFFEN</span>
             </h1>
-            <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
-              Erleben Sie den Gipfel der Shisha-Raffinesse. Kuratiert für jene Wenigen, die bei jedem Zug absolute Perfektion verlangen.
+            <p className={styles.heroText}>
+              Erleben Sie den Gipfel der Shisha-Raffinesse. Kuratiert fuer jene
+              Wenigen, die bei jedem Zug absolute Perfektion verlangen.
             </p>
           </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-6">
+
+          <div className={styles.heroActions}>
             <Link href="/#catalog">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold h-16 px-12 rounded-full crimson-glow transition-all hover:scale-105">
+              <Button size="lg" className={cn(generatedStyles.actionButton, styles.primaryAction)}>
                 Die Schatzkammer erkunden
               </Button>
             </Link>
-            <Button asChild size="lg" variant="outline" className="border-white/10 text-white hover:bg-white/5 h-16 px-12 rounded-full backdrop-blur-sm">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className={styles.secondaryAction}
+            >
               <Link href="/story">Die Geschichte</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Catalog Section */}
-      <section id="catalog" className="container mx-auto px-4 lg:px-8 space-y-16 scroll-mt-24">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 border-b border-white/5 pb-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-secondary font-black uppercase tracking-[0.4em] text-[10px]">
-              <Sparkles className="h-3 w-3" />
+      <section id="catalog" className={styles.catalog}>
+        <div className={styles.catalogHeader}>
+          <div>
+            <div className={styles.sectionEyebrow}>
+              <Sparkles size={12} />
               Kuratierte Auswahl
             </div>
-            <h2 className="text-5xl md:text-6xl font-headline font-bold leading-none">Die Kollektion</h2>
+            <h2 className={styles.catalogTitle}>Die Kollektion</h2>
             {searchQuery && (
-              <div className="flex items-center gap-2 mt-4">
-                <Badge variant="secondary" className="px-4 py-1.5 bg-secondary/10 text-secondary border-secondary/20 rounded-full flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
+              <div className={styles.searchBadgeWrap}>
+                <Badge variant="secondary" className={styles.searchBadge}>
                   Suche: "{searchQuery}"
-                  <button onClick={clearSearch} className="hover:text-foreground">
-                    <X className="h-3 w-3" />
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className={styles.clearSearch}
+                    aria-label="Suche entfernen"
+                  >
+                    <X size={12} />
                   </button>
                 </Badge>
               </div>
             )}
           </div>
-          
-          <div className="flex flex-wrap gap-3">
-            {CATEGORIES.map((cat) => (
+
+          <div className={styles.categoryList}>
+            {PRODUCT_CATEGORIES.map((category) => (
               <Button
-                key={cat.id}
-                variant={selectedCategory === cat.id ? 'secondary' : 'ghost'}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={cn(
-                  "h-12 px-8 rounded-full font-bold text-xs uppercase tracking-widest transition-all",
-                  selectedCategory === cat.id 
-                    ? "bg-secondary text-background hover:bg-secondary/90 gold-glow" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-                )}
+                key={category.id}
+                variant={selectedCategory === category.id ? 'secondary' : 'ghost'}
+                onClick={() => setSelectedCategory(category.id)}
+                className={[
+                  styles.categoryButton,
+                  selectedCategory === category.id
+                    ? `${styles.categoryButtonActive} gold-glow`
+                    : styles.categoryButtonInactive,
+                ].join(' ')}
               >
-                {cat.label}
+                {category.label}
               </Button>
             ))}
           </div>
         </div>
 
         {isLoading ? (
-          <div className="flex flex-col justify-center items-center py-40 gap-6">
-            <Loader2 className="h-12 w-12 animate-spin text-secondary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-muted-foreground animate-pulse">Meisterwerke werden gefiltert...</p>
+          <div className={styles.loadingState}>
+            <Loader2 className={styles.loader} />
+            <p className={styles.loadingText}>
+              Meisterwerke werden gefiltert...
+            </p>
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+          <div className={styles.productGrid}>
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-40 glass-card rounded-[3rem] border-dashed border-2 border-white/5">
-            <div className="max-w-md mx-auto space-y-6">
-              <div className="p-6 rounded-full bg-white/5 inline-block">
-                <Filter className="h-10 w-10 text-muted-foreground/50" />
+          <div className={cn(generatedStyles.homePageContainerPrimary, styles.emptyState)}>
+            <div className={styles.emptyContent}>
+              <div className={styles.emptyIconWrap}>
+                <Filter className={styles.emptyIcon} />
               </div>
-              <h3 className="text-2xl font-bold font-headline">Keine Funde</h3>
-              <p className="text-muted-foreground font-light">
-                {searchQuery 
-                  ? `Unsere Archive enthalten keine Treffer für "${searchQuery}". Versuchen Sie es mit einem anderen Begriff.`
-                  : `Diese spezifische Kollektion befindet sich derzeit in der Kuratierung.`
-                }
+              <h3 className={styles.emptyTitle}>Keine Funde</h3>
+              <p className={styles.emptyText}>
+                {searchQuery
+                  ? `Unsere Archive enthalten keine Treffer fuer "${searchQuery}". Versuchen Sie es mit einem anderen Begriff.`
+                  : 'Diese spezifische Kollektion befindet sich derzeit in der Kuratierung.'}
               </p>
-              <Button variant="link" onClick={() => { setSelectedCategory('all'); clearSearch(); }} className="text-secondary font-black uppercase tracking-widest text-xs">
-                Filter zurücksetzen
+              <Button
+                variant="link"
+                onClick={resetFilters}
+                className={styles.resetButton}
+              >
+                Filter zuruecksetzen
               </Button>
             </div>
           </div>
@@ -176,3 +170,4 @@ export default function Home() {
     </div>
   );
 }
+

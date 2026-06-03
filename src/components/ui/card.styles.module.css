@@ -1,0 +1,89 @@
+.cardPanelPrimary {
+  border-radius: var(--radius);
+}
+
+.cardPanelPrimary {
+  border-width: 1px;
+}
+
+.cardPanelPrimary {
+  background-color: hsl(var(--card));
+}
+
+.cardPanelPrimary {
+  color: hsl(var(--card-foreground));
+}
+
+.cardPanelPrimary {
+  --style-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --style-shadow-colored: 0 1px 2px 0 var(--style-shadow-color);
+  box-shadow: var(--style-ring-offset-shadow, 0 0 #0000), var(--style-ring-shadow, 0 0 #0000), var(--style-shadow);
+}
+
+.cardLayoutPrimary {
+  display: flex;
+}
+
+.cardLayoutPrimary {
+  flex-direction: column;
+}
+
+.cardLayoutPrimary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.375rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.375rem * var(--style-space-y-reverse));
+}
+
+.cardLayoutPrimary {
+  padding: 1.5rem;
+}
+
+.cardTextPrimary {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.cardTextPrimary {
+  font-weight: 600;
+}
+
+.cardTextPrimary {
+  line-height: 1;
+}
+
+.cardTextPrimary {
+  letter-spacing: -0.025em;
+}
+
+.cardIconPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cardIconPrimary {
+  color: hsl(var(--muted-foreground));
+}
+
+.cardContainerPrimary {
+  padding: 1.5rem;
+}
+
+.cardContainerPrimary {
+  padding-top: 0px;
+}
+
+.cardLayoutSecondary {
+  display: flex;
+}
+
+.cardLayoutSecondary {
+  align-items: center;
+}
+
+.cardLayoutSecondary {
+  padding: 1.5rem;
+}
+
+.cardLayoutSecondary {
+  padding-top: 0px;
+}

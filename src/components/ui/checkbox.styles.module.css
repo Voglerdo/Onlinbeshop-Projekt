@@ -1,0 +1,78 @@
+.checkboxIconPrimary {
+  height: 1rem;
+}
+
+.checkboxIconPrimary {
+  width: 1rem;
+}
+
+.checkboxIconSecondary {
+  height: 1rem;
+}
+
+.checkboxIconSecondary {
+  width: 1rem;
+}
+
+.checkboxIconSecondary {
+  flex-shrink: 0;
+}
+
+.checkboxIconSecondary {
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.checkboxIconSecondary {
+  border-width: 1px;
+}
+
+.checkboxIconSecondary {
+  border-color: hsl(var(--primary));
+}
+
+.checkboxIconSecondary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.checkboxIconSecondary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.checkboxIconSecondary:focus-visible {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.checkboxIconSecondary:focus-visible {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.checkboxIconSecondary:focus-visible {
+  --style-ring-offset-width: 2px;
+}
+
+.checkboxIconSecondary:disabled {
+  cursor: not-allowed;
+}
+
+.checkboxIconSecondary:disabled {
+  opacity: 0.5;
+}
+
+.checkboxLayoutPrimary {
+  display: flex;
+}
+
+.checkboxLayoutPrimary {
+  align-items: center;
+}
+
+.checkboxLayoutPrimary {
+  justify-content: center;
+}
+
+.checkboxLayoutPrimary {
+  color: currentColor;
+}
