@@ -16,7 +16,7 @@ This backend exposes the REST API your Next.js frontend calls on `http://localho
 docker compose up -d mysql
 ```
 
-2. Make sure your local MySQL server is running and that the schema `tablename` exists.
+2. Make sure your local MySQL server is running and that the schema `blubber_baron` exists.
 
 3. Start the backend:
 

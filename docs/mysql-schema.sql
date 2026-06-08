@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS tablename;
-USE tablename;
+CREATE DATABASE IF NOT EXISTS blubber_baron;
+USE blubber_baron;
 
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,

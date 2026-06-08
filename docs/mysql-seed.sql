@@ -1,4 +1,4 @@
-USE tablename;
+USE blubber_baron;
 
 INSERT INTO products (name, description, price, category, image_url, image_hint, brand, stock_quantity, created_at, updated_at)
 SELECT * FROM (
