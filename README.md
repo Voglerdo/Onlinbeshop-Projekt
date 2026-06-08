@@ -144,8 +144,8 @@ The backend is currently configured with these fixed values:
 
 - host `localhost`
 - port `3306`
-- database `tablename`
-- username `root`
+- database `blubber_baron`
+- username `blubber_user`
 - password `RootPasswort0815`
 - backend port `8081`
 
@@ -236,12 +236,12 @@ Docker uses:
 - port: `3306`
 - database: `blubber_baron`
 - username: `blubber_user`
-- password: `blubber_pass`
+- password: `RootPasswort0815`
 
 Your backend is currently set to use:
 
-- database: `tablename`
-- username: `root`
+- database: `blubber_baron`
+- username: `blubber_user`
 - password: `RootPasswort0815`
 - port: `8081`
 

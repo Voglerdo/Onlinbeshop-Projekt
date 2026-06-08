@@ -4,10 +4,10 @@ services:
     container_name: blubber-baron-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: RootPasswort0815
       MYSQL_DATABASE: blubber_baron
       MYSQL_USER: blubber_user
-      MYSQL_PASSWORD: blubber_pass
+      MYSQL_PASSWORD: RootPasswort0815
     ports:
       - "3306:3306"
     volumes:
