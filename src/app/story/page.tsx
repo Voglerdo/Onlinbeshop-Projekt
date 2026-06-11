@@ -40,8 +40,8 @@ export default function StoryPage() {
               </div>
             </div>
           </div>
-          <div className={styles.storyPanelPrimary}>
-            <Image src="https://picsum.photos/seed/baron-craft/1000/1000" alt="Handwerkskunst" fill className={styles.handwerkskunstImage} data-ai-hint="shisha craftsmanship" />
+          <div className="relative aspect-square rounded-[3rem] overflow-hidden glass-card gold-glow border-none">
+            <Image src="/images/laborexperten.png" alt="Laborexperten" fill className="object-cover" data-ai-hint="labor experts" />
           </div>
         </div>
       </section>

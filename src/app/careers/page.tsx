@@ -201,12 +201,12 @@ export default function CareersPage() {
         ) : jobs && jobs.length > 0 ? (
           <div className={styles.grid2}>
             {jobs.map((job) => (
-              <Card key={job.id} className={styles.careersCardPrimary}>
-                <CardHeader className={styles.careersLayoutSenary}>
-                  <div className={styles.careersContainerSenary}>
-                    <div className={styles.careersLayoutSecondary}>
-                      <Badge className={styles.statusBadge2}>{job.department}</Badge>
-                      <Badge variant="outline" className={styles.statusBadge3}>{job.type}</Badge>
+              <Card key={job.id} className="glass-card border border-border/40 hover:gold-glow transition-all duration-500 group overflow-hidden">
+                <CardHeader className="flex flex-row items-center justify-between p-8">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-secondary/20 text-secondary border-none">{job.department}</Badge>
+                      <Badge variant="outline" className="border-border text-muted-foreground">{job.type}</Badge>
                     </div>
                     <CardTitle className={styles.careersTextPrimary}>
                       {job.title}
@@ -214,8 +214,8 @@ export default function CareersPage() {
                     <div className={styles.careersLayoutSeptenary}>
                       <MapPin className={styles.careersIconPrimary} />
                       {job.location}
-                      <Clock className={styles.careersIconSecondary} />
-                      Gepostet am {new Date(job.createdAt).toLocaleDateString()}
+                      <Clock className="h-4 w-4 text-primary ml-4" />
+                      Gepostet am {new Date(job.createdAt || Date.now()).toLocaleDateString()}
                     </div>
                   </div>
                   
@@ -324,11 +324,27 @@ export default function CareersPage() {
                     </DialogContent>
                   </Dialog>
                 </CardHeader>
-                <CardContent className={styles.cardcontent62}>
-                  <p className={styles.bodyText3}>
-                    {job.description}
-                  </p>
-                  <Button variant="link" className={styles.actionButton2} onClick={() => setSelectedJob(job)}>
+                <CardContent className="px-8 pb-8">
+                  <div className="max-w-4xl space-y-6">
+                    <p className="whitespace-pre-line text-muted-foreground leading-8">
+                      {job.description}
+                    </p>
+
+                    {job.requirements && job.requirements.length > 0 && (
+                      <div className="rounded-2xl border border-border/60 bg-background/35 p-5">
+                        <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-secondary">Anforderungen</h3>
+                        <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
+                          {job.requirements.map((item) => (
+                            <li key={item} className="flex gap-3">
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  <Button variant="link" className="text-secondary p-0 mt-4 md:hidden" onClick={() => setSelectedJob(job)}>
                     Details ansehen & bewerben
                   </Button>
                 </CardContent>
