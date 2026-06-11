@@ -1,0 +1,306 @@
+.calendarUtilityPrimary {
+  padding: 0.75rem;
+}
+
+.calendarUtilitySecondary {
+  height: 1.75rem;
+}
+
+.calendarUtilitySecondary {
+  width: 1.75rem;
+}
+
+.calendarUtilitySecondary {
+  background-color: transparent;
+}
+
+.calendarUtilitySecondary {
+  padding: 0px;
+}
+
+.calendarUtilitySecondary {
+  opacity: 0.5;
+}
+
+.calendarUtilitySecondary:hover {
+  opacity: 1;
+}
+
+.calendarUtilityTertiary {
+  height: 2.25rem;
+}
+
+.calendarUtilityTertiary {
+  width: 2.25rem;
+}
+
+.calendarUtilityTertiary {
+  padding: 0px;
+}
+
+.calendarUtilityTertiary {
+  font-weight: 400;
+}
+
+.calendarIconPrimary {
+  height: 1rem;
+}
+
+.calendarIconPrimary {
+  width: 1rem;
+}
+
+.variantMonths {
+  display: flex;
+}
+
+.variantMonths {
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .variantMonths {
+    flex-direction: row;
+  }
+}
+
+.variantMonths > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--style-space-y-reverse));
+}
+
+@media (min-width: 640px) {
+  .variantMonths > :not([hidden]) ~ :not([hidden]) {
+    --style-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--style-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--style-space-x-reverse)));
+  }
+}
+
+@media (min-width: 640px) {
+  .variantMonths > :not([hidden]) ~ :not([hidden]) {
+    --style-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--style-space-y-reverse)));
+    margin-bottom: calc(0px * var(--style-space-y-reverse));
+  }
+}
+
+.variantMonth > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--style-space-y-reverse));
+}
+
+.variantCaption {
+  display: flex;
+}
+
+.variantCaption {
+  justify-content: center;
+}
+
+.variantCaption {
+  padding-top: 0.25rem;
+}
+
+.variantCaption {
+  position: relative;
+}
+
+.variantCaption {
+  align-items: center;
+}
+
+.variantCaptionLabel {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.variantCaptionLabel {
+  font-weight: 500;
+}
+
+.variantNav > :not([hidden]) ~ :not([hidden]) {
+  --style-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--style-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--style-space-x-reverse)));
+}
+
+.variantNav {
+  display: flex;
+}
+
+.variantNav {
+  align-items: center;
+}
+
+.variantNavButtonPrevious {
+  position: absolute;
+}
+
+.variantNavButtonPrevious {
+  left: 0.25rem;
+}
+
+.variantNavButtonNext {
+  position: absolute;
+}
+
+.variantNavButtonNext {
+  right: 0.25rem;
+}
+
+.variantTable {
+  width: 100%;
+}
+
+.variantTable {
+  border-collapse: collapse;
+}
+
+.variantTable > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--style-space-y-reverse));
+}
+
+.variantHeadRow {
+  display: flex;
+}
+
+.calendarTextPrimary {
+  color: hsl(var(--muted-foreground));
+}
+
+.calendarTextPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.calendarTextPrimary {
+  width: 2.25rem;
+}
+
+.calendarTextPrimary {
+  font-weight: 400;
+}
+
+.calendarTextPrimary {
+  font-size: 0.8rem;
+}
+
+.variantRow {
+  display: flex;
+}
+
+.variantRow {
+  width: 100%;
+}
+
+.variantRow {
+  margin-top: 0.5rem;
+}
+
+.variantCell {
+  height: 2.25rem;
+}
+
+.variantCell {
+  width: 2.25rem;
+}
+
+.variantCell {
+  calendarTextPrimary-align: center;
+}
+
+.variantCell {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.variantCell {
+  padding: 0px;
+}
+
+.variantCell {
+  position: relative;
+}
+
+.variantCell:has([aria-selected].day-range-end) {
+  border-top-right-radius: calc(var(--radius) - 2px);
+  border-bottom-right-radius: calc(var(--radius) - 2px);
+}
+
+.variantCell:has([aria-selected].day-outside) {
+  background-color: hsl(var(--accent) / 0.5);
+}
+
+.variantCell:has([aria-selected]) {
+  background-color: hsl(var(--accent));
+}
+
+.variantCell:has([aria-selected]):first-child {
+  border-top-left-radius: calc(var(--radius) - 2px);
+  border-bottom-left-radius: calc(var(--radius) - 2px);
+}
+
+.variantCell:has([aria-selected]):last-child {
+  border-top-right-radius: calc(var(--radius) - 2px);
+  border-bottom-right-radius: calc(var(--radius) - 2px);
+}
+
+.variantCell:focus-within {
+  position: relative;
+}
+
+.variantCell:focus-within {
+  z-index: 20;
+}
+
+.calendarUtilityQuaternary {
+  background-color: hsl(var(--primary));
+}
+
+.calendarUtilityQuaternary {
+  color: hsl(var(--primary-foreground));
+}
+
+.calendarUtilityQuaternary:hover {
+  background-color: hsl(var(--primary));
+}
+
+.calendarUtilityQuaternary:hover {
+  color: hsl(var(--primary-foreground));
+}
+
+.calendarUtilityQuaternary:focus {
+  background-color: hsl(var(--primary));
+}
+
+.calendarUtilityQuaternary:focus {
+  color: hsl(var(--primary-foreground));
+}
+
+.variantDayToday {
+  background-color: hsl(var(--accent));
+}
+
+.variantDayToday {
+  color: hsl(var(--accent-foreground));
+}
+
+.calendarUtilityQuinary {
+  color: hsl(var(--muted-foreground));
+}
+
+.variantDayDisabled {
+  color: hsl(var(--muted-foreground));
+}
+
+.variantDayDisabled {
+  opacity: 0.5;
+}
+
+.variantDayHidden {
+  visibility: hidden;
+}

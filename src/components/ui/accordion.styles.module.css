@@ -1,0 +1,91 @@
+.accordionLayoutPrimary {
+  display: flex;
+}
+
+.accordionIconPrimary {
+  height: 1rem;
+}
+
+.accordionIconPrimary {
+  width: 1rem;
+}
+
+.accordionIconPrimary {
+  flex-shrink: 0;
+}
+
+.accordionIconPrimary {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.accordionIconPrimary {
+  transition-duration: 200ms;
+}
+
+.accordionIconPrimary {
+  animation-duration: 200ms;
+}
+
+.accordionIconSecondary {
+  overflow: hidden;
+}
+
+.accordionIconSecondary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.accordionIconSecondary {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.accordionUtilityPrimary {
+  border-bottom-width: 1px;
+}
+
+.accordionLayoutSecondary {
+  display: flex;
+}
+
+.accordionLayoutSecondary {
+  flex: 1 1 0%;
+}
+
+.accordionLayoutSecondary {
+  align-items: center;
+}
+
+.accordionLayoutSecondary {
+  justify-content: space-between;
+}
+
+.accordionLayoutSecondary {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.accordionLayoutSecondary {
+  font-weight: 500;
+}
+
+.accordionLayoutSecondary {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.accordionLayoutSecondary:hover {
+  text-decoration-line: underline;
+}
+
+.accordionContainerPrimary {
+  padding-bottom: 1rem;
+}
+
+.accordionContainerPrimary {
+  padding-top: 0px;
+}

@@ -1,0 +1,244 @@
+.dialogPanelPrimary {
+  position: absolute;
+}
+
+.dialogPanelPrimary {
+  right: 1rem;
+}
+
+.dialogPanelPrimary {
+  top: 1rem;
+}
+
+.dialogPanelPrimary {
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.dialogPanelPrimary {
+  opacity: 0.7;
+}
+
+.dialogPanelPrimary {
+  --style-ring-offset-color: hsl(var(--background));
+}
+
+.dialogPanelPrimary {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.dialogPanelPrimary:hover {
+  opacity: 1;
+}
+
+.dialogPanelPrimary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.dialogPanelPrimary:focus {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.dialogPanelPrimary:focus {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.dialogPanelPrimary:focus {
+  --style-ring-offset-width: 2px;
+}
+
+.dialogPanelPrimary:disabled {
+  pointer-events: none;
+}
+
+.xIcon {
+  height: 1rem;
+}
+
+.xIcon {
+  width: 1rem;
+}
+
+.closeText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.dialogUtilityPrimary {
+  position: fixed;
+}
+
+.dialogUtilityPrimary {
+  inset: 0px;
+}
+
+.dialogUtilityPrimary {
+  z-index: 50;
+}
+
+.dialogUtilityPrimary {
+  background-color: rgb(0 0 0 / 0.8);
+}
+
+.grid {
+  position: fixed;
+}
+
+.grid {
+  left: 50%;
+}
+
+.grid {
+  top: 50%;
+}
+
+.grid {
+  z-index: 50;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid {
+  width: 100%;
+}
+
+.grid {
+  max-width: 32rem;
+}
+
+.grid {
+  --style-translate-x: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.grid {
+  --style-translate-y: -50%;
+  transform: translate(var(--style-translate-x), var(--style-translate-y)) rotate(var(--style-rotate)) skewX(var(--style-skew-x)) skewY(var(--style-skew-y)) scaleX(var(--style-scale-x)) scaleY(var(--style-scale-y));
+}
+
+.grid {
+  gap: 1rem;
+}
+
+.grid {
+  border-width: 1px;
+}
+
+.grid {
+  background-color: hsl(var(--background));
+}
+
+.grid {
+  padding: 1.5rem;
+}
+
+.grid {
+  --style-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --style-shadow-colored: 0 10px 15px -3px var(--style-shadow-color), 0 4px 6px -4px var(--style-shadow-color);
+  box-shadow: var(--style-ring-offset-shadow, 0 0 #0000), var(--style-ring-shadow, 0 0 #0000), var(--style-shadow);
+}
+
+.grid {
+  transition-duration: 200ms;
+}
+
+.grid {
+  animation-duration: 200ms;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    border-radius: var(--radius);
+  }
+}
+
+.dialogLayoutPrimary {
+  display: flex;
+}
+
+.dialogLayoutPrimary {
+  flex-direction: column;
+}
+
+.dialogLayoutPrimary > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.375rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.375rem * var(--style-space-y-reverse));
+}
+
+.dialogLayoutPrimary {
+  dialogTextPrimary-align: center;
+}
+
+@media (min-width: 640px) {
+  .dialogLayoutPrimary {
+    dialogTextPrimary-align: left;
+  }
+}
+
+.dialogLayoutSecondary {
+  display: flex;
+}
+
+.dialogLayoutSecondary {
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 640px) {
+  .dialogLayoutSecondary {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 640px) {
+  .dialogLayoutSecondary {
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 640px) {
+  .dialogLayoutSecondary > :not([hidden]) ~ :not([hidden]) {
+    --style-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--style-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--style-space-x-reverse)));
+  }
+}
+
+.dialogTextPrimary {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.dialogTextPrimary {
+  font-weight: 600;
+}
+
+.dialogTextPrimary {
+  line-height: 1;
+}
+
+.dialogTextPrimary {
+  letter-spacing: -0.025em;
+}
+
+.dialogIconPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.dialogIconPrimary {
+  color: hsl(var(--muted-foreground));
+}

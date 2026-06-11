@@ -1,0 +1,62 @@
+.tooltipIconPrimary {
+  z-index: 50;
+}
+
+.tooltipIconPrimary {
+  overflow: hidden;
+}
+
+.tooltipIconPrimary {
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.tooltipIconPrimary {
+  border-width: 1px;
+}
+
+.tooltipIconPrimary {
+  background-color: hsl(var(--popover));
+}
+
+.tooltipIconPrimary {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.tooltipIconPrimary {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+.tooltipIconPrimary {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.tooltipIconPrimary {
+  color: hsl(var(--popover-foreground));
+}
+
+.tooltipIconPrimary {
+  --style-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --style-shadow-colored: 0 4px 6px -1px var(--style-shadow-color), 0 2px 4px -2px var(--style-shadow-color);
+  box-shadow: var(--style-ring-offset-shadow, 0 0 #0000), var(--style-ring-shadow, 0 0 #0000), var(--style-shadow);
+}
+
+.tooltipIconPrimary {
+  animation-name: enter;
+  animation-duration: 150ms;
+  --style-enter-opacity: initial;
+  --style-enter-scale: initial;
+  --style-enter-rotate: initial;
+  --style-enter-translate-x: initial;
+  --style-enter-translate-y: initial;
+}
+
+.tooltipIconPrimary {
+  --style-enter-opacity: 0;
+}
+
+.tooltipIconPrimary {
+  --style-enter-scale: .95;
+}

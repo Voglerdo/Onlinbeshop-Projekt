@@ -1,0 +1,95 @@
+.viewport1 {
+  height: 100%;
+}
+
+.viewport1 {
+  width: 100%;
+}
+
+.viewport1 {
+  border-radius: inherit;
+}
+
+.scrollAreaPanelPrimary {
+  position: relative;
+}
+
+.scrollAreaPanelPrimary {
+  flex: 1 1 0%;
+}
+
+.scrollAreaPanelPrimary {
+  border-radius: 9999px;
+}
+
+.scrollAreaPanelPrimary {
+  background-color: hsl(var(--border));
+}
+
+.scrollAreaUtilityPrimary {
+  position: relative;
+}
+
+.scrollAreaUtilityPrimary {
+  overflow: hidden;
+}
+
+.scrollAreaLayoutPrimary {
+  display: flex;
+}
+
+.scrollAreaLayoutPrimary {
+  touch-action: none;
+}
+
+.scrollAreaLayoutPrimary {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.scrollAreaLayoutPrimary {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.scrollAreaUtilitySecondary {
+  height: 100%;
+}
+
+.scrollAreaUtilitySecondary {
+  width: 0.625rem;
+}
+
+.scrollAreaUtilitySecondary {
+  border-left-width: 1px;
+}
+
+.scrollAreaUtilitySecondary {
+  border-left-color: transparent;
+}
+
+.scrollAreaUtilitySecondary {
+  padding: 1px;
+}
+
+.scrollAreaUtilityTertiary {
+  height: 0.625rem;
+}
+
+.scrollAreaUtilityTertiary {
+  flex-direction: column;
+}
+
+.scrollAreaUtilityTertiary {
+  border-top-width: 1px;
+}
+
+.scrollAreaUtilityTertiary {
+  border-top-color: transparent;
+}
+
+.scrollAreaUtilityTertiary {
+  padding: 1px;
+}

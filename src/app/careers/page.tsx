@@ -22,6 +22,8 @@ import { Briefcase, MapPin, Clock, ChevronRight, Loader2, Sparkles, Send, Paperc
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { externalApiService } from '@/services/api-client';
+import styles from './page.styles.module.css';
+import { cn } from '@/lib/utils';
 
 export default function CareersPage() {
   const { toast } = useToast();
@@ -117,59 +119,59 @@ export default function CareersPage() {
   };
 
   return (
-    <div className="flex flex-col gap-24 pb-20">
+    <div className={styles.careersLayoutPrimary}>
       {/* Hero Section */}
-      <section className="relative w-full h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className={styles.careersSection}>
         <Image
           src="https://picsum.photos/seed/baron-careers/1920/1080"
           alt="Werden Sie Teil der Baron-Elite"
           fill
           priority
-          className="object-cover opacity-30 grayscale-[0.3]"
+          className={styles.careersUtilityPrimary}
           data-ai-hint="luxury office"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+        <div className={styles.overlay} />
         
-        <div className="container relative z-10 px-4 text-center space-y-6">
-          <Badge className="bg-primary/20 text-primary border-primary/30 px-6 py-1 text-xs tracking-[0.3em] font-bold">DEM IMPERIUM BEITRETEN</Badge>
-          <h1 className="text-6xl md:text-8xl font-black font-headline tracking-tighter leading-none">
-            DIE ZUKUNFT <br /><span className="text-secondary">GESTALTEN</span>
+        <div className={styles.careersContainerPrimary}>
+          <Badge className={styles.demImperiumBeitretenBadge}>DEM IMPERIUM BEITRETEN</Badge>
+          <h1 className={styles.careersTitle}>
+            DIE ZUKUNFT <br /><span className={styles.careersLineBreakPrimary}>GESTALTEN</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
+          <p className={styles.bodyText}>
             Bei Blubber Baron bieten wir nicht nur Jobs an; wir bieten einen Platz am Tisch für Luxus und Innovation.
           </p>
         </div>
       </section>
 
       {/* Philosophy Section */}
-      <section className="container mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden glass-card gold-glow border-none">
+      <section className={styles.careersSection2}>
+        <div className={styles.grid}>
+          <div className={styles.careersPanelPrimary}>
             <Image 
               src="https://picsum.photos/seed/baron-culture/1000/750" 
               alt="Unsere Kultur" 
               fill 
-              className="object-cover"
+              className={styles.careersUtilitySecondary}
               data-ai-hint="team luxury"
             />
           </div>
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-headline font-bold">Der innere Kreis des Barons</h2>
-              <div className="h-1 w-24 bg-secondary" />
+          <div className={styles.careersContainerSecondary}>
+            <div className={styles.careersContainerTertiary}>
+              <h2 className={styles.derInnereKreisDesBaronsHeading}>Der innere Kreis des Barons</h2>
+              <div className={styles.careersContainerQuaternary} />
             </div>
-            <p className="text-xl text-muted-foreground leading-relaxed font-light">
+            <p className={styles.bodyText2}>
               Wir sind ein Kollektiv von Designern, Visionären und Shisha-Aficionados, die sich der Neudefinition der Branchenstandards verschrieben haben.
             </p>
-            <div className="space-y-4">
+            <div className={styles.careersContainerTertiary}>
               {[
                 "Globale Netzwerkmöglichkeiten mit Luxusmarken.",
                 "Zugang zu den exklusiven Forschungs- und Entwicklungslaboren des Barons.",
                 "Ein kollaboratives Umfeld, das ästhetische Präzision schätzt."
               ].map((benefit, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span className="text-sm font-medium text-muted-foreground">{benefit}</span>
+                <div key={i} className={styles.careersLayoutSecondary}>
+                  <div className={styles.careersPanelSecondary} />
+                  <span className={styles.inlineText}>{benefit}</span>
                 </div>
               ))}
             </div>
@@ -178,26 +180,26 @@ export default function CareersPage() {
       </section>
 
       {/* Job Listings Section */}
-      <section className="container mx-auto px-4 lg:px-8 space-y-12">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-border pb-8">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-secondary font-bold uppercase tracking-[0.4em] text-[10px]">
-              <Sparkles className="h-3 w-3" />
+      <section className={styles.careersSection3}>
+        <div className={styles.careersLayoutTertiary}>
+          <div className={styles.careersContainerQuinary}>
+            <div className={styles.careersLayoutQuaternary}>
+              <Sparkles className={styles.sparklesIcon} />
               Offene Positionen
             </div>
-            <h2 className="text-4xl font-headline font-bold">Aktuelle Chancen</h2>
+            <h2 className={styles.aktuelleChancenHeading}>Aktuelle Chancen</h2>
           </div>
-          <Badge variant="outline" className="text-muted-foreground border-border px-4 py-1">
+          <Badge variant="outline" className={styles.statusBadge}>
             {isLoading ? '...' : (jobs?.length || 0)} Möglichkeiten
           </Badge>
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <div className={styles.careersLayoutQuinary}>
+            <Loader2 className={styles.loader2Icon} />
           </div>
         ) : jobs && jobs.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6">
+          <div className={styles.grid2}>
             {jobs.map((job) => (
               <Card key={job.id} className="glass-card border border-border/40 hover:gold-glow transition-all duration-500 group overflow-hidden">
                 <CardHeader className="flex flex-row items-center justify-between p-8">
@@ -206,11 +208,11 @@ export default function CareersPage() {
                       <Badge className="bg-secondary/20 text-secondary border-none">{job.department}</Badge>
                       <Badge variant="outline" className="border-border text-muted-foreground">{job.type}</Badge>
                     </div>
-                    <CardTitle className="text-3xl font-headline font-bold group-hover:text-primary transition-colors">
+                    <CardTitle className={styles.careersTextPrimary}>
                       {job.title}
                     </CardTitle>
-                    <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2">
-                      <MapPin className="h-4 w-4 text-primary" />
+                    <div className={styles.careersLayoutSeptenary}>
+                      <MapPin className={styles.careersIconPrimary} />
                       {job.location}
                       <Clock className="h-4 w-4 text-primary ml-4" />
                       Gepostet am {new Date(job.createdAt || Date.now()).toLocaleDateString()}
@@ -219,86 +221,91 @@ export default function CareersPage() {
                   
                   <Dialog open={selectedJob?.id === job.id} onOpenChange={(open) => !open && setSelectedJob(null)}>
                     <DialogTrigger asChild>
-                      <Button size="lg" className="bg-primary hover:bg-primary/90 rounded-xl px-8 hidden md:flex font-bold" onClick={() => setSelectedJob(job)}>
+                      <Button size="lg" className={styles.actionButton} onClick={() => setSelectedJob(job)}>
                         Jetzt bewerben
-                        <ChevronRight className="ml-2 h-4 w-4" />
+                        <ChevronRight className={styles.careersIconTertiary} />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="glass-card border-none sm:max-w-[500px] overflow-y-auto max-h-[90vh]">
+                    <DialogContent className={styles.careersDialogPrimary}>
                       <form onSubmit={handleApply}>
-                        <DialogHeader className="space-y-4">
-                          <DialogTitle className="text-3xl font-headline font-bold">Manifestieren Sie Ihren Ehrgeiz</DialogTitle>
-                          <DialogDescription className="text-base">
-                            Bewerben Sie sich für die Position als <span className="text-secondary font-bold">{job.title}</span> im Rat des Barons.
+                        <DialogHeader className={styles.careersContainerTertiary}>
+                          <DialogTitle className={styles.careersTextSecondary}>Manifestieren Sie Ihren Ehrgeiz</DialogTitle>
+                          <DialogDescription className={styles.careersDialogSecondary}>
+                            Bewerben Sie sich für die Position als <span className={styles.inlineText2}>{job.title}</span> im Rat des Barons.
                           </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-6 py-6">
-                          <div className="space-y-2">
+                        <div className={styles.careersContainerSeptenary}>
+                          <div className={styles.careersContainerSenary}>
                             <Label htmlFor="name">Ihr Name</Label>
                             <Input 
                               id="name" 
                               placeholder="Vollständiger Name" 
                               required 
-                              className="bg-card h-12"
+                              className={styles.careersUtilityTertiary}
                               value={applicationData.name}
                               onChange={(e) => setApplicationData({ ...applicationData, name: e.target.value })}
                             />
                           </div>
-                          <div className="space-y-2">
+                          <div className={styles.careersContainerSenary}>
                             <Label htmlFor="email">Bevorzugte Kontakt-E-Mail</Label>
                             <Input 
                               id="email" 
                               type="email" 
                               placeholder="email@beispiel.de" 
                               required 
-                              className="bg-card h-12"
+                              className={styles.careersUtilityTertiary}
                               value={applicationData.email}
                               onChange={(e) => setApplicationData({ ...applicationData, email: e.target.value })}
                             />
                           </div>
                           
-                          <div className="space-y-2">
+                          <div className={styles.careersContainerSenary}>
                             <Label>Lebenslauf / Portfolio</Label>
                             <div 
-                              className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-colors cursor-pointer ${resumeBase64 ? 'border-secondary bg-secondary/5' : 'border-border hover:border-primary/50'}`}
+                              className={cn(
+                                styles.resumeDropzone,
+                                resumeBase64
+                                  ? styles.resumeDropzoneSelected
+                                  : styles.resumeDropzoneEmpty,
+                              )}
                               onClick={() => !resumeBase64 && fileInputRef.current?.click()}
                             >
                               {resumeBase64 ? (
-                                <div className="flex items-center justify-between w-full">
-                                  <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-secondary/20 rounded-lg">
-                                      <FileText className="h-5 w-5 text-secondary" />
+                                <div className={styles.careersLayoutOctonary}>
+                                  <div className={styles.careersLayoutSecondary}>
+                                    <div className={styles.careersPanelTertiary}>
+                                      <FileText className={styles.careersIconQuaternary} />
                                     </div>
-                                    <span className="text-sm font-medium truncate max-w-[200px]">{fileName}</span>
+                                    <span className={styles.inlineText3}>{fileName}</span>
                                   </div>
                                   <Button type="button" variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); clearFile(); }}>
-                                    <X className="h-4 w-4" />
+                                    <X className={styles.xIcon} />
                                   </Button>
                                 </div>
                               ) : (
                                 <>
-                                  <Paperclip className="h-6 w-6 text-muted-foreground mb-2" />
-                                  <span className="text-sm text-muted-foreground font-medium">Visionären Lebenslauf anhängen</span>
-                                  <span className="text-[10px] text-muted-foreground uppercase mt-1">PDF oder DOC (Max 2MB)</span>
+                                  <Paperclip className={styles.paperclip54} />
+                                  <span className={styles.visionarenLebenslaufAnhangenText}>Visionären Lebenslauf anhängen</span>
+                                  <span className={styles.pdfOderDocMax2mbText}>PDF oder DOC (Max 2MB)</span>
                                 </>
                               )}
                               <input 
                                 type="file" 
                                 ref={fileInputRef} 
-                                className="hidden" 
+                                className={styles.careersUtilityQuaternary} 
                                 accept=".pdf,.doc,.docx"
                                 onChange={handleFileChange}
                               />
                             </div>
                           </div>
 
-                          <div className="space-y-2">
+                          <div className={styles.careersContainerSenary}>
                             <Label htmlFor="message">Warum der Baron?</Label>
                             <Textarea 
                               id="message" 
                               placeholder="Erzählen Sie uns von Ihrer Vision..." 
                               required 
-                              className="bg-card min-h-[100px] resize-none"
+                              className={styles.careersUtilityQuinary}
                               value={applicationData.message}
                               onChange={(e) => setApplicationData({ ...applicationData, message: e.target.value })}
                             />
@@ -308,9 +315,9 @@ export default function CareersPage() {
                           <Button 
                             type="submit" 
                             disabled={isApplying} 
-                            className="w-full h-14 bg-primary hover:bg-primary/90 font-bold text-lg crimson-glow"
+                            className={styles.careersTextTertiary}
                           >
-                            {isApplying ? <Loader2 className="h-5 w-5 animate-spin" /> : <><Send className="mr-2 h-5 w-5" /> Bewerbung einreichen</>}
+                            {isApplying ? <Loader2 className={styles.loader2Icon2} /> : <><Send className={styles.loader2Icon3} /> Bewerbung einreichen</>}
                           </Button>
                         </DialogFooter>
                       </form>
@@ -345,11 +352,11 @@ export default function CareersPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 glass-card rounded-3xl border-dashed border-2 border-border/50">
-            <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-bold font-headline">Der Rat des Barons ist derzeit vollzählig</h3>
-            <p className="text-muted-foreground max-w-md mx-auto mt-2">
-              Auch wenn wir momentan keine offenen Stellen haben, findet Exzellenz immer einen Weg. Senden Sie Ihre Initiativbewerbung an <span className="text-secondary">register@blubberbaron.de</span>
+          <div className={styles.careersPanelQuaternary}>
+            <Briefcase className={styles.briefcaseIcon} />
+            <h3 className={styles.derRatDesBaronsIstDerzeitVollzahligHeading}>Der Rat des Barons ist derzeit vollzählig</h3>
+            <p className={styles.bodyText4}>
+              Auch wenn wir momentan keine offenen Stellen haben, findet Exzellenz immer einen Weg. Senden Sie Ihre Initiativbewerbung an <span className={styles.careersLineBreakPrimary}>register@blubberbaron.de</span>
             </p>
           </div>
         )}
@@ -357,3 +364,5 @@ export default function CareersPage() {
     </div>
   );
 }
+
+

@@ -1,46 +1,68 @@
-
 import Link from 'next/link';
+
+import styles from './Footer.module.css';
+
+const footerSections = [
+  {
+    title: 'Shop',
+    links: [
+      { href: '/#catalog', label: 'Wasserpfeifen' },
+      { href: '/#catalog', label: 'Kohle' },
+      { href: '/#catalog', label: 'Tabak & Aromen' },
+      { href: '/#catalog', label: 'Zubehoer' },
+    ],
+  },
+  {
+    title: 'Imperium',
+    links: [
+      { href: '/story', label: 'Unsere Geschichte' },
+      { href: '/careers', label: 'Karriere' },
+      { href: '/profile', label: 'Das Register' },
+      { href: '/admin', label: 'Admin-Konsole' },
+    ],
+  },
+  {
+    title: 'Kontakt',
+    links: [
+      { href: '/', label: 'Instagram' },
+      { href: '/', label: 'Twitter' },
+      { href: '/', label: 'Facebook' },
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-border bg-card mt-20">
-      <div className="container mx-auto px-4 py-12 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold font-headline text-primary uppercase tracking-tighter">BLUBBER BARON</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Exzellente Shisha-Erlebnisse für den anspruchsvollen Genießer. Luxus, Leistung und Raffinesse in jedem Zug.
+    <footer className={styles.footer}>
+      <div className={styles.inner}>
+        <div className={styles.grid}>
+          <div className={styles.brandBlock}>
+            <h3 className={styles.brandTitle}>BLUBBER BARON</h3>
+            <p className={styles.description}>
+              Exzellente Shisha-Erlebnisse fuer den anspruchsvollen Geniesser.
+              Luxus, Leistung und Raffinesse in jedem Zug.
             </p>
           </div>
-          <div>
-            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Shop</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Wasserpfeifen</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Kohle</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Tabak & Aromen</Link></li>
-              <li><Link href="/#catalog" className="hover:text-primary transition-colors">Zubehör</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Imperium</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/story" className="hover:text-primary transition-colors">Unsere Geschichte</Link></li>
-              <li><Link href="/careers" className="hover:text-primary transition-colors">Karriere</Link></li>
-              <li><Link href="/profile" className="hover:text-primary transition-colors">Das Register</Link></li>
-              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin-Konsole</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4 text-secondary uppercase tracking-widest text-xs">Kontakt</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/" className="hover:text-primary transition-colors">Instagram</Link></li>
-              <li><Link href="/" className="hover:text-primary transition-colors">Twitter</Link></li>
-              <li><Link href="/" className="hover:text-primary transition-colors">Facebook</Link></li>
-            </ul>
-          </div>
+
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h4 className={styles.sectionTitle}>{section.title}</h4>
+              <ul className={styles.linkList}>
+                {section.links.map((link) => (
+                  <li key={`${section.title}-${link.label}`}>
+                    <Link href={link.href} className={styles.link}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div className="border-t border-border mt-12 pt-8 text-center text-xs text-muted-foreground uppercase tracking-widest">
-          &copy; {new Date().getFullYear()} Blubber Baron. Alle Rechte vorbehalten.
+
+        <div className={styles.copyright}>
+          &copy; {new Date().getFullYear()} Blubber Baron. Alle Rechte
+          vorbehalten.
         </div>
       </div>
     </footer>

@@ -1,0 +1,67 @@
+.avatarLayoutPrimary {
+  position: relative;
+}
+
+.avatarLayoutPrimary {
+  display: flex;
+}
+
+.avatarLayoutPrimary {
+  height: 2.5rem;
+}
+
+.avatarLayoutPrimary {
+  width: 2.5rem;
+}
+
+.avatarLayoutPrimary {
+  flex-shrink: 0;
+}
+
+.avatarLayoutPrimary {
+  overflow: hidden;
+}
+
+.avatarLayoutPrimary {
+  border-radius: 9999px;
+}
+
+.avatarUtilityPrimary {
+  aspect-ratio: 1 / 1;
+}
+
+.avatarUtilityPrimary {
+  height: 100%;
+}
+
+.avatarUtilityPrimary {
+  width: 100%;
+}
+
+.avatarLayoutSecondary {
+  display: flex;
+}
+
+.avatarLayoutSecondary {
+  height: 100%;
+}
+
+.avatarLayoutSecondary {
+  width: 100%;
+}
+
+.avatarLayoutSecondary {
+  align-items: center;
+}
+
+.avatarLayoutSecondary {
+  justify-content: center;
+}
+
+.avatarLayoutSecondary {
+  border-radius: 9999px;
+}
+
+.avatarLayoutSecondary {
+  background-color: hsl(var(--muted));
+}

@@ -1,0 +1,111 @@
+.badgeLayoutPrimary {
+  display: inline-flex;
+}
+
+.badgeLayoutPrimary {
+  align-items: center;
+}
+
+.badgeLayoutPrimary {
+  border-radius: 9999px;
+}
+
+.badgeLayoutPrimary {
+  border-width: 1px;
+}
+
+.badgeLayoutPrimary {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.badgeLayoutPrimary {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
+.badgeLayoutPrimary {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.badgeLayoutPrimary {
+  font-weight: 600;
+}
+
+.badgeLayoutPrimary {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.badgeLayoutPrimary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.badgeLayoutPrimary:focus {
+  --style-ring-offset-shadow: var(--style-ring-inset) 0 0 0 var(--style-ring-offset-width) var(--style-ring-offset-color);
+  --style-ring-shadow: var(--style-ring-inset) 0 0 0 calc(2px + var(--style-ring-offset-width)) var(--style-ring-color);
+  box-shadow: var(--style-ring-offset-shadow), var(--style-ring-shadow), var(--style-shadow, 0 0 #0000);
+}
+
+.badgeLayoutPrimary:focus {
+  --style-ring-color: hsl(var(--ring));
+}
+
+.badgeLayoutPrimary:focus {
+  --style-ring-offset-width: 2px;
+}
+
+.badgeUtilityPrimary {
+  border-color: transparent;
+}
+
+.badgeUtilityPrimary {
+  background-color: hsl(var(--primary));
+}
+
+.badgeUtilityPrimary {
+  color: hsl(var(--primary-foreground));
+}
+
+.badgeUtilityPrimary:hover {
+  background-color: hsl(var(--primary) / 0.8);
+}
+
+.badgeUtilitySecondary {
+  border-color: transparent;
+}
+
+.badgeUtilitySecondary {
+  background-color: hsl(var(--secondary));
+}
+
+.badgeUtilitySecondary {
+  color: hsl(var(--secondary-foreground));
+}
+
+.badgeUtilitySecondary:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+.badgeUtilityTertiary {
+  border-color: transparent;
+}
+
+.badgeUtilityTertiary {
+  background-color: hsl(var(--destructive));
+}
+
+.badgeUtilityTertiary {
+  color: hsl(var(--destructive-foreground));
+}
+
+.badgeUtilityTertiary:hover {
+  background-color: hsl(var(--destructive) / 0.8);
+}
+
+.variantOutline {
+  color: hsl(var(--foreground));
+}
