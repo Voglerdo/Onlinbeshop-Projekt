@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     category VARCHAR(50) NOT NULL,
-    image_url TEXT,
+    image_url LONGTEXT,
     image_hint VARCHAR(255),
     brand VARCHAR(100),
     stock_quantity INT DEFAULT 0,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS product_images (
     product_id BIGINT NOT NULL,
     display_order INT NOT NULL,
-    image_url TEXT NOT NULL,
+    image_url LONGTEXT NOT NULL,
     PRIMARY KEY (product_id, display_order),
     CONSTRAINT fk_product_images_product
         FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE

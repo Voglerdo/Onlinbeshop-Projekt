@@ -40,7 +40,7 @@ export default function StoryPage() {
             </div>
           </div>
           <div className="relative aspect-square rounded-[3rem] overflow-hidden glass-card gold-glow border-none">
-            <Image src="https://picsum.photos/seed/baron-craft/1000/1000" alt="Handwerkskunst" fill className="object-cover" data-ai-hint="shisha craftsmanship" />
+            <Image src="/images/laborexperten.png" alt="Laborexperten" fill className="object-cover" data-ai-hint="labor experts" />
           </div>
         </div>
       </section>

@@ -35,7 +35,7 @@ public class ProductEntity {
     @Column(nullable = false)
     private String category;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     private String imageHint;
@@ -46,7 +46,7 @@ public class ProductEntity {
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "image_url", columnDefinition = "TEXT")
+    @Column(name = "image_url", columnDefinition = "LONGTEXT")
     @OrderColumn(name = "display_order")
     private List<String> imageUrls = new ArrayList<String>();
 

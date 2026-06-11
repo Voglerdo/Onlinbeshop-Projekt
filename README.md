@@ -257,6 +257,12 @@ Workbench/manual SQL scripts:
 
 ## Useful Docker Commands
 
+Fresh clones automatically load the shared demo data from:
+
+- [backend/docker/mysql/init/02-seed-current-data.sql](C:/Users/domin/Downloads/project%20(1)/backend/docker/mysql/init/02-seed-current-data.sql)
+
+This import only runs when Docker creates the MySQL volume for the first time. Existing local volumes keep their own data.
+
 Start database:
 
 ```powershell
