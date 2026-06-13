@@ -365,16 +365,26 @@
   font-weight: 700;
 }
 
-.storyContainerQuaternary {
+.storyDivider {
   height: 0.25rem;
 }
 
-.storyContainerQuaternary {
+.storyDivider {
   width: 6rem;
 }
 
-.storyContainerQuaternary {
+.storyDivider {
   background-color: hsl(var(--primary));
+}
+
+.storyFeature {
+  min-width: 0;
+}
+
+.storyFeature > :not([hidden]) ~ :not([hidden]) {
+  --style-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--style-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--style-space-y-reverse));
 }
 
 .bodyText2 {

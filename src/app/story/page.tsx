@@ -26,28 +26,28 @@ export default function StoryPage() {
           <div className={styles.storyContainerTertiary}>
             <div className={styles.storyContainerSecondary}>
               <h2 className={styles.eineVisionDerRaffinesseHeading}>Eine Vision der Raffinesse</h2>
-              <div className={styles.storyContainerQuaternary} />
+              <div className={styles.storyDivider} />
             </div>
             <p className={styles.bodyText2}>Blubber Baron wurde aus einer einzigen Besessenheit geboren: das Alltägliche abzustreifen und das Shisha-Erlebnis zu einer Kunstform zu erheben.</p>
             <div className={styles.grid2}>
-              <div className={styles.storyContainerQuaternary}>
+              <div className={styles.storyFeature}>
                 <div className={styles.storyLayoutTertiary}><History className={styles.storyIconPrimary} /> Erbe</div>
                 <p className={styles.bodyText3}>Jahrzehntelange Expertise in Fluiddynamik und Materialwissenschaft.</p>
               </div>
-              <div className={styles.storyContainerQuaternary}>
+              <div className={styles.storyFeature}>
                 <div className={styles.storyLayoutTertiary}><Award className={styles.storyIconPrimary} /> Qualität</div>
                 <p className={styles.bodyText3}>Wir verwenden nur feinstes medizinisches Silikon und Stahl in Luftfahrtqualität.</p>
               </div>
             </div>
           </div>
-          <div className="relative aspect-square rounded-[3rem] overflow-hidden glass-card gold-glow border-none">
-            <Image src="/images/laborexperten.png" alt="Laborexperten" fill className="object-cover" data-ai-hint="labor experts" />
+          <div className={styles.storyPanelPrimary}>
+            <Image src="/images/laborexperten.png" alt="Laborexperten" fill className={styles.handwerkskunstImage} data-ai-hint="labor experts" />
           </div>
         </div>
       </section>
 
       <section className={styles.storySection3}>
-        <div className={styles.storyContainerQuaternary}>
+        <div className={styles.storyContainerSenary}>
           <Quote className={styles.quoteIcon} />
           <h2 className={styles.storyHeading}>"Der Baron glaubt, dass wahrer Luxus in der Stille eines perfekten Zugs und der Dichte einer Wolke zu spüren ist, die wie eine Erinnerung verweilt."</h2>
           <div className={styles.storyLayoutQuaternary}>
