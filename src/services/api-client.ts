@@ -3,7 +3,7 @@
  * @fileOverview Zentraler API-Client für die Kommunikation mit einem externen REST-Backend.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
 
 export async function apiRequest<T>(
   endpoint: string,
