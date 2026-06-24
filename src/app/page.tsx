@@ -1,42 +1,42 @@
-"use client"
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Filter, Loader2, Sparkles, X } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Filter, Loader2, Sparkles, X } from "lucide-react";
 
-import { PRODUCT_CATEGORIES, ProductCategoryId } from './home.constants';
-import { filterProducts } from './home.utils';
-import { ProductCard } from '@/components/products/ProductCard';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { useProducts } from '@/hooks/use-products';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import styles from './page.module.css';
-import generatedStyles from './page.styles.module.css';
-import { cn } from '@/lib/utils';
+import { PRODUCT_CATEGORIES, ProductCategoryId } from "./home.constants";
+import { filterProducts } from "./home.utils";
+import { ProductCard } from "@/components/products/ProductCard";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useProducts } from "@/hooks/use-products";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import styles from "./page.module.css";
+import generatedStyles from "./page.styles.module.css";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] =
-    useState<ProductCategoryId>('all');
+    useState<ProductCategoryId>("all");
   const { products, isLoading } = useProducts();
 
-  const searchQuery = searchParams.get('q') || '';
-  const heroImg = PlaceHolderImages.find((img) => img.id === 'hero-shisha');
+  const searchQuery = searchParams.get("q") || "";
+  const heroImg = PlaceHolderImages.find((img) => img.id === "hero-shisha");
   const filteredProducts = useMemo(
     () => filterProducts(products, selectedCategory, searchQuery),
     [products, searchQuery, selectedCategory],
   );
 
   function clearSearch() {
-    router.push('/#catalog');
+    router.push("/#catalog");
   }
 
   function resetFilters() {
-    setSelectedCategory('all');
+    setSelectedCategory("all");
     clearSearch();
   }
 
@@ -44,7 +44,7 @@ export default function Home() {
     <div className={styles.home}>
       <section className={styles.hero}>
         <Image
-          src={heroImg?.imageUrl || ''}
+          src={heroImg?.imageUrl || ""}
           alt="Luxus-Shisha-Erlebnis"
           fill
           priority
@@ -56,23 +56,29 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <div className={styles.eyebrow}>
               <div className={styles.eyebrowLine} />
-              <span className={styles.eyebrowText}>Imperialer Standard</span>
+              <span className={styles.eyebrowText}>IMPERIAL COLLECTION</span>
               <div className={styles.eyebrowLine} />
             </div>
             <h1 className={styles.heroTitle}>
-              EXZELLENZ <br />
-              <span className={styles.heroTitleAccent}>ERSCHAFFEN</span>
+              ERSCHAFFEN
+              <br />
+              <span className={styles.heroTitleAccent}>FÜR WAHREN GENUSS</span>
             </h1>
             <p className={styles.heroText}>
-              Erleben Sie den Gipfel der Shisha-Raffinesse. Kuratiert fuer jene
-              Wenigen, die bei jedem Zug absolute Perfektion verlangen.
+              Weil das Leben zu kurz für schlechte Köpfe ist.
             </p>
           </div>
 
           <div className={styles.heroActions}>
             <Link href="/#catalog">
-              <Button size="lg" className={cn(generatedStyles.actionButton, styles.primaryAction)}>
-                Die Schatzkammer erkunden
+              <Button
+                size="lg"
+                className={cn(
+                  generatedStyles.actionButton,
+                  styles.primaryAction,
+                )}
+              >
+                Kollektion entdecken
               </Button>
             </Link>
             <Button
@@ -81,7 +87,7 @@ export default function Home() {
               variant="outline"
               className={styles.secondaryAction}
             >
-              <Link href="/story">Die Geschichte</Link>
+              <Link href="/story">Mehr erfahren</Link>
             </Button>
           </div>
         </div>
@@ -92,7 +98,7 @@ export default function Home() {
           <div>
             <div className={styles.sectionEyebrow}>
               <Sparkles size={12} />
-              Kuratierte Auswahl
+              Für wahre Genießer
             </div>
             <h2 className={styles.catalogTitle}>Die Kollektion</h2>
             {searchQuery && (
@@ -116,14 +122,16 @@ export default function Home() {
             {PRODUCT_CATEGORIES.map((category) => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? 'secondary' : 'ghost'}
+                variant={
+                  selectedCategory === category.id ? "secondary" : "ghost"
+                }
                 onClick={() => setSelectedCategory(category.id)}
                 className={[
                   styles.categoryButton,
                   selectedCategory === category.id
                     ? `${styles.categoryButtonActive} gold-glow`
                     : styles.categoryButtonInactive,
-                ].join(' ')}
+                ].join(" ")}
               >
                 {category.label}
               </Button>
@@ -145,23 +153,30 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className={cn(generatedStyles.homePageContainerPrimary, styles.emptyState)}>
+          <div
+            className={cn(
+              generatedStyles.homePageContainerPrimary,
+              styles.emptyState,
+            )}
+          >
             <div className={styles.emptyContent}>
               <div className={styles.emptyIconWrap}>
                 <Filter className={styles.emptyIcon} />
               </div>
-              <h3 className={styles.emptyTitle}>Keine Funde</h3>
+              <h3 className={styles.emptyTitle}>
+                Die Schatzkammer ist noch nicht gefüllt
+              </h3>
               <p className={styles.emptyText}>
                 {searchQuery
                   ? `Unsere Archive enthalten keine Treffer fuer "${searchQuery}". Versuchen Sie es mit einem anderen Begriff.`
-                  : 'Diese spezifische Kollektion befindet sich derzeit in der Kuratierung.'}
+                  : "Unsere Barone wählen derzeit die nächsten Highlights für diese Kollektion aus. Schauen Sie bald wieder vorbei -  das Warten könnte sich lohnen."}
               </p>
               <Button
                 variant="link"
                 onClick={resetFilters}
                 className={styles.resetButton}
               >
-                Filter zuruecksetzen
+                Alle Produkte anzeigen
               </Button>
             </div>
           </div>
@@ -170,4 +185,3 @@ export default function Home() {
     </div>
   );
 }
-
