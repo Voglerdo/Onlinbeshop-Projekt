@@ -106,7 +106,7 @@ export default function ProfilePage() {
       login(user.email || "baron@elite.de", true); // Update lokale Session
       toast({
         title: "Admin-Zugang gewährt",
-        description: "Sie haben nun Zugriff auf die Imperiale Konsole.",
+        description: "Sie haben nun Zugriff auf die Adminstrationskonsole.",
       });
     } catch (err) {
       toast({ title: "Promotion fehlgeschlagen", variant: "destructive" });
@@ -128,11 +128,11 @@ export default function ProfilePage() {
       <div className={styles.profileContainerPrimary}>
         <div className={styles.profileContainerSecondary}>
           <h1 className={styles.imperialesRegisterTitle}>
-            Imperiales Register
+            {" "}
+            Zugang zum Blubber Baron
           </h1>
           <p className={styles.bodyText}>
-            Identifizieren Sie sich, um Zugang zum Blubber Baron Ökosystem zu
-            erhalten.
+            Melde dich an, um Zugang zum Blubber Baron Ökosystem zu erhalten.
           </p>
         </div>
 
@@ -142,17 +142,14 @@ export default function ProfilePage() {
               <User className={styles.user10} />
             </div>
             <div className={styles.profileContainerSecondary}>
-              <h2 className={styles.kundenzugangHeading}>Kundenzugang</h2>
-              <p className={styles.bodyText2}>
-                Verwalten Sie Ihre Kollektion, verfolgen Sie Erwerbe und stöbern
-                Sie im Katalog.
-              </p>
+              <h2 className={styles.kundenzugangHeading}>Kundenbereich</h2>
+              <p className={styles.bodyText2}></p>
             </div>
             <Button
               className={styles.actionButton}
               onClick={() => login("baron@elite.de")}
             >
-              Kunden-Anmeldung
+              Jetzt anmelden
             </Button>
           </Card>
 
@@ -161,19 +158,14 @@ export default function ProfilePage() {
               <ShieldCheck className={styles.shieldcheck17} />
             </div>
             <div className={styles.profileContainerSecondary}>
-              <h2 className={styles.kundenzugangHeading}>
-                Imperiales Personal
-              </h2>
-              <p className={styles.bodyText2}>
-                Für Administratoren zur Verwaltung von Inventar und
-                Stellenangeboten.
-              </p>
+              <h2 className={styles.kundenzugangHeading}>Adminbereich</h2>
+              <p className={styles.bodyText2}></p>
             </div>
             <Button
               className={styles.actionButton2}
               onClick={() => login("admin@blubberbaron.de", true)}
             >
-              Admin-Anmeldung
+              Jetzt anmelden
             </Button>
           </Card>
         </div>
@@ -191,18 +183,12 @@ export default function ProfilePage() {
             ) : (
               <User className={styles.shieldcheck24} />
             )}
-            {user.isAdmin
-              ? "Imperiale Administration"
-              : "Authentifizierter Baron"}
+            {user.isAdmin ? "Adminkonto" : "Kundenkonto"}
           </div>
           <h1 className={styles.profileTitle}>
-            Willkommen, {profile?.firstName || "Baron"}
+            Willkommen, {profile?.firstName || "Baron"}!
           </h1>
-          <p className={styles.bodyText3}>
-            {user.isAdmin
-              ? "Sie haben die volle Aufsicht über das Blubber Baron Imperium."
-              : `Wir verwalten Ihren Elite-Lifestyle.`}
-          </p>
+          <p className={styles.bodyText3}>{user.isAdmin ? "" : ``}</p>
         </div>
 
         <div className={styles.profileLayoutOctonary}>
@@ -210,7 +196,7 @@ export default function ProfilePage() {
             <Link href="/admin">
               <Button className={styles.actionButton3}>
                 <Key className={styles.profileIconPrimary} />
-                Admin-Konsole
+                Adminstrationskonsole
               </Button>
             </Link>
           )}
@@ -220,7 +206,7 @@ export default function ProfilePage() {
             onClick={logout}
           >
             <LogOut className={styles.profileIconPrimary} />
-            Sitzung beenden
+            abmelden
           </Button>
         </div>
       </div>
@@ -231,7 +217,7 @@ export default function ProfilePage() {
             <Package className={styles.profileIconPrimary} /> Übersicht
           </TabsTrigger>
           <TabsTrigger value="settings" className={styles.tabstrigger33}>
-            <Settings className={styles.profileIconPrimary} /> Referenzen
+            <Settings className={styles.profileIconPrimary} /> Kontodaten
           </TabsTrigger>
         </TabsList>
 
@@ -240,11 +226,9 @@ export default function ProfilePage() {
             <Card className={styles.profileCardPrimary}>
               <CardHeader>
                 <CardTitle className={styles.cardtitle36}>
-                  Jüngste Akquisitionen
+                  Bestellungen
                 </CardTitle>
-                <CardDescription>
-                  Eine Chronik Ihrer Luxustransaktionen.
-                </CardDescription>
+                <CardDescription>Übersicht Deiner Bestellungen</CardDescription>
               </CardHeader>
               <CardContent>
                 {isDataLoading ? (
@@ -254,14 +238,14 @@ export default function ProfilePage() {
                 ) : orders.length === 0 ? (
                   <div className={styles.profileContainerSeptenary}>
                     <p className={styles.bodyText3}>
-                      Ihre Historie ist noch ein leeres Blatt.
+                      Dein Bestellverlauf ist noch leer.
                     </p>
                     <Link href="/#catalog">
                       <Button
                         variant="link"
                         className={styles.beginnenSieIhreErsteSessionButton}
                       >
-                        Beginnen Sie Ihre erste Session
+                        Lass dich inspirieren!
                       </Button>
                     </Link>
                   </div>
@@ -319,7 +303,7 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent className={styles.profileContainerOctonary}>
                   <div className={styles.profileLayoutThirteenth}>
-                    <span className={styles.bodyText2}>Mitgliedschaft</span>
+                    <span className={styles.bodyText2}>Mitgliedsstatus</span>
                     <Badge
                       className={
                         user.isAdmin
@@ -327,7 +311,7 @@ export default function ProfilePage() {
                           : "bg-secondary adminTextPrimary-background font-bold border-none"
                       }
                     >
-                      {user.isAdmin ? "IMPERIALES PERSONAL" : "ELITE BARON"}
+                      {user.isAdmin ? "BARON ADMIN" : "BARON MITGLIED"}
                     </Badge>
                   </div>
                   <Separator className={styles.separator55} />
@@ -352,7 +336,7 @@ export default function ProfilePage() {
               <Card className={styles.profileCardTertiary}>
                 <CardHeader>
                   <CardTitle className={styles.profileTextPrimary}>
-                    Identität
+                    Profil
                   </CardTitle>
                 </CardHeader>
                 <CardContent className={styles.profileContainerOctonary}>
@@ -363,7 +347,7 @@ export default function ProfilePage() {
                   <div className={styles.profileLayoutFourteenth}>
                     <Calendar className={styles.profileIconQuinary} />
                     <span className={styles.inlineText2}>
-                      Zuletzt aktiv: {new Date().toLocaleDateString()}
+                      Letzte Anmeldung: {new Date().toLocaleDateString()}
                     </span>
                   </div>
                 </CardContent>
@@ -376,11 +360,9 @@ export default function ProfilePage() {
           <Card className={styles.profileCardQuaternary}>
             <CardHeader>
               <CardTitle className={styles.cardtitle36}>
-                Persönliche Referenzen
+                Persönliche Daten
               </CardTitle>
-              <CardDescription>
-                Aktualisieren Sie Ihre Präsenz im Blubber Baron Register.
-              </CardDescription>
+              <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleUpdateProfile} className={styles.form}>
@@ -426,7 +408,7 @@ export default function ProfilePage() {
                     {isSaving ? (
                       <Loader2 className={styles.loader2Icon2} />
                     ) : (
-                      "Referenzen synchronisieren"
+                      "Änderungen speichern"
                     )}
                   </Button>
                 </div>

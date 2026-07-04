@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -15,12 +15,13 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import { useCart } from './CartProvider';
-import styles from './CartSheet.module.css';
+} from "@/components/ui/sheet";
+import { useCart } from "./CartProvider";
+import styles from "./CartSheet.module.css";
 
 export function CartSheet() {
-  const { items, totalItems, totalPrice, removeItem, updateQuantity } = useCart();
+  const { items, totalItems, totalPrice, removeItem, updateQuantity } =
+    useCart();
   const hasItems = items.length > 0;
 
   return (
@@ -40,7 +41,7 @@ export function CartSheet() {
         <SheetHeader className={styles.header}>
           <SheetTitle className={styles.title}>
             <ShoppingBag className={styles.titleIcon} />
-            Ihre Auswahl
+            Warenkorb
           </SheetTitle>
         </SheetHeader>
 
@@ -51,7 +52,7 @@ export function CartSheet() {
                 <ShoppingBag className={styles.emptyIcon} />
               </div>
               <p className={styles.emptyText}>
-                Ihr Warenkorb ist derzeit leer.
+                Der Warenkorb ist derzeit leer.
               </p>
               <Button variant="link" asChild className={styles.emptyLink}>
                 <Link href="/#catalog">Weiter einkaufen</Link>

@@ -169,7 +169,7 @@ export default function Home() {
               <p className={styles.emptyText}>
                 {searchQuery
                   ? `Unsere Archive enthalten keine Treffer fuer "${searchQuery}". Versuchen Sie es mit einem anderen Begriff.`
-                  : "Unsere Barone wählen derzeit die nächsten Highlights für diese Kollektion aus. Schauen Sie bald wieder vorbei -  das Warten könnte sich lohnen."}
+                  : "Unsere Barone wählen derzeit die nächsten Highlights für diese Kollektion aus. Schau bald wieder vorbei -  das Warten könnte sich lohnen."}
               </p>
               <Button
                 variant="link"
