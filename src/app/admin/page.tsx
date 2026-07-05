@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { 
   Plus, 
   MoreHorizontal, 
+  Pencil,
   Trash2, 
   LayoutGrid,
   Loader2,
@@ -217,6 +218,9 @@ export default function AdminPage() {
                               <Button variant="ghost" size="icon"><MoreHorizontal className={styles.actionButton3} /></Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className={styles.dropdownmenucontent36}>
+                              <DropdownMenuItem asChild>
+                                <Link href={`/admin/products/${product.id}/edit`}><Pencil className={styles.adminIconPrimary} /> Bearbeiten</Link>
+                              </DropdownMenuItem>
                               <DropdownMenuItem asChild>
                                 <Link href={`/products/${product.id}`}><ExternalLink className={styles.adminIconPrimary} /> Ansehen</Link>
                               </DropdownMenuItem>

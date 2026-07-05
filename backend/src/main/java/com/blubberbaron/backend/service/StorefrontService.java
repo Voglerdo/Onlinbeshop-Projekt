@@ -5,6 +5,7 @@ import com.blubberbaron.backend.dto.JobOfferDto;
 import com.blubberbaron.backend.dto.OrderDto;
 import com.blubberbaron.backend.dto.OrderItemDto;
 import com.blubberbaron.backend.dto.ProductDto;
+import com.blubberbaron.backend.dto.ProductPatchDto;
 import com.blubberbaron.backend.dto.ReviewDto;
 import com.blubberbaron.backend.dto.UserProfileDto;
 import com.blubberbaron.backend.model.JobApplicationEntity;
@@ -86,6 +87,47 @@ public class StorefrontService {
         entity.setCreatedAt(entity.getCreatedAt() == null ? parseDate(dto.getCreatedAt(), LocalDateTime.now()) : entity.getCreatedAt());
         entity.setUpdatedAt(LocalDateTime.now());
 
+        return toProductDto(productRepository.save(entity));
+    }
+
+    public ProductDto patchProduct(String id, ProductPatchDto dto) {
+        ProductEntity entity = findProduct(id);
+
+        if (dto.getName() != null) {
+            entity.setName(requireNonBlank(dto.getName(), "Product name must not be blank"));
+        }
+        if (dto.getDescription() != null) {
+            entity.setDescription(requireNonBlank(dto.getDescription(), "Product description must not be blank"));
+        }
+        if (dto.getPrice() != null) {
+            entity.setPrice(dto.getPrice());
+        }
+        if (dto.getCategory() != null) {
+            entity.setCategory(requireNonBlank(dto.getCategory(), "Product category must not be blank"));
+        }
+        if (dto.getImageUrls() != null) {
+            entity.setImageUrls(dto.getImageUrls());
+            if (dto.getImageUrl() == null) {
+                entity.setImageUrl(firstNonBlank(firstFromList(dto.getImageUrls()), entity.getImageUrl()));
+            }
+        }
+        if (dto.getImageUrl() != null) {
+            entity.setImageUrl(firstNonBlank(dto.getImageUrl(), firstFromList(entity.getImageUrls())));
+        }
+        if (dto.getImageHint() != null) {
+            entity.setImageHint(requireNonBlank(dto.getImageHint(), "Image hint must not be blank"));
+        }
+        if (dto.getBrand() != null) {
+            entity.setBrand(requireNonBlank(dto.getBrand(), "Brand must not be blank"));
+        }
+        if (dto.getStockQuantity() != null) {
+            entity.setStockQuantity(dto.getStockQuantity());
+        }
+        if (dto.getFeatures() != null) {
+            entity.setFeatures(dto.getFeatures());
+        }
+
+        entity.setUpdatedAt(LocalDateTime.now());
         return toProductDto(productRepository.save(entity));
     }
 
@@ -354,6 +396,13 @@ public class StorefrontService {
 
     private String firstNonBlank(String primary, String fallback) {
         return primary != null && !primary.trim().isEmpty() ? primary : fallback;
+    }
+
+    private String requireNonBlank(String value, String message) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
     }
 
     private String firstFromList(List<String> values) {
