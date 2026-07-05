@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import Link from 'next/link';
-import { Search, ShieldCheck, User } from 'lucide-react';
+import Link from "next/link";
+import { Search, ShieldCheck, User } from "lucide-react";
 
-import { CartSheet } from '@/components/cart/CartSheet';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/context/AuthContext';
-import { useNavbarSearch } from '@/hooks/use-navbar-search';
-import styles from './Navbar.module.css';
+import { CartSheet } from "@/components/cart/CartSheet";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
+import { useNavbarSearch } from "@/hooks/use-navbar-search";
+import styles from "./Navbar.module.css";
 
 export function Navbar() {
   const { user } = useAuth();
@@ -53,17 +53,17 @@ export function Navbar() {
             onSubmit={handleSearch}
             className={[
               styles.searchForm,
-              isSearchOpen ? styles.searchFormOpen : '',
-            ].join(' ')}
+              isSearchOpen ? styles.searchFormOpen : "",
+            ].join(" ")}
           >
             <Input
-              placeholder="Archive durchsuchen..."
+              placeholder="Suchen"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               className={[
                 styles.searchInput,
-                isSearchOpen ? styles.searchInputOpen : '',
-              ].join(' ')}
+                isSearchOpen ? styles.searchInputOpen : "",
+              ].join(" ")}
               onBlur={handleSearchBlur}
             />
             <Button
@@ -72,8 +72,8 @@ export function Navbar() {
               size="icon"
               className={[
                 styles.searchButton,
-                isSearchOpen ? styles.searchButtonOpen : '',
-              ].join(' ')}
+                isSearchOpen ? styles.searchButtonOpen : "",
+              ].join(" ")}
               onClick={() => setIsSearchOpen(true)}
               aria-label="Suche oeffnen"
             >
@@ -86,7 +86,11 @@ export function Navbar() {
           <CartSheet />
 
           <Link href="/profile">
-            <Button variant="ghost" size="icon" className={styles.profileButton}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={styles.profileButton}
+            >
               <User className={styles.icon} />
             </Button>
           </Link>

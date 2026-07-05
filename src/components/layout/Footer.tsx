@@ -1,32 +1,32 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import styles from './Footer.module.css';
+import styles from "./Footer.module.css";
 
 const footerSections = [
   {
-    title: 'Shop',
+    title: "Kollektion",
     links: [
-      { href: '/#catalog', label: 'Wasserpfeifen' },
-      { href: '/#catalog', label: 'Kohle' },
-      { href: '/#catalog', label: 'Tabak & Aromen' },
-      { href: '/#catalog', label: 'Zubehoer' },
+      { href: "/#catalog", label: "Wasserpfeifen" },
+      { href: "/#catalog", label: "Kohle" },
+      { href: "/#catalog", label: "Tabak & Aromen" },
+      { href: "/#catalog", label: "Zubehör" },
     ],
   },
   {
-    title: 'Imperium',
+    title: "Imperium",
     links: [
-      { href: '/story', label: 'Unsere Geschichte' },
-      { href: '/careers', label: 'Karriere' },
-      { href: '/profile', label: 'Das Register' },
-      { href: '/admin', label: 'Admin-Konsole' },
+      { href: "/story", label: "Unsere Geschichte" },
+      { href: "/careers", label: "Karriere" },
+      { href: "/profile", label: "Kontakt" },
+      { href: "/admin", label: "Adminkonto" },
     ],
   },
   {
-    title: 'Kontakt',
+    title: "FOLGEN SIE UNS",
     links: [
-      { href: '/', label: 'Instagram' },
-      { href: '/', label: 'Twitter' },
-      { href: '/', label: 'Facebook' },
+      { href: "/", label: "Instagram" },
+      { href: "/", label: "TikTok" },
+      { href: "/", label: "Facebook" },
     ],
   },
 ];
@@ -39,8 +39,7 @@ export function Footer() {
           <div className={styles.brandBlock}>
             <h3 className={styles.brandTitle}>BLUBBER BARON</h3>
             <p className={styles.description}>
-              Exzellente Shisha-Erlebnisse fuer den anspruchsvollen Geniesser.
-              Luxus, Leistung und Raffinesse in jedem Zug.
+              Nicht jeder ist ein Baron. Aber jeder kann wie einer genießen.
             </p>
           </div>
 
