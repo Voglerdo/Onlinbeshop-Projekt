@@ -7,6 +7,7 @@ import {
   getCartTotalItems,
   getCartTotalPrice,
   removeProductFromCart,
+  sanitizeCartItems,
   updateProductQuantity,
 } from './cart.utils';
 
@@ -22,6 +23,13 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+function isQuotaExceededError(error: unknown) {
+  return (
+    error instanceof DOMException &&
+    (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
+  );
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
@@ -29,15 +37,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const savedCart = localStorage.getItem('blubber_baron_cart');
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart));
+        setItems(sanitizeCartItems(JSON.parse(savedCart)));
       } catch (e) {
-        console.error("Failed to parse cart", e);
+        localStorage.removeItem('blubber_baron_cart');
       }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('blubber_baron_cart', JSON.stringify(items));
+    try {
+      localStorage.setItem('blubber_baron_cart', JSON.stringify(items));
+    } catch (error) {
+      if (!isQuotaExceededError(error)) {
+        console.warn('Failed to persist cart', error);
+      }
+      localStorage.removeItem('blubber_baron_cart');
+    }
   }, [items]);
 
   const addItem = (product: Product) => {

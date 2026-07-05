@@ -342,8 +342,9 @@
 }
 
 .careersUtilitySecondary {
-  -o-object-fit: cover;
-  object-fit: cover;
+  -o-object-fit: contain;
+  object-fit: contain;
+  object-position: center;
 }
 
 .careersContainerSecondary > :not([hidden]) ~ :not([hidden]) {

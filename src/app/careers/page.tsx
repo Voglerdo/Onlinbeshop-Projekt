@@ -148,11 +148,10 @@ export default function CareersPage() {
         <div className={styles.grid}>
           <div className={styles.careersPanelPrimary}>
             <Image 
-              src="https://picsum.photos/seed/baron-culture/1000/750" 
+              src="/images/hr_expert.png" 
               alt="Unsere Kultur" 
               fill 
               className={styles.careersUtilitySecondary}
-              data-ai-hint="team luxury"
             />
           </div>
           <div className={styles.careersContainerSecondary}>
