@@ -25,7 +25,11 @@ export interface Review {
   createdAt: string;
 }
 
-export interface CartItem extends Product {
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
   quantity: number;
 }
 

@@ -1,6 +1,7 @@
 package com.blubberbaron.backend.controller;
 
 import com.blubberbaron.backend.dto.ProductDto;
+import com.blubberbaron.backend.dto.ProductPatchDto;
 import com.blubberbaron.backend.dto.ReviewDto;
 import com.blubberbaron.backend.service.StorefrontService;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,11 @@ public class ProductController {
     @PostMapping("/products")
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(storefrontService.saveProduct(productDto));
+    }
+
+    @PatchMapping("/products/{id}")
+    public ProductDto patchProduct(@PathVariable String id, @Valid @RequestBody ProductPatchDto productPatchDto) {
+        return storefrontService.patchProduct(id, productPatchDto);
     }
 
     @DeleteMapping("/products/{id}")
