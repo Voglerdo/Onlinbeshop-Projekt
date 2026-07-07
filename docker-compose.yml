@@ -9,7 +9,7 @@ services:
       MYSQL_USER: blubber_user
       MYSQL_PASSWORD: RootPasswort0815
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./backend/docker/mysql/init:/docker-entrypoint-initdb.d
