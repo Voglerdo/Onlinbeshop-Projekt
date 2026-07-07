@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { CartItem, Product } from '@/app/types';
 import {
   addProductToCart,
@@ -10,6 +10,8 @@ import {
   sanitizeCartItems,
   updateProductQuantity,
 } from './cart.utils';
+import { useToast } from '@/hooks/use-toast';
+import { externalApiService } from '@/services/api-client';
 
 interface CartContextType {
   items: CartItem[];
@@ -32,6 +34,8 @@ function isQuotaExceededError(error: unknown) {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { toast } = useToast();
+  const hasShownStorageWarning = useRef(false);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('blubber_baron_cart');
