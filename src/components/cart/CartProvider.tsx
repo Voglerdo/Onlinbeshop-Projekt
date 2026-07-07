@@ -8,7 +8,6 @@ import {
   getCartTotalPrice,
   removeProductFromCart,
   sanitizeCartItems,
-  serializeCartItems,
   updateProductQuantity,
 } from './cart.utils';
 import { useToast } from '@/hooks/use-toast';
@@ -26,6 +25,13 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+function isQuotaExceededError(error: unknown) {
+  return (
+    error instanceof DOMException &&
+    (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
+  );
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
@@ -37,7 +43,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       try {
         setItems(sanitizeCartItems(JSON.parse(savedCart)));
       } catch (e) {
-        console.error("Failed to parse cart", e);
         localStorage.removeItem('blubber_baron_cart');
       }
     }
@@ -45,60 +50,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(
-        'blubber_baron_cart',
-        JSON.stringify(serializeCartItems(items))
-      );
+      localStorage.setItem('blubber_baron_cart', JSON.stringify(items));
     } catch (error) {
+      if (!isQuotaExceededError(error)) {
+        console.warn('Failed to persist cart', error);
+      }
       localStorage.removeItem('blubber_baron_cart');
-      console.error('Failed to persist cart', error);
-      if (!hasShownStorageWarning.current) {
-        hasShownStorageWarning.current = true;
-        toast({
-          title: 'Warenkorb konnte nicht gespeichert werden',
-          description: 'Zu viele lokale Daten im Browser. Der Warenkorb bleibt nur fuer diese Sitzung erhalten.',
-          variant: 'destructive',
-        });
-      }
     }
-  }, [items, toast]);
-
-  useEffect(() => {
-    const itemsMissingImages = items.filter((item) => !item.imageUrl);
-
-    if (itemsMissingImages.length === 0) {
-      return;
-    }
-
-    let isMounted = true;
-
-    async function hydrateCartImages() {
-      try {
-        const products = await externalApiService.getProducts();
-        const imageById = new Map(
-          products.map((product: Product) => [product.id, product.imageUrl])
-        );
-
-        if (!isMounted) {
-          return;
-        }
-
-        setItems((currentItems) =>
-          currentItems.map((item) => ({
-            ...item,
-            imageUrl: item.imageUrl || imageById.get(item.id) || undefined,
-          }))
-        );
-      } catch (error) {
-        console.warn('Produktbilder fuer Warenkorb konnten nicht geladen werden.');
-      }
-    }
-
-    hydrateCartImages();
-
-    return () => {
-      isMounted = false;
-    };
   }, [items]);
 
   const addItem = (product: Product) => {

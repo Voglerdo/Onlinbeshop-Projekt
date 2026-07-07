@@ -169,12 +169,11 @@ export default function CareersPage() {
       <section className={styles.careersSection2}>
         <div className={styles.grid}>
           <div className={styles.careersPanelPrimary}>
-            <Image
-              src="https://picsum.photos/seed/baron-culture/1000/750"
-              alt="Unsere Kultur"
-              fill
+            <Image 
+              src="/images/hr_expert.png" 
+              alt="Unsere Kultur" 
+              fill 
               className={styles.careersUtilitySecondary}
-              data-ai-hint="team luxury"
             />
           </div>
           <div className={styles.careersContainerSecondary}>

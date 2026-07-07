@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  MoreHorizontal,
-  Trash2,
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { 
+  Plus, 
+  MoreHorizontal, 
+  Pencil,
+  Trash2, 
   LayoutGrid,
   Loader2,
   ExternalLink,
@@ -250,12 +251,10 @@ export default function AdminPage() {
                               className={styles.dropdownmenucontent36}
                             >
                               <DropdownMenuItem asChild>
-                                <Link href={`/products/${product.id}`}>
-                                  <ExternalLink
-                                    className={styles.adminIconPrimary}
-                                  />{" "}
-                                  Anzeigen
-                                </Link>
+                                <Link href={`/admin/products/${product.id}/edit`}><Pencil className={styles.adminIconPrimary} /> Bearbeiten</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem asChild>
+                                <Link href={`/products/${product.id}`}><ExternalLink className={styles.adminIconPrimary} /> Ansehen</Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className={styles.dropdownmenuitem37}

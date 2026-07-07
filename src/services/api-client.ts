@@ -17,7 +17,7 @@ class ApiError extends Error {
 
 export async function apiRequest<T>(
   endpoint: string,
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
   body?: any
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -59,6 +59,7 @@ export const externalApiService = {
   getProducts: () => apiRequest<any[]>('/products'),
   getProduct: (id: string) => apiRequest<any>(`/products/${id}`),
   syncProduct: (productData: any) => apiRequest<any>('/products', 'POST', productData),
+  patchProduct: (id: string, productPatch: any) => apiRequest<any>(`/products/${id}`, 'PATCH', productPatch),
   deleteProduct: (id: string) => apiRequest<any>(`/products/${id}`, 'DELETE'),
   
   // Bestellungen
