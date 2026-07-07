@@ -63,12 +63,18 @@ export function CartSheet() {
               {items.map((item) => (
                 <div key={item.id} className={styles.item}>
                   <div className={styles.itemImageWrap}>
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.name}
-                      fill
-                      className={styles.itemImage}
-                    />
+                    {item.imageUrl ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.name}
+                        fill
+                        className={styles.itemImage}
+                      />
+                    ) : (
+                      <div className={styles.emptyIconWrap}>
+                        <ShoppingBag className={styles.emptyIcon} />
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.itemBody}>

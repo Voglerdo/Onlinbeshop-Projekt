@@ -49,17 +49,28 @@ export default function ProfilePage() {
       if (!user) return;
       setIsDataLoading(true);
       try {
-        const [profileData, ordersData] = await Promise.all([
+        const [profileResult, ordersResult] = await Promise.allSettled([
           externalApiService.getUserProfile(user.uid),
           externalApiService.getOrders(user.uid),
         ]);
-        setProfile(profileData);
-        setOrders(ordersData);
+
+        if (profileResult.status === "fulfilled" && profileResult.value) {
+          setProfile(profileResult.value);
+        } else {
+          setProfile(user);
+        }
+
+        if (ordersResult.status === "fulfilled" && ordersResult.value) {
+          setOrders(ordersResult.value);
+        } else {
+          setOrders([]);
+        }
       } catch (err) {
         console.warn(
           "REST API Profil-Laden fehlgeschlagen, nutze lokale Session-Daten.",
         );
         setProfile(user);
+        setOrders([]);
       } finally {
         setIsDataLoading(false);
       }
