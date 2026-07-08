@@ -1,5 +1,6 @@
 
 import type {Metadata} from 'next';
+import { Suspense } from 'react';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -29,7 +30,9 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             <div className={styles.appShell}>
-              <Navbar />
+              <Suspense fallback={null}>
+                <Navbar />
+              </Suspense>
               <main className={styles.pageContent}>{children}</main>
               <Footer />
             </div>

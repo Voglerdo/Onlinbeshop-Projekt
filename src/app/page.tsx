@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Filter, Loader2, Sparkles, X } from "lucide-react";
 
@@ -17,7 +17,7 @@ import styles from "./page.module.css";
 import generatedStyles from "./page.styles.module.css";
 import { cn } from "@/lib/utils";
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] =
@@ -183,5 +183,13 @@ export default function Home() {
         )}
       </section>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }

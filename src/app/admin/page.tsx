@@ -335,7 +335,7 @@ export default function AdminPage() {
                         <TableCell>{job.type}</TableCell>
                         <TableCell className={styles.adminIconSecondary}>
                           <Clock className={styles.tablecell43} />{" "}
-                          {new Date(job.createdAt).toLocaleDateString()}
+                          {new Date(job.createdAt || Date.now()).toLocaleDateString()}
                         </TableCell>
                         <TableCell className={styles.tablehead28}>
                           <DropdownMenu>
