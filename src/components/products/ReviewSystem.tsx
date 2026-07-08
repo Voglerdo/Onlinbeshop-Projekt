@@ -52,7 +52,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     }
 
     if (comment.trim().length < 5) {
-      toast({ title: "Narrativ zu kurz", description: "Ihr Feedback muss mindestens 5 Zeichen lang sein.", variant: "destructive" });
+      toast({ title: "Bewertung zu kurz", description: "Ihr Feedback muss mindestens 5 Zeichen lang sein.", variant: "destructive" });
       return;
     }
 
@@ -60,7 +60,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     const newReview = {
       productId,
       userId: user.uid,
-      userName: user.firstName ? `${user.firstName} ${user.lastName}` : 'Anonymer Baron',
+      userName: user.firstName ? `${user.firstName} ${user.lastName}` : 'Anonymer Kunde',
       rating,
       comment,
       createdAt: new Date().toISOString()
@@ -69,7 +69,7 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     try {
       const savedReview = await externalApiService.syncReview(newReview);
       setReviews([savedReview, ...reviews]);
-      toast({ title: "Dekret erhalten", description: "Ihre Erfahrung wurde protokolliert." });
+      toast({ title: "Bewertung gespeichert", description: "Vielen Dank für Ihr Feedback." });
       setComment('');
       setRating(5);
     } catch (err) {
@@ -83,8 +83,8 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
     <div className={styles.productsReviewsystemContainerPrimary}>
       <div className={styles.productsReviewsystemLayoutPrimary}>
         <div className={styles.productsReviewsystemContainerSecondary}>
-          <h2 className={styles.derKonsensHeading}>Der Konsens</h2>
-          <p className={styles.stimmenAusDemInnerenKreisDesBaronsText}>Stimmen aus dem inneren Kreis des Barons.</p>
+          <h2 className={styles.derKonsensHeading}>Kundenbewertungen</h2>
+          <p className={styles.stimmenAusDemInnerenKreisDesBaronsText}>Erfahrungen unserer Kunden.</p>
         </div>
         <div className={styles.productsReviewsystemLayoutSecondary}>
           <div className={styles.productsReviewsystemContainerTertiary}>
@@ -93,11 +93,11 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
                 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
                 : "5.0"}
             </div>
-            <div className={styles.productsReviewsystemTextSecondary}>Imperiales Rating</div>
+            <div className={styles.productsReviewsystemTextSecondary}>Durchschnittliche Bewertung</div>
           </div>
           <div className={styles.productsReviewsystemContainerQuaternary} />
           <Badge variant="outline" className={styles.statusBadge}>
-            {reviews.length} Dekrete
+            {reviews.length} Bewertungen
           </Badge>
         </div>
       </div>
@@ -105,10 +105,10 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
       <div className={styles.grid}>
         <div className={styles.productsReviewsystemContainerQuinary}>
           <div className={styles.productsReviewsystemPanelPrimary}>
-            <h3 className={styles.feedbackManifestierenHeading}>Feedback manifestieren</h3>
+            <h3 className={styles.feedbackManifestierenHeading}>Bewertung abgeben</h3>
             <form onSubmit={handleSubmitReview} className={styles.form}>
               <div className={styles.productsReviewsystemContainerSecondary}>
-                <Label className={styles.productsReviewsystemIconPrimary}>Qualitäts-Score</Label>
+                <Label className={styles.productsReviewsystemIconPrimary}>Bewertung</Label>
                 <div className={styles.productsReviewsystemLayoutTertiary}>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button key={star} type="button" onClick={() => setRating(star)} className={styles.button19}>
@@ -118,11 +118,11 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
                 </div>
               </div>
               <div className={styles.productsReviewsystemContainerSecondary}>
-                <Label htmlFor="comment" className={styles.productsReviewsystemIconPrimary}>Narrativ</Label>
+                <Label htmlFor="comment" className={styles.productsReviewsystemIconPrimary}>Ihr Feedback</Label>
                 <Textarea id="comment" placeholder="Beschreiben Sie Ihre Erfahrung..." className={styles.textarea20} value={comment} onChange={(e) => setComment(e.target.value)} required />
               </div>
               <Button type="submit" disabled={isSubmitting || !user} className={styles.actionButton}>
-                {isSubmitting ? <Loader2 className={styles.loader2Icon} /> : !user ? "Anmelden für Review" : <><Send className={styles.loader2Icon2} /> Dekret veröffentlichen</>}
+                {isSubmitting ? <Loader2 className={styles.loader2Icon} /> : !user ? "Zum Bewerten anmelden" : <><Send className={styles.loader2Icon2} /> Bewertung veröffentlichen</>}
               </Button>
             </form>
           </div>
@@ -161,8 +161,8 @@ export function ReviewSystem({ productId }: ReviewSystemProps) {
           ) : (
             <div className={styles.productsReviewsystemPanelTertiary}>
               <Star className={styles.starIcon} />
-              <h3 className={styles.keineDekreteHeading}>Keine Dekrete</h3>
-              <p className={styles.bodyText2}>Seien Sie der Erste, der dieses Meisterwerk bewertet.</p>
+              <h3 className={styles.keineDekreteHeading}>Noch keine Bewertungen</h3>
+              <p className={styles.bodyText2}>Seien Sie der Erste, der dieses Produkt bewertet.</p>
             </div>
           )}
         </div>
