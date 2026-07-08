@@ -15,8 +15,8 @@ export function AddToCartButton({ product }: { product: Product }) {
   const handleAdd = () => {
     addItem(product);
     toast({
-      title: "Hinzugefügt",
-      description: `${product.name} wurde Ihrer Auswahl hinzugefügt.`,
+      title: "Zum Warenkorb hinzugefügt",
+      description: `${product.name} wurde Ihrem Warenkorb hinzugefügt.`,
     });
   };
 
@@ -27,7 +27,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       onClick={handleAdd}
     >
       <ShoppingBag className={styles.shoppingbag2} />
-      Sicherer Erwerb
+      In den Warenkorb
     </Button>
   );
 }

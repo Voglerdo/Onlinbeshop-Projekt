@@ -53,7 +53,7 @@ export default function ProductPage() {
           <Loader2 className={styles.loader2Icon} />
           <div className={styles.overlay} />
         </div>
-        <p className={styles.produktdatenWerdenBeschworenText}>Produktdaten werden beschworen...</p>
+        <p className={styles.produktdatenWerdenBeschworenText}>Produktdaten werden geladen...</p>
       </div>
     );
   }
@@ -128,7 +128,7 @@ export default function ProductPage() {
             <div className={styles.productsContainerTertiary}>
               <div className={styles.productsLayoutQuaternary}>
                 <Badge variant="secondary" className={styles.statusBadge}>
-                  Premium Auswahl
+                  Premium-Auswahl
                 </Badge>
                 <Badge variant="outline" className={styles.statusBadge2}>
                   {product.category}
@@ -142,7 +142,7 @@ export default function ProductPage() {
                   {[1, 2, 3, 4, 5].map((s) => <Star key={s} className={styles.starIcon} />)}
                 </div>
                 <div className={styles.productsIconPrimary} />
-                <span className={styles.zertifizierterLuxusText}>Zertifizierter Luxus</span>
+                <span className={styles.zertifizierterLuxusText}>Premium-Qualität</span>
               </div>
 
               <div className={styles.productsLayoutSeptenary}>
@@ -152,7 +152,7 @@ export default function ProductPage() {
             </div>
 
             <div className={styles.productsContainerSenary}>
-              <h3 className={styles.dasNarrativHeading}>Das Narrativ</h3>
+              <h3 className={styles.dasNarrativHeading}>Produktbeschreibung</h3>
               <p className={styles.bodyText}>
                 {product.description}
               </p>
@@ -176,7 +176,7 @@ export default function ProductPage() {
               <div className={styles.productsLayoutOctonary}>
                 <AddToCartButton product={product} />
                 <p className={styles.bodyText2}>
-                  Limitierte Verfügbarkeit • Weltweiter Versand
+                  Begrenzte Verfügbarkeit • Schneller Versand
                 </p>
               </div>
               
@@ -185,19 +185,19 @@ export default function ProductPage() {
                   <div className={styles.productsPanelTertiary}>
                     <ShieldCheck className={styles.shieldcheck48} />
                   </div>
-                  <span className={styles.authentischText}>Authentisch</span>
+                  <span className={styles.authentischText}>Geprüfte Qualität</span>
                 </div>
                 <div className={styles.productsLayoutNonary}>
                   <div className={styles.productsPanelTertiary}>
                     <Truck className={styles.shieldcheck48} />
                   </div>
-                  <span className={styles.authentischText}>Priorität</span>
+                  <span className={styles.authentischText}>Schneller Versand</span>
                 </div>
                 <div className={styles.productsLayoutNonary}>
                   <div className={styles.productsPanelTertiary}>
                     <RefreshCw className={styles.shieldcheck48} />
                   </div>
-                  <span className={styles.authentischText}>Premium Pflege</span>
+                  <span className={styles.authentischText}>Einfache Rückgabe</span>
                 </div>
               </div>
             </div>
@@ -211,9 +211,9 @@ export default function ProductPage() {
         <section className={styles.productsSection}>
           <div className={styles.productsLayoutDenary}>
             <div className={styles.productsContainerDenary}>
-              <h2 className={styles.dasKompletteSetHeading}>Das komplette Set</h2>
+              <h2 className={styles.dasKompletteSetHeading}>Passende Produkte</h2>
               <div className={styles.productsContainerEleventh} />
-              <p className={styles.bodyText3}>Ergänzende Auswahlen, kuratiert für dieses Stück.</p>
+              <p className={styles.bodyText3}>Weitere Produkte, die gut zu Ihrer Auswahl passen.</p>
             </div>
           </div>
           <div className={styles.grid4}>
