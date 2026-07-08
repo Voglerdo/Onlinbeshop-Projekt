@@ -30,7 +30,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { externalApiService } from "@/services/api-client";
+import { ApiRequestError, externalApiService } from "@/services/api-client";
 import Link from "next/link";
 import styles from "./page.styles.module.css";
 
@@ -49,10 +49,24 @@ export default function ProfilePage() {
       if (!user) return;
       setIsDataLoading(true);
       try {
-        const [profileData, ordersData] = await Promise.all([
-          externalApiService.getUserProfile(user.uid),
-          externalApiService.getOrders(user.uid),
-        ]);
+        let profileData;
+
+        try {
+          profileData = await externalApiService.getUserProfile(user.uid);
+        } catch (err) {
+          if (err instanceof ApiRequestError && err.status === 404) {
+            profileData = await externalApiService.updateUserProfile(user.uid, {
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              isAdmin: user.isAdmin,
+            });
+          } else {
+            throw err;
+          }
+        }
+
+        const ordersData = await externalApiService.getOrders(user.uid);
         setProfile(profileData);
         setOrders(ordersData);
       } catch (err) {

@@ -5,6 +5,18 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
 
+export class ApiRequestError extends Error {
+  status: number;
+  endpoint: string;
+
+  constructor(message: string, status: number, endpoint: string) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.status = status;
+    this.endpoint = endpoint;
+  }
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
@@ -24,7 +36,11 @@ export async function apiRequest<T>(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `API-Anfrage fehlgeschlagen: ${response.status}`);
+      throw new ApiRequestError(
+        errorData.message || `API-Anfrage fehlgeschlagen: ${response.status}`,
+        response.status,
+        endpoint
+      );
     }
 
     if (response.status === 204) {
@@ -34,7 +50,6 @@ export async function apiRequest<T>(
     const text = await response.text();
     return text ? JSON.parse(text) as T : null as T;
   } catch (error) {
-    console.error(`REST-API Fehler (${method} ${endpoint}):`, error);
     throw error;
   }
 }
